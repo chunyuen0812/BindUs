@@ -94,8 +94,6 @@ class Search extends Component {
   }
 }
 
-export default Search;
-
 const styles = StyleSheet.create({
   image:{
     backgroundColor:"yellow",
