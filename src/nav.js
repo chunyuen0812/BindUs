@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Login from "./pages/login";
 import Home from './pages/home';
 import Profile from './pages/profile';
+import SignUp from './pages/login/signup'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,6 +36,8 @@ function Nav() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Login">
         <Stack.Screen name="Home" component={MainTabs}/>
+        <Stack.Screen name="Profile" component={Profile}/>
+        <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
       </Stack.Navigator>
     </NavigationContainer>

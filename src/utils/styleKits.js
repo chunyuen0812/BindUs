@@ -3,6 +3,7 @@
 
 import { Screen } from "react-native-screens";
 import { Dimensions } from "react-native";
+import { theme } from 'galio-framework';
 
 export const screenWidth = Dimensions.get('window').width;
 export const screenHeight = Dimensions.get('window').height;
@@ -13,3 +14,5 @@ export const screenHeight = Dimensions.get('window').height;
  * @returns 元素的寬度或高度 單位px
  */
 export const pxToDp = (elePx) => screenWidth * elePx / 375;
+
+export const HeaderHeight = (theme.SIZES.BASE * 3.5 + (StatusHeight || 0));
