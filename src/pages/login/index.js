@@ -5,7 +5,7 @@ import request from "../../utils/request";
 import { ACCOUNT_LOGIN } from '../../utils/pathMap';
 
 
-class Index extends Component {
+class LoginPage extends Component {
 
   state = {
     loginname: '',
@@ -49,7 +49,7 @@ class Index extends Component {
 
       <Text style={styles.text}>BindUs</Text>
       <Input style={{width:"90%",marginLeft: 20}} placeholder="Account" onChangeText={(text) => this.setState({ loginname: text })}/>
-      <Input style={{width:"90%",marginLeft: 20}} placeholder="password" password viewPass onChangeText={(text) => this.setState({ loginpwd: text })}/>
+      <Input style={{width:"90%",marginLeft: 20}} placeholder="Password" password viewPass onChangeText={(text) => this.setState({ loginpwd: text })}/>
       
       <View style={{flexDirection:"row",marginLeft: 50}}>
         <Button color="#5BC0DE" style={{width:"40%"}}>Sign Up</Button>
@@ -86,4 +86,4 @@ class Index extends Component {
     
   });
 
-  export default Index;
+  export default LoginPage;

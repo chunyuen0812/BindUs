@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import Nav from './src/nav'
 
 class Index extends Component {
@@ -7,7 +7,7 @@ class Index extends Component {
   render() { 
     return (
       <View style={{flex:1}}>
-        <Nav></Nav>
+        <Nav/>
       </View>
     );
   }

@@ -4,9 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import Login from "./pages/login";
-import Home from './pages/home';
-import Profile from './pages/profile';
+import Login from '../src/pages/login';
+import home from '../src/pages/home';
+import Profile from '../src/pages/profile';
+import Editprofile from './pages/editprofile';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -15,7 +16,7 @@ function MainTabs() {
   return (
     <Tab.Navigator >
       <Tab.Screen name="Home" 
-      component={Home} 
+      component={home} 
       options={{headerShown:false,
         tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
@@ -36,6 +37,8 @@ function Nav() {
       <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Login">
         <Stack.Screen name="Home" component={MainTabs}/>
         <Stack.Screen name="Login" component={Login}/>
+        <Stack.Screen name="Profile" component={Profile}/>
+        <Stack.Screen name="Editprofile" component={Editprofile}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
