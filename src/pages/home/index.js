@@ -2,51 +2,6 @@ import React, { Component } from "react";
 import { StyleSheet, Image, Text, View, FlatList } from "react-native";
 import {SearchBar } from "@rneui/themed"; // npm this package for search bar functions
 
-const DATA = [
-  {
-    id: "1",
-    groupimage: '../../res/christmasparty.jpg',
-    title: "Christmas Party",
-    description: "ABC",
-    grpprogress: 60, 
-  },
-  {
-    id: "2",
-    groupimage: '../../res/gradtrip.jpg',
-    title: "Grad trip",
-    description: "ABC",
-    grpprogress: 65,
-  },
-  {
-    id: "3",
-    groupimage: '../../res/igshop.jpg',
-    title: "New shop",
-    description: "ABC",
-    grpprogress: 35,
-  },
-];
- // problem in displaying image
-const Item = ({groupimage, title, description, grpprogress}) => {
-  return (
-    <View style={styles.item}>
-      <Image source={groupimage} style={styles.image}/> 
-      <View style={styles.grpinfo}>
-        <View style={styles.row}>
-          <Text numberOfLines={1} style={styles.name}>
-          {title}
-          </Text>
-          <Text>
-          Group progress: {grpprogress}% 
-          </Text>
-        </View>
-      <Text numberOfLines={2} style={styles.subtitle}>
-      Description: {description}
-      </Text>
-      </View>
-    </View>
-  );
-};
-
 const renderItem = ({ item }) => <Item 
 groupimage={item.groupimage} 
 title={item.title} 
