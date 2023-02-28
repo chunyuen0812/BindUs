@@ -8,7 +8,8 @@ import Login from '../src/pages/login';
 import home from '../src/pages/home';
 import Profile from '../src/pages/profile';
 import Editprofile from './pages/editprofile';
-import SignUp from './pages/login/signup'
+import SignUp from './pages/login/signup';
+import Group from './pages/group'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,8 +41,8 @@ function Nav() {
         <Stack.Screen name="Profile" component={Profile}/>
         <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Profile" component={Profile}/>
         <Stack.Screen name="Editprofile" component={Editprofile}/>
+        <Stack.Screen name="Group" component={Group}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable } from "react-native";
 import {Button} from 'galio-framework';
 import {SearchBar, ListItem } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
  // npm this package for search bar functions
 
 const DATA = [
@@ -26,74 +27,13 @@ const DATA = [
     description: "ABC",
     grpprogress: 35,
   },
-{
-  id: "4",
-  groupimage: require('../../res/christmasparty.jpg'),
-  title: "Christmas Party",
-  description: "ABC",
-  grpprogress: 60, 
-},
-{
-  id: "5",
-  groupimage: require('../../res/gradtrip.jpg'),
-  title: "Grad trip",
-  description: "ABC",
-  grpprogress: 65,
-},
-{
-  id: "6",
-  groupimage: require('../../res/igshop.jpg'),
-  title: "New shop",
-  description: "ABC",
-  grpprogress: 35,
-},
-{
-  id: "7",
-  groupimage: require('../../res/christmasparty.jpg'),
-  title: "Christmas Party",
-  description: "ABC",
-  grpprogress: 60, 
-},
-{
-  id: "8",
-  groupimage: require('../../res/gradtrip.jpg'),
-  title: "Grad trip",
-  description: "ABC",
-  grpprogress: 65,
-},
-{
-  id: "9",
-  groupimage: require('../../res/igshop.jpg'),
-  title: "New shop",
-  description: "ABC",
-  grpprogress: 35,
-},
-{
-  id: "10",
-  groupimage: require('../../res/christmasparty.jpg'),
-  title: "Christmas Party",
-  description: "ABC",
-  grpprogress: 60, 
-},
-{
-  id: "11",
-  groupimage: require('../../res/gradtrip.jpg'),
-  title: "Grad trip",
-  description: "ABC",
-  grpprogress: 65,
-},
-{
-  id: "12",
-  groupimage: require('../../res/igshop.jpg'),
-  title: "New shop",
-  description: "ABC",
-  grpprogress: 35,
-},
 ];
+
 // pixel per item 85p
 const Item = ({id, groupimage, title, description, grpprogress}) => {
+  const navigation=useNavigation();
   return (
-    <Pressable onPress={()=>console.log('navigate')} style={styles.item}>
+    <Pressable onPress={() => navigation.navigate('Group')} style={styles.item}>
       <Image source={groupimage} style={styles.image}/> 
       <View style={styles.grpinfo}>
         <View style={styles.row}>
@@ -143,6 +83,11 @@ class HomePage extends Component {
   render() {
     return (
       <View style={{flexDirection:'column'}}> 
+        <View style={styles.header}>
+          <Text style={styles.title}>
+            Home
+          </Text>
+        </View>
         <View style={styles.container}>
           <SearchBar
             placeholder="Search Here..."
@@ -175,6 +120,15 @@ class HomePage extends Component {
 }
 
 const styles = StyleSheet.create({
+  header:{
+    marginTop: 25,
+    backgroundColor:'lightgrey',
+    alignItems:'center',
+  },
+  title:{
+    fontSize: 32,
+    fontWeight:'bold'
+  },
   image:{
     alignItems:"center",
     justifyContent:"center",
@@ -188,7 +142,6 @@ const styles = StyleSheet.create({
     resizeMode: "center",
   },
   container: {
-    marginTop: 25,
     padding: 1,
   },
   listcontainer:{
