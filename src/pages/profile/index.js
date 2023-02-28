@@ -90,7 +90,7 @@ class ProfilePage extends Component {
                     style={styles.editbutton}
                     title="Edit"
                     onPress={() => 
-                        this.props.navigation.navigate('Editprofile')
+                        console.log('navigate')
                     }
                 />
             </ScrollView>
