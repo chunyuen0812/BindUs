@@ -3,12 +3,34 @@ import { View, ImageBackground, StyleSheet,ScrollView,Dimensions,Image} from 're
 import { Block,Text,theme,Button} from 'galio-framework';
 import { HeaderHeight } from '../../utils/styleKits';
 import { argonTheme} from '../../utils'
+import axios from 'axios';
+import {token} from '../../utils/pathMap'
 
 const { width, height } = Dimensions.get("screen");
 const thumbMeasure = (width - 48 - 32) / 3;
 
 class Index extends Component {
+
+
     state = {  } 
+
+    handleUpdate = () =>{
+        axios({
+            method: 'post',
+            url: 'https://datastudio.simnectzplatform.com/gateway/SIMNECTZ/1676014870768//e-wallet/sys/loginuserenquiry',
+            headers:{token:token},
+            data:{}
+          }).then((response) => {
+            console.log(response);
+            // 拉取并更新数据
+          })
+          .catch((error) => {
+            // Handle error
+            console.error(error);
+          });
+
+    }
+
     render() { 
         return (
             <Block flex style={styles.profile}>
@@ -23,13 +45,30 @@ class Index extends Component {
                     style={{ width, marginTop: '25%' }}
                   >
                     <Block flex style={styles.profileCard}>
+
+                    {/* icon */}
                       <Block middle style={styles.avatarContainer}>
                         <Image
                           source={require('../../res/icon.jpeg')}
                           style={styles.avatar}
                         />
                       </Block>
+
                       <Block style={styles.info}>
+                  <Block
+                    middle
+                    row
+                    space="evenly"
+                    style={{ marginTop: 20, paddingBottom: 24 }}
+                  >
+                    <Button
+                      small
+                      style={{ backgroundColor: argonTheme.COLORS.INFO }}
+                      onPress={this.handleUpdate}
+                    >
+                      Update
+                    </Button>
+                  </Block>
 
                         <Block row space="between">
                           <Block middle>
