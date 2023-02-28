@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { ImageBackground, StyleSheet, View, Text, Alert} from 'react-native';
 import { Input,Button} from 'galio-framework';
 import request from "../../utils/request";
+import signup from './signup'
 import { ACCOUNT_LOGIN } from '../../utils/pathMap';
 
 
@@ -22,11 +23,11 @@ class LoginPage extends Component {
     // API handle
     // console.log(loginname,loginpwd,token,clientid,messageid)
     request
-      .post(ACCOUNT_LOGIN,{ loginname:loginname, loginpwd:loginpwd})
+      .post(ACCOUNT_LOGIN,{ username:loginname, password:loginpwd})
       .then((response) => {
         // Handle successful login
         console.log(response);
-        if (response.data.msg ==  "Operation Successed"){
+        if (response.data.msg ==  "Operation success"){
           this.props.navigation.navigate("Home");
         }
         else{
@@ -40,6 +41,10 @@ class LoginPage extends Component {
       });
   };
 
+  handleSignUp = () => {
+    this.props.navigation.navigate("SignUp");
+  }
+
 
   render() { 
     return (
@@ -52,7 +57,7 @@ class LoginPage extends Component {
       <Input style={{width:"90%",marginLeft: 20}} placeholder="Password" password viewPass onChangeText={(text) => this.setState({ loginpwd: text })}/>
       
       <View style={{flexDirection:"row",marginLeft: 50}}>
-        <Button color="#5BC0DE" style={{width:"40%"}}>Sign Up</Button>
+        <Button color="#5BC0DE" style={{width:"40%"}} onPress={this.handleSignUp}>Sign Up</Button>
         <Button color="#5BC0DE" style={{width:"40%"}} onPress={this.handleLogin}>Login</Button>
       </View>
       

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import { ScrollView, StyleSheet, Image, View, Text } from 'react-native';
-import {Button} from 'galio-framework';
+
+import { ScrollView, StyleSheet, Image, View, Text, ImageBackground } from 'react-native';
+import {Button, Block} from 'galio-framework';
 import{useNavigation}from '@react-navigation/native'
 
 

@@ -8,6 +8,7 @@ import Login from '../src/pages/login';
 import home from '../src/pages/home';
 import Profile from '../src/pages/profile';
 import Editprofile from './pages/editprofile';
+import SignUp from './pages/login/signup'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -36,6 +37,8 @@ function Nav() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Login">
         <Stack.Screen name="Home" component={MainTabs}/>
+        <Stack.Screen name="Profile" component={Profile}/>
+        <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="Profile" component={Profile}/>
         <Stack.Screen name="Editprofile" component={Editprofile}/>
