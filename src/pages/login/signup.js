@@ -44,7 +44,9 @@ class Index extends Component {
             // Handle successful login
             console.log(response);
             if (response.data.code == "200"){
+              Alert.alert("Sign Up Success")
               this.props.navigation.navigate("Login");
+              // data add
             }
             else{
               Alert.alert("Sign Up failed");

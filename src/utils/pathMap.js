@@ -10,3 +10,6 @@ export const ACCOUNT_LOGIN = "/e-wallet/sys/login";
 //register
 export const ACCOUNT_SIGN = '/e-wallet/sys/register'
 
+// balance
+export const ACCOUNT_BALANCE = '/e-wallet/pay/eWalletBalance'
+
