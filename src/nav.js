@@ -7,7 +7,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Login from '../src/pages/login';
 import home from '../src/pages/home';
 import Profile from '../src/pages/profile';
-import Editprofile from './pages/editprofile';
 import SignUp from './pages/login/signup'
 
 const Stack = createNativeStackNavigator();
@@ -40,8 +39,6 @@ function Nav() {
         <Stack.Screen name="Profile" component={Profile}/>
         <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Profile" component={Profile}/>
-        <Stack.Screen name="Editprofile" component={Editprofile}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
