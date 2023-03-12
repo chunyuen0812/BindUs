@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable } from "react-native";
-import {Button} from 'galio-framework';
+import {NavBar,Button} from 'galio-framework';
 import {SearchBar, ListItem } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
  // npm this package for search bar functions
@@ -83,11 +83,7 @@ class HomePage extends Component {
   render() {
     return (
       <View style={{flexDirection:'column'}}> 
-        <View style={styles.header}>
-          <Text style={styles.title}>
-            Home
-          </Text>
-        </View>
+        <NavBar style={styles.header} titleStyle={styles.title} title="Home" />
         <View style={styles.container}>
           <SearchBar
             placeholder="Search Here..."
@@ -109,9 +105,7 @@ class HomePage extends Component {
         <View>
         <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={30} 
           color="green" iconColor="#fff" style={styles.plusbutton}
-          onPress={() => {
-          console.log('Create New Group!');
-          }}
+          onPress={() => {this.props.navigation.navigate('CreateGroup')}}
           /> 
         </View>
       </View>
@@ -146,11 +140,9 @@ const styles = StyleSheet.create({
   },
   listcontainer:{
     flexGrow: 1,
-    backgroundColor: 'grey',
   },
   grpinfo:{
     flex:1, 
-    backgroundColor:"lightskyblue",
   },
   name:{
     flex: 1,
@@ -167,7 +159,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   item: {
-    backgroundColor:"lightgreen",
     height: 75,
     flexDirection: "row",
     padding: 10,
