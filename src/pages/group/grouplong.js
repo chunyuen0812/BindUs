@@ -99,7 +99,7 @@ const ItemA = ({id, name, profpic, Amount}) => {
 };
 const ItemB = ({id, name, profpic,payment, date, time}) => {
   return(
-  <View style={{margin:5, flexDirection:'row', borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'lightgrey'}}>
+  <View style={{margin:5, flexDirection:'row', borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'lightgrey', justifyContent:'space-around'}}>
       <Image source={profpic} style={styles.image}/>
       <View style={{margin:5, flexDirection:'row', justifyContent:'space-around'}}>
         <Text numberOfLines={1} style={styles.name2}>{name}</Text>
@@ -120,13 +120,16 @@ const renderStage=({item, index})=> {
     return(
         <View>
             <View style={{flexDirection:'row', margin:5, borderTopWidth:StyleSheet.hairlineWidth}}>
-                <Text style={styles.subtitle1}> Stage: {item.id} </Text>
-                <Text style={styles.subtitle2}> ${stageprogress(index)}/ ${item.goal}</Text>
-                <Text style={styles.subtitle2}> {Math.round(stageprogress(index)/item.goal*100)}%</Text>
+              <Text style={styles.subtitle1}> Stage: {item.id}</Text>
+              <Text style={styles.subtitle2}>{item.id}/{STAGE.length}</Text>
             </View>
-            <View style={{margin:5,marginBottom:10, justifyContent:'space-around', borderBottomWidth:StyleSheet.hairlineWidth}}>
+            <View style={{flexDirection:'row', margin:5}}>
+              <Text style={styles.subtitle1}> ${stageprogress(index)}/ ${item.goal}</Text>
+              <Text style={styles.subtitle2}> {Math.round(stageprogress(index)/item.goal*100)}%</Text>
+            </View>
+            <View style={{margin:5,marginBottom:10, borderBottomWidth:StyleSheet.hairlineWidth}}>
                 <ProgressBar style={{margin:5, alignSelf:'center'}} color={'lightblue'} progress={stageprogress(index)/item.goal} width={windowWidth}/>
-                <View style={{flexDirection:'row',marginVertical:5}}>
+                <View style={{flexDirection:'row'}}>
                     <Text style={styles.subtitle1}> End Date:</Text>
                     <Text style={styles.subtitle2}>{item.date}</Text>
                 </View>
@@ -187,7 +190,7 @@ class GrouplongPage extends Component {
           data={DATA}
           renderItem={renderItemA}
           keyExtractor={item => item.id}/>
-        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'38%'}}>
+        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'32%'}}>
           <Text style={styles.subtitleb}> History</Text>
           <FlatList
             style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth}}
@@ -225,22 +228,22 @@ const styles= StyleSheet.create({
   },
   subtitlea:{
     flex:1,
-    fontSize: 18,
+    fontSize: 20,
     fontWeight:'bold',
     marginHorizontal:10
   },
   subtitleb:{
-    fontSize: 18,
+    fontSize: 20,
     fontWeight:'bold',
     marginHorizontal:10
   },
   subtitle1:{
     flex:1,
-    fontSize: 16,
+    fontSize: 18,
     marginHorizontal:10
   },
   subtitle2:{
-    fontSize: 16,
+    fontSize: 18,
     marginHorizontal:10
   },
   image:{
@@ -257,13 +260,13 @@ const styles= StyleSheet.create({
   name:{
     alignSelf:'center',
     fontWeight:"bold",
-    fontSize: 14,
+    fontSize: 16,
   },
   name2:{
     width:'30%',
     alignSelf:'center',
     fontWeight:"bold",
-    fontSize: 16,
+    fontSize: 14,
   },
 })
 
