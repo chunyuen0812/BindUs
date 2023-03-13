@@ -1,10 +1,36 @@
-import { Image,FlatList, StyleSheet, Text, View } from 'react-native';
+import { Image,FlatList, StyleSheet, Text, View, Dimensions } from 'react-native';
 import{ NavBar, Button} from 'galio-framework';
 import React, { Component } from 'react';
-import ProgressBar from 'react-native-progress/Bar'; //npm install react-native-progress --save
+import ProgressBar from 'react-native-progress/Bar'; 
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+//npm install react-native-swiper-flatlist --save
+//npm install react-native-progress --save
 // fetch group info from db
 
-const Target=100000;
+let n=0;
+
+const STAGE=[
+{
+    id:'1',
+    goal: 4000,
+    date:'10/02/2023',
+},
+{
+    id:'2',
+    goal: 3000,
+    date:'20/02/2023',
+},
+{
+    id:'3',
+    goal: 2000,
+    date:'07/03/2023',
+},
+{
+    id:'4',
+    goal: 1000,
+    date:'20/03/2023',
+},
+];
 
 const DATA = [
   {
@@ -36,10 +62,30 @@ const DATA = [
   },
 ];
 
-const sum = DATA.reduce((accumulator, object) => {
+const sumamount = DATA.reduce((accumulator, object) => {
+    console.log(accumulator + object.Amount)
   return accumulator + object.Amount;
 }, 0);
 
+const Target = STAGE.reduce((accumulator, object) => {
+    console.log(accumulator + object.goal)
+    return accumulator + object.goal;
+  }, 0);
+
+function stageprogress(n){
+    let x=0;
+    x= sumamount;
+    for (let i = 0; i <= n; i++) {
+        x-=STAGE[i].goal;
+      }
+    x = x+STAGE[n].goal;
+      console.log(x);
+    if(x>=STAGE[n].goal){
+        return STAGE[n].goal;
+    } else{
+        return x
+    }
+}
 
 const ItemA = ({id, name, profpic, Amount}) => {
   return(
@@ -68,6 +114,27 @@ const ItemB = ({id, name, profpic,payment, date, time}) => {
   
 };
 
+const windowWidth = Dimensions.get('window').width-20;
+
+const renderStage=({item, index})=> {
+    return(
+        <View>
+            <View style={{flexDirection:'row', margin:5, borderTopWidth:StyleSheet.hairlineWidth}}>
+                <Text style={styles.subtitle1}> Stage: {item.id} </Text>
+                <Text style={styles.subtitle2}> ${stageprogress(index)}/ ${item.goal}</Text>
+                <Text style={styles.subtitle2}> {Math.round(stageprogress(index)/item.goal*100)}%</Text>
+            </View>
+            <View style={{margin:5,marginBottom:10, justifyContent:'space-around', borderBottomWidth:StyleSheet.hairlineWidth}}>
+                <ProgressBar style={{margin:5, alignSelf:'center'}} color={'lightblue'} progress={stageprogress(index)/item.goal} width={windowWidth}/>
+                <View style={{flexDirection:'row',marginVertical:5}}>
+                    <Text style={styles.subtitle1}> End Date:</Text>
+                    <Text style={styles.subtitle2}>{item.date}</Text>
+                </View>
+            </View>
+        </View>
+    );
+}
+
 const renderItemA = ({ item }) => <ItemA 
   id={item.id}
   profpic={item.profpic} 
@@ -83,7 +150,7 @@ const renderItemA = ({ item }) => <ItemA
   date={item.date}
   time={item.time}
   />;
-class GroupPage extends Component {
+class GrouplongPage extends Component {
 
   render(
   ) {   
@@ -101,16 +168,15 @@ class GroupPage extends Component {
         </View>
         <Text style={styles.subtitleb}> Goal Progress:</Text>
         <View style={{flexDirection:'row'}}>
-          <Text style={styles.subtitle1}> ${sum}/ ${Target}</Text>
-          <Text style={styles.subtitle2}> {Math.round(sum/Target*100)}%</Text>
+          <Text style={styles.subtitle1}> ${sumamount}/ ${Target}</Text>
+          <Text style={styles.subtitle2}> {Math.round(sumamount/Target*100)}%</Text>
         </View>
-        <View style={{margin:5,marginBottom:10, justifyContent:'space-around', borderBottomWidth:StyleSheet.hairlineWidth}}>
-          <ProgressBar style={{margin:5, alignSelf:'center'}} progress={sum/Target} width={300}/>
-          <View style={{flexDirection:'row',marginVertical:5}}>
-            <Text style={styles.subtitle1}> End Date:</Text>
-            <Text style={styles.subtitle2}>01/04/2023</Text>
-          </View>
-        </View>
+        <ProgressBar style={{margin:5, alignSelf:'center'}} progress={sumamount/Target} width={windowWidth}/>
+        <SwiperFlatList
+            index={0}
+            data={STAGE}
+            renderItem={renderStage}
+        />
         <View style={{flexDirection:'row'}}>
           <Text style={styles.subtitlea}>Contribution:</Text>
           <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={25} color="lightgreen" iconColor="#fff" style={{ width: 30, height: 30, right: 10 }} onPress={()=>console.log('To contact list')}/>
@@ -121,7 +187,7 @@ class GroupPage extends Component {
           data={DATA}
           renderItem={renderItemA}
           keyExtractor={item => item.id}/>
-        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'40%'}}>
+        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'38%'}}>
           <Text style={styles.subtitleb}> History</Text>
           <FlatList
             style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth}}
@@ -130,11 +196,18 @@ class GroupPage extends Component {
             keyExtractor={item => item.id}
           />
         </View>
-        <Button 
-        size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-        onPress={()=>console.log('deposit')}>
-        Deposit
-        </Button>
+        <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
+            <Button 
+            size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
+            onPress={()=>console.log('deposit')}>
+            Deposit
+            </Button>
+            <Button 
+            size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
+            onPress={()=>console.log('vote')}>
+            Vote
+            </Button>
+        </View>
       </View>
     )
   }
@@ -194,4 +267,4 @@ const styles= StyleSheet.create({
   },
 })
 
-export default GroupPage
+export default GrouplongPage

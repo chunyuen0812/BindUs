@@ -12,6 +12,7 @@ const DATA = [
     title: "Christmas Party",
     description: "ABC",
     grpprogress: 60, 
+    goaltype:'short',
   },
   {
     id: "2",
@@ -19,6 +20,7 @@ const DATA = [
     title: "Grad trip",
     description: "ABC",
     grpprogress: 65,
+    goaltype:'short',
   },
   {
     id: "3",
@@ -26,14 +28,17 @@ const DATA = [
     title: "New shop",
     description: "ABC",
     grpprogress: 35,
+    goaltype:'long',
   },
 ];
 
+const navbutton='Group'
+
 // pixel per item 85p
-const Item = ({id, groupimage, title, description, grpprogress}) => {
+const Item = ({id, groupimage, title, description, grpprogress,goaltype}) => {
   const navigation=useNavigation();
   return (
-    <Pressable onPress={() => {console.log({id});navigation.navigate('Group')}} style={styles.item}>
+    <Pressable onPress={() => {console.log({id});navigation.navigate(navbutton.concat(goaltype))}} style={styles.item}>
       <Image source={groupimage} style={styles.image}/> 
       <View style={styles.grpinfo}>
         <View style={styles.row}>
@@ -57,7 +62,8 @@ id={item.id}
 groupimage={item.groupimage} 
 title={item.title} 
 description={item.description} 
-grpprogress={item.grpprogress} />;
+grpprogress={item.grpprogress}
+goaltype={item.goaltype} />;
 
 class HomePage extends Component {
   constructor(props) {

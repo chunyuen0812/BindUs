@@ -8,7 +8,8 @@ import Login from '../src/pages/login';
 import home from '../src/pages/home';
 import Profile from '../src/pages/profile';
 import SignUp from './pages/login/signup';
-import Group from './pages/group';
+import GroupshortPage from './pages/group/groupshort';
+import GrouplongPage from './pages/group/grouplong';
 import Notice from './pages/group/notice';
 import CreateGroup from './pages/creategroup';
 
@@ -42,7 +43,8 @@ function Nav() {
         <Stack.Screen name="Profile" component={MainTabs}/>
         <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Group" component={Group}/>
+        <Stack.Screen name="Groupshort" component={GroupshortPage}/>
+        <Stack.Screen name="Grouplong" component={GrouplongPage}/>
         <Stack.Screen name="Notice" component={Notice}/>
         <Stack.Screen name="CreateGroup" component={CreateGroup}/>
       </Stack.Navigator>
