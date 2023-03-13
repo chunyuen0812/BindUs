@@ -80,7 +80,7 @@ class Index extends Component {
                             >
                               $ XXX
                             </Text>
-                            <Text size={12} color={argonTheme.COLORS.TEXT}>Blance</Text>
+                            <Text size={12} color={argonTheme.COLORS.TEXT}>Balance</Text>
                           </Block>
                           <Block middle>
                             <Text
@@ -167,7 +167,6 @@ class Index extends Component {
                 </ImageBackground>
               </Block>
               </Block>
-
         );
     }
 }

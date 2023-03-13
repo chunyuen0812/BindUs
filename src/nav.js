@@ -7,7 +7,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Login from '../src/pages/login';
 import home from '../src/pages/home';
 import Profile from '../src/pages/profile';
-import SignUp from './pages/login/signup'
+import SignUp from './pages/login/signup';
+import GroupshortPage from './pages/group/groupshort';
+import GrouplongPage from './pages/group/grouplong';
+import Notice from './pages/group/notice';
+import CreateGroup from './pages/creategroup';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -36,9 +40,13 @@ function Nav() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Login">
         <Stack.Screen name="Home" component={MainTabs}/>
-        <Stack.Screen name="Profile" component={Profile}/>
+        <Stack.Screen name="Profile" component={MainTabs}/>
         <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
+        <Stack.Screen name="Groupshort" component={GroupshortPage}/>
+        <Stack.Screen name="Grouplong" component={GrouplongPage}/>
+        <Stack.Screen name="Notice" component={Notice}/>
+        <Stack.Screen name="CreateGroup" component={CreateGroup}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

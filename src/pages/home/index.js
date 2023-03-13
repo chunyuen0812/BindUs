@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable } from "react-native";
-import {Button} from 'galio-framework';
+import {NavBar,Button} from 'galio-framework';
 import {SearchBar, ListItem } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
  // npm this package for search bar functions
 
 const DATA = [
@@ -11,6 +12,7 @@ const DATA = [
     title: "Christmas Party",
     description: "ABC",
     grpprogress: 60, 
+    goaltype:'short',
   },
   {
     id: "2",
@@ -18,6 +20,7 @@ const DATA = [
     title: "Grad trip",
     description: "ABC",
     grpprogress: 65,
+    goaltype:'short',
   },
   {
     id: "3",
@@ -25,80 +28,22 @@ const DATA = [
     title: "New shop",
     description: "ABC",
     grpprogress: 35,
+    goaltype:'long',
   },
-{
-  id: "4",
-  groupimage: require('../../res/christmasparty.jpg'),
-  title: "Christmas Party",
-  description: "ABC",
-  grpprogress: 60, 
-},
-{
-  id: "5",
-  groupimage: require('../../res/gradtrip.jpg'),
-  title: "Grad trip",
-  description: "ABC",
-  grpprogress: 65,
-},
-{
-  id: "6",
-  groupimage: require('../../res/igshop.jpg'),
-  title: "New shop",
-  description: "ABC",
-  grpprogress: 35,
-},
-{
-  id: "7",
-  groupimage: require('../../res/christmasparty.jpg'),
-  title: "Christmas Party",
-  description: "ABC",
-  grpprogress: 60, 
-},
-{
-  id: "8",
-  groupimage: require('../../res/gradtrip.jpg'),
-  title: "Grad trip",
-  description: "ABC",
-  grpprogress: 65,
-},
-{
-  id: "9",
-  groupimage: require('../../res/igshop.jpg'),
-  title: "New shop",
-  description: "ABC",
-  grpprogress: 35,
-},
-{
-  id: "10",
-  groupimage: require('../../res/christmasparty.jpg'),
-  title: "Christmas Party",
-  description: "ABC",
-  grpprogress: 60, 
-},
-{
-  id: "11",
-  groupimage: require('../../res/gradtrip.jpg'),
-  title: "Grad trip",
-  description: "ABC",
-  grpprogress: 65,
-},
-{
-  id: "12",
-  groupimage: require('../../res/igshop.jpg'),
-  title: "New shop",
-  description: "ABC",
-  grpprogress: 35,
-},
 ];
+
+const navbutton='Group'
+
 // pixel per item 85p
-const Item = ({id, groupimage, title, description, grpprogress}) => {
+const Item = ({id, groupimage, title, description, grpprogress,goaltype}) => {
+  const navigation=useNavigation();
   return (
-    <Pressable onPress={()=>console.log('navigate')} style={styles.item}>
+    <Pressable onPress={() => {console.log({id});navigation.navigate(navbutton.concat(goaltype))}} style={styles.item}>
       <Image source={groupimage} style={styles.image}/> 
       <View style={styles.grpinfo}>
         <View style={styles.row}>
           <Text numberOfLines={1} style={styles.name}>
-          {title}:{id}
+          {title}: {id}
           </Text>
           <Text>
           Group progress: {grpprogress}% 
@@ -117,7 +62,8 @@ id={item.id}
 groupimage={item.groupimage} 
 title={item.title} 
 description={item.description} 
-grpprogress={item.grpprogress} />;
+grpprogress={item.grpprogress}
+goaltype={item.goaltype} />;
 
 class HomePage extends Component {
   constructor(props) {
@@ -143,6 +89,7 @@ class HomePage extends Component {
   render() {
     return (
       <View style={{flexDirection:'column'}}> 
+        <NavBar style={styles.header} titleStyle={styles.title} title="Home" />
         <View style={styles.container}>
           <SearchBar
             placeholder="Search Here..."
@@ -153,7 +100,7 @@ class HomePage extends Component {
             autoCorrect={false}
           />
         </View>
-        <View>
+        <View style={{height:'68%'}}>
             <FlatList
             data={this.state.data}
             renderItem={renderItem}
@@ -161,12 +108,10 @@ class HomePage extends Component {
             keyExtractor={(item) => item.id}
             />    
         </View>
-        <View>
-        <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={30} 
-          color="green" iconColor="#fff" style={styles.plusbutton}
-          onPress={() => {
-          console.log('Create New Group!');
-          }}
+        <View style={{justifyContent:'center', flexDirection:'row'}}>
+        <Button opacity={0.5} onlyIcon icon="plus" iconFamily="antdesign" iconSize={30} 
+          color="success" iconColor="#fff" style={styles.plusbutton}
+          onPress={() => {this.props.navigation.navigate('CreateGroup')}}
           /> 
         </View>
       </View>
@@ -175,6 +120,15 @@ class HomePage extends Component {
 }
 
 const styles = StyleSheet.create({
+  header:{
+    marginTop: 25,
+    backgroundColor:'lightgrey',
+    alignItems:'center',
+  },
+  title:{
+    fontSize: 32,
+    fontWeight:'bold'
+  },
   image:{
     alignItems:"center",
     justifyContent:"center",
@@ -188,16 +142,13 @@ const styles = StyleSheet.create({
     resizeMode: "center",
   },
   container: {
-    marginTop: 25,
     padding: 1,
   },
   listcontainer:{
     flexGrow: 1,
-    backgroundColor: 'grey',
   },
   grpinfo:{
     flex:1, 
-    backgroundColor:"lightskyblue",
   },
   name:{
     flex: 1,
@@ -214,7 +165,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   item: {
-    backgroundColor:"lightgreen",
     height: 75,
     flexDirection: "row",
     padding: 10,
@@ -224,15 +174,9 @@ const styles = StyleSheet.create({
     borderColor:"lightgray",
   },
   plusbutton:{
-    borderWidth:1,
-    borderColor:'rgba(0,0,0,0.2)',
     alignItems:'center',
-    width:70,
-    position: 'absolute',                                          
-    bottom: 15,
-    right: 15,
-    height:70,
-    backgroundColor:'green',
+    width:65,                                         
+    height:65,
     borderRadius:100,
   },
 });
