@@ -33,12 +33,12 @@ const DATA = [
 const Item = ({id, groupimage, title, description, grpprogress}) => {
   const navigation=useNavigation();
   return (
-    <Pressable onPress={() => navigation.navigate('Group')} style={styles.item}>
+    <Pressable onPress={() => {console.log({id});navigation.navigate('Group')}} style={styles.item}>
       <Image source={groupimage} style={styles.image}/> 
       <View style={styles.grpinfo}>
         <View style={styles.row}>
           <Text numberOfLines={1} style={styles.name}>
-          {title}:{id}
+          {title}: {id}
           </Text>
           <Text>
           Group progress: {grpprogress}% 
@@ -94,7 +94,7 @@ class HomePage extends Component {
             autoCorrect={false}
           />
         </View>
-        <View>
+        <View style={{height:'68%'}}>
             <FlatList
             data={this.state.data}
             renderItem={renderItem}
@@ -102,9 +102,9 @@ class HomePage extends Component {
             keyExtractor={(item) => item.id}
             />    
         </View>
-        <View>
-        <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={30} 
-          color="green" iconColor="#fff" style={styles.plusbutton}
+        <View style={{justifyContent:'center', flexDirection:'row'}}>
+        <Button opacity={0.5} onlyIcon icon="plus" iconFamily="antdesign" iconSize={30} 
+          color="success" iconColor="#fff" style={styles.plusbutton}
           onPress={() => {this.props.navigation.navigate('CreateGroup')}}
           /> 
         </View>
@@ -168,15 +168,9 @@ const styles = StyleSheet.create({
     borderColor:"lightgray",
   },
   plusbutton:{
-    borderWidth:1,
-    borderColor:'rgba(0,0,0,0.2)',
     alignItems:'center',
-    width:70,
-    position: 'absolute',                                          
-    bottom: 15,
-    right: 15,
-    height:70,
-    backgroundColor:'green',
+    width:65,                                         
+    height:65,
     borderRadius:100,
   },
 });

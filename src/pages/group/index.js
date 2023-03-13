@@ -4,8 +4,7 @@ import React, { Component } from 'react';
 import ProgressBar from 'react-native-progress/Bar'; //npm install react-native-progress --save
 // fetch group info from db
 
-const Target=10000;
-
+const Target=100000;
 
 const DATA = [
   {
@@ -93,7 +92,7 @@ class GroupPage extends Component {
         <View>
           <NavBar style={styles.header} titleStyle={styles.title} back 
           right={
-          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>console.log('request page')}/>
+          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); this.props.navigation.navigate('Notice')}}/>
           } 
           title="Group Name" 
           onLeftPress={()=>this.props.navigation.navigate('Home')} 
@@ -117,12 +116,12 @@ class GroupPage extends Component {
           <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={25} color="lightgreen" iconColor="#fff" style={{ width: 30, height: 30, right: 10 }} onPress={()=>console.log('To contact list')}/>
         </View>
         <FlatList
-          style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth}}
+          style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey'}}
           horizontal
           data={DATA}
           renderItem={renderItemA}
           keyExtractor={item => item.id}/>
-        <View style={{flexDirection:'column', margin:5,}}>
+        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'40%'}}>
           <Text style={styles.subtitleb}> History</Text>
           <FlatList
             style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth}}

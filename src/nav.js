@@ -9,6 +9,7 @@ import home from '../src/pages/home';
 import Profile from '../src/pages/profile';
 import SignUp from './pages/login/signup';
 import Group from './pages/group';
+import Notice from './pages/group/notice';
 import CreateGroup from './pages/creategroup';
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +43,7 @@ function Nav() {
         <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="Group" component={Group}/>
+        <Stack.Screen name="Notice" component={Notice}/>
         <Stack.Screen name="CreateGroup" component={CreateGroup}/>
       </Stack.Navigator>
     </NavigationContainer>

@@ -71,7 +71,7 @@ class CreateGroup extends Component {
 
    render(){
     return (
-    <ScrollView>
+    <View>
         <NavBar style={styles.header} titleStyle={styles.title} back  title="Create Group" 
         onLeftPress={()=>this.props.navigation.navigate('Home')} leftStyle={{width:30,height:30}} leftIconSize={30}
         />
@@ -84,15 +84,17 @@ class CreateGroup extends Component {
                 <Text style={styles.subtitle}>Members:</Text>
                 <Button style={{alignSelf:'flex-end'}} onPress={()=>console.log('To Contact list')} size={'small'}> Add </Button>
             </View>
-            <FlatList 
-            data={DATA}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}/>          
+            <View style={{borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'45%'}}>
+              <FlatList 
+              data={DATA}
+              renderItem={renderItem}
+              keyExtractor={item => item.id}/>  
+            </View>     
             <View style={{alignItems:'center'}}>
                 <Button color="#5BC0DE" round style={{width:"40%"}} onPress={this.SignUp}>Submit</Button>
             </View>
         </View>
-    </ScrollView>
+    </View>
     )
   }
 }
