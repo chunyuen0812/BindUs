@@ -18,7 +18,7 @@ const Item = ({id, initiate,votetype, info, votecount, voteflag}) => {
       return(
         <View style={styles.votecontainer}>
           <Text style= {styles.votetitle}>{votetype} : {info}</Text>
-          <View style={{flexDirection:'row', marginVertical:5}}>
+          <View style={{flexDirection:'row',justifyContent:'space-between', marginHorizontal:10}}>
             <Text style= {styles.name}>Initiator : {initiate}</Text>
             <Text style={styles.subtitle}>Current vote count: {votecount}</Text>
           </View>
@@ -78,7 +78,6 @@ const styles= StyleSheet.create({
       fontSize:20,
     },
     name:{
-      flex:1,
       fontSize:18,
     },
     subtitle:{

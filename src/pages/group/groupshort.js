@@ -92,7 +92,7 @@ class GroupshortPage extends Component {
         <View>
           <NavBar style={styles.header} titleStyle={styles.title} back 
           title="Group Name" 
-          onLeftPress={()=>this.props.navigation.navigate('Home')} 
+          onLeftPress={()=>this.props.navigation.goBack()} 
           leftStyle={{width:30,height:30}} leftIconSize={30}
           />
         </View>
@@ -101,14 +101,19 @@ class GroupshortPage extends Component {
           <Text style={styles.subtitle1}> ${sum}/ ${Target}</Text>
           <Text style={styles.subtitle2}> {Math.round(sum/Target*100)}%</Text>
         </View>
-        <View style={{margin:5,marginBottom:10, justifyContent:'space-around', borderBottomWidth:StyleSheet.hairlineWidth}}>
+        <View style={{margin:5, justifyContent:'space-around', borderBottomWidth:StyleSheet.hairlineWidth}}>
           <ProgressBar style={{margin:5, alignSelf:'center'}} progress={sum/Target} width={300}/>
           <View style={{flexDirection:'row',marginVertical:5}}>
             <Text style={styles.subtitle1}> End Date:</Text>
             <Text style={styles.subtitle2}>01/04/2023</Text>
           </View>
         </View>
-        <View style={{flexDirection:'row'}}>
+        <View style={{flexDirection:'column',margin:5}}>
+          <Text style={styles.subtitleb}>Group description:</Text>
+          <Text  numberOfLines={1} style={styles.subtitle2}>kashdiabdukabvnbm,nmnbvxchvjbkhgfxcvhbjnkjbhgcfjhgfhjkhgfhjklhghjkhgfhjkhjgnbfghjkhgfhjvdvajdhvadvjhdvajdj</Text>
+          <Text style={styles.hyperlink} onPress={()=>console.log('group description')}>Read more...</Text>
+        </View>
+        <View style={{flexDirection:'row',borderTopWidth:StyleSheet.hairlineWidth, height:30}}>
           <Text style={styles.subtitlea}>Contribution:</Text>
           <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={25} color="lightgreen" iconColor="#fff" style={{ width: 30, height: 30, right: 10 }} onPress={()=>console.log('To contact list')}/>
         </View>
@@ -118,7 +123,7 @@ class GroupshortPage extends Component {
           data={DATA}
           renderItem={renderItemA}
           keyExtractor={item => item.id}/>
-        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'40%'}}>
+        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'38%'}}>
           <Text style={styles.subtitleb}> History</Text>
           <FlatList
             style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth}}
@@ -129,7 +134,7 @@ class GroupshortPage extends Component {
         </View>
         <Button 
         size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-        onPress={()=>console.log('deposit')}>
+        onPress={()=>this.props.navigation.navigate('Deposit')}>
         Deposit
         </Button>
       </View>
@@ -189,6 +194,12 @@ const styles= StyleSheet.create({
     fontWeight:"bold",
     fontSize: 16,
   },
+  hyperlink:{
+    color:'blue',
+    fontSize: 16,
+    marginHorizontal:10,
+    textDecorationLine: 'underline'
+  }
 })
 
 export default GroupshortPage

@@ -165,7 +165,7 @@ class GrouplongPage extends Component {
           <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); this.props.navigation.navigate('Notice')}}/>
           } 
           title="Group Name" 
-          onLeftPress={()=>this.props.navigation.navigate('Home')} 
+          onLeftPress={()=>this.props.navigation.goBack()} 
           leftStyle={{width:30,height:30}} leftIconSize={30}
           />
         </View>
@@ -180,7 +180,12 @@ class GrouplongPage extends Component {
             data={STAGE}
             renderItem={renderStage}
         />
-        <View style={{flexDirection:'row'}}>
+        <View style={{flexDirection:'column',marginHorizontal:5}}>
+          <Text style={styles.subtitleb}>Group description:</Text>
+          <Text  numberOfLines={1} style={styles.subtitle2}>kashdiabdukabvnbm,nmnbvxchvjbkhgfxcvhbjnkjbhgcfjhgfhjkhgfhjklhghjkhgfhjkhjgnbfghjkhgfhjvdvajdhvadvjhdvajdj</Text>
+          <Text style={styles.hyperlink} onPress={()=>console.log('group description')}>Read more...</Text>
+        </View>
+        <View style={{flexDirection:'row',borderTopWidth:StyleSheet.hairlineWidth, height:30,margin:5}}>
           <Text style={styles.subtitlea}>Contribution:</Text>
           <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={25} color="lightgreen" iconColor="#fff" style={{ width: 30, height: 30, right: 10 }} onPress={()=>console.log('To contact list')}/>
         </View>
@@ -190,7 +195,7 @@ class GrouplongPage extends Component {
           data={DATA}
           renderItem={renderItemA}
           keyExtractor={item => item.id}/>
-        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'32%'}}>
+        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'26%'}}>
           <Text style={styles.subtitleb}> History</Text>
           <FlatList
             style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth}}
@@ -202,12 +207,12 @@ class GrouplongPage extends Component {
         <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
             <Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>console.log('deposit')}>
+            onPress={()=>this.props.navigation.navigate('Deposit')}>
             Deposit
             </Button>
             <Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>console.log('vote')}>
+            onPress={()=>this.props.navigation.navigate('Vote')}>
             Vote
             </Button>
         </View>
@@ -268,6 +273,12 @@ const styles= StyleSheet.create({
     fontWeight:"bold",
     fontSize: 14,
   },
+  hyperlink:{
+    color:'blue',
+    fontSize: 16,
+    marginHorizontal:10,
+    textDecorationLine: 'underline'
+  }
 })
 
 export default GrouplongPage

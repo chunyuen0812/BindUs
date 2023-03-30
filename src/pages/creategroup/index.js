@@ -1,6 +1,8 @@
-import { ScrollView,Alert, FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { Pressable,Alert, FlatList, Image, StyleSheet, Text, View } from 'react-native'
 import {NavBar, Input,Button} from 'galio-framework';
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react';
+import DateTimePicker,{ DateTimePickerAndroid,RNDateTimePicker} from '@react-native-community/datetimepicker';
+import { useNavigation } from '@react-navigation/native';
 
 const DATA = [
     {
@@ -25,19 +27,20 @@ const DATA = [
 
   const Item = ({id, name, profpic, phoneno}) => {
     return(
-    <View style={styles.membercontainer}>
+    <Pressable style={styles.membercontainer} onPress={()=>console.log({name},' profile page')}>
         <Image source={profpic} style={styles.image}/>
         <View style={{flexDirection:'column'}}>
             <View style={{flexDirection:'row',flex:1, width:300}}>
                 <Text style={styles.name}>{name}</Text>
-                <Text>{phoneno}</Text>
+                <Text style={{alignSelf:'center'}}>{phoneno}</Text>
             </View>
             <Text numberOfLines={1} style={{fontSize:15, color:'grey'}}>{id}</Text>
         </View>
-    </View>
+    </Pressable>
     );
     
   };
+
 
   const renderItem = ({ item }) => <Item 
     id={item.id}
@@ -45,59 +48,81 @@ const DATA = [
     name={item.name}
     phoneno={item.phoneno} />;
 
-class CreateGroup extends Component {
-    state = { 
-        GrpName: "",
+  const state = { 
+      GrpName: "",
 	    GrpDescript: "",
 	    GoalTarget: "",
 	    GoalTimeLimit: "",
 	    Members: 0,
-     }; 
+     };
+    
+function CreateGroup () {
+    
 
-     SignUp = () => {
-        // 註冊帳號
-        const { GrpName,GrpDescript,GoalTarget,GoalTimeLimit,Members} = this.state;
-        // if not any input
-        if (!GrpName || !GrpDescript || !Members || !GoalTimeLimit || !GoalTarget) {
-          Alert.alert('Error', 'Please enter all.');
-          return;
-        } else {
-            console.log('Check flags');
-            console.log('Input to database');
-           this.props.navigation.navigate('Home');
+const navigation=useNavigation();
+const [date, setDate] = useState(new Date());
+const [show, setShow] = useState(false);
+const onChange = (event, selectedDate) => {
+          const currentDate = selectedDate;
+          setShow(false);
+          setDate(currentDate);
         };
-        
-    };
-
-   render(){
+const showDatepicker = () => {
+          DateTimePickerAndroid.open({
+            value: date,
+            onChange,
+            mode: 'date',
+            dateFormat:"dayofweek day month",
+          });
+        };
+const SignUp = () => {
+          // 註冊帳號
+          const { GrpName,GrpDescript,GoalTarget,GoalTimeLimit,Members} = state;
+          // if not any input
+          if (!GrpName || !GrpDescript || !Members || !GoalTimeLimit || !GoalTarget) {
+            Alert.alert('Error', 'Please enter all.');
+            console.log({GrpName},{GrpDescript},{Members},{GoalTarget},{GoalTimeLimit})
+            return;
+          } else {
+              console.log('Check flags');
+              console.log('Input to database');
+              Alert.alert({GrpName},{GrpDescript},{Members},{GoalTarget},{GoalTimeLimit})
+             navigation.navigate('Home');
+          };};   
+      
     return (
     <View>
         <NavBar style={styles.header} titleStyle={styles.title} back  title="Create Group" 
-        onLeftPress={()=>this.props.navigation.navigate('Home')} leftStyle={{width:30,height:30}} leftIconSize={30}
+        onLeftPress={()=>navigation.goBack()} leftStyle={{width:30,height:30}} leftIconSize={30}
         />
         <View style={styles.container}>
-            <Input style={{width:"90%",marginLeft: 20}} placeholder="Group Name" onChangeText={(text) => this.setState({ GrpName: text })}/>
-            <Input style={{width:"90%",marginLeft: 20}} placeholder="Description" onChangeText={(text) => this.setState({ GrpDescript: text })}/>
-            <Input style={{width:"90%",marginLeft: 20}} placeholder="Goal Target Amount" type={'number-pad'} onChangeText={(text) => this.setState({ GoalTarget: text })}/>
-            <Input style={{width:"90%",marginLeft: 20}} placeholder="Time Limit/ End Date" type={'datetime'} onChangeText={(text) => this.setState({ GoalTimeLimit: text })}/>
-            <View style={{flexDirection:'row', margin:5, justifyContent:'space-evenly',}}>
-                <Text style={styles.subtitle}>Members:</Text>
-                <Button style={{alignSelf:'flex-end'}} onPress={()=>console.log('To Contact list')} size={'small'}> Add </Button>
+            <Input style={{width:"90%",marginLeft: 20}} placeholder="Group Name" onChangeText={(text) =>{state.GrpName=text}}/>
+            <Input style={{width:"90%",marginLeft: 20}} placeholder="Description" onChangeText={(text) => {state.GrpDescript=text}}/>
+            <Input style={{width:"90%",marginLeft: 20}} placeholder="Goal Target Amount" type={'number-pad'} onChangeText={(text) => { state.GoalTarget=text }}/>           
+            <View style={{flexDirection:'row', marginHorizontal:10}}>
+              <Text style={{alignSelf:'center', fontSize:15, fontWeight:'bold'}}>Goal End Date: </Text>
+              <Text style={{alignSelf:'center'}}>{date.toDateString()}</Text>
+              <Button round style={{alignSelf:'center', height:25, width:65}} color='success' onPress={showDatepicker}>Choose</Button>
+              <Button round color='success' style={{alignSelf:'center',width:65, height:25}} onPress={()=>{state.GoalTimeLimit=date.toDateString()}}>Confirm</Button>
             </View>
-            <View style={{borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'45%'}}>
+            <View style={{flexDirection:'row', margin:5, justifyContent:'space-around',}}>
+                <Text style={styles.subtitle}>Members:</Text>
+                <Button onPress={()=>{ state.Members+=1; console.log('To Contact list',JSON.stringify(state.Members));}} size={'small'}> Add </Button>
+            </View>
+            <View style={{borderWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'42%'}}>
               <FlatList 
               data={DATA}
               renderItem={renderItem}
               keyExtractor={item => item.id}/>  
             </View>     
             <View style={{alignItems:'center'}}>
-                <Button color="#5BC0DE" round style={{width:"40%"}} onPress={this.SignUp}>Submit</Button>
+                <Button color="#5BC0DE" round style={{width:"40%"}} onPress={SignUp}>Submit</Button>
             </View>
         </View>
     </View>
     )
   }
-}
+
 
 const styles= StyleSheet.create({
     membercontainer:{
@@ -123,6 +148,7 @@ const styles= StyleSheet.create({
         flex: 1,
         fontWeight:"bold",
         fontSize: 18,
+        alignSelf:'center'
       },
     container: {
         marginTop:5,
@@ -139,7 +165,7 @@ const styles= StyleSheet.create({
     },
     subtitle:{
         alignSelf:'center',
-        fontSize: 20,
+        fontSize: 18,
     },
   })
 
