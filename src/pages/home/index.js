@@ -53,7 +53,7 @@ const Item = ({gid, groupimage, title, description, grpprogress,goaltype,pending
 
   if (pending==1){
     return (
-      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton1.concat(goaltype),{groupname:title, goaltype:goaltype})}} style={styles.item}>
+      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton1,{groupname:title, goaltype:goaltype})}} style={styles.item}>
         <Image source={groupimage} style={styles.image}/> 
         <View style={styles.grpinfo}>
           <View style={styles.row}>
@@ -72,7 +72,7 @@ const Item = ({gid, groupimage, title, description, grpprogress,goaltype,pending
     );
   }else if(pending==0){
     return (
-      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton2.concat(goaltype),{groupname:title, goaltype:goaltype})}} style={styles.item}>
+      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton2,{groupname:title, goaltype:goaltype})}} style={styles.item}>
         <Image source={groupimage} style={styles.image}/> 
         <View style={styles.grpinfo}>
           <View style={styles.row}>

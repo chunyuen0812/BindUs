@@ -8,10 +8,8 @@ import Login from '../src/pages/login';
 import home from '../src/pages/home';
 import Profile from '../src/pages/profile';
 import SignUp from './pages/login/signup';
-import GroupshortPage from './pages/group/groupshort';
-import GrouplongPage from './pages/group/grouplong';
-import Pendinglong from './pages/group/pendinglong';
-import Pendingshort from './pages/group/pendingshort';
+import GroupPage from './pages/group/grouppage';
+import Pending from './pages/group/pending';
 import Notice from './pages/group/notice';
 import CreateGroup from './pages/creategroup';
 import Deposit from './pages/group/deposit';
@@ -48,10 +46,8 @@ function Nav() {
         <Stack.Screen name="Profile" component={MainTabs}/>
         <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Groupshort" component={GroupshortPage}/>
-        <Stack.Screen name="Grouplong" component={GrouplongPage}/>
-        <Stack.Screen name="Pendinglong" component={Pendinglong}/>
-        <Stack.Screen name="Pendingshort" component={Pendingshort}/>
+        <Stack.Screen name="Group" component={GroupPage}/>
+        <Stack.Screen name="Pending" component={Pending}/>
         <Stack.Screen name="Notice" component={Notice}/>
         <Stack.Screen name="Deposit" component={Deposit}/>
         <Stack.Screen name="Vote" component={Vote}/>
