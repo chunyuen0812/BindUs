@@ -83,7 +83,7 @@ const windowWidth = Dimensions.get('window').width-20;
 const renderStage=({item, index})=> {
     return(
         <View>
-            <View style={{flexDirection:'row', margin:5, borderTopWidth:StyleSheet.hairlineWidth}}>
+            <View style={{flexDirection:'row', margin:5}}>
               <Text style={styles.subtitle1}> Stage: {item.id}</Text>
               <Text style={styles.subtitle2}>{item.id}/{STAGE.length}</Text>
             </View>
@@ -109,6 +109,8 @@ const renderItemA = ({ item }) => <ItemA
   Uservote={item.Uservote}
   />;
 
+  const windowHeight = Dimensions.get('window').height; 
+
 const Pending=({route})=> {
  const navigation=useNavigation();
  var goaltype=route.params.goaltype;
@@ -117,7 +119,7 @@ const Pending=({route})=> {
     histheight='41%'
   }
     return (
-      <View style={{flexDirection:'column'}}>
+      <View style={{flexDirection:'column', height:windowHeight}}>
         <View>
           <NavBar style={styles.header} titleStyle={styles.title} back 
           title={route.params.groupname}  
@@ -125,17 +127,21 @@ const Pending=({route})=> {
           leftStyle={{width:30,height:30}} leftIconSize={30}
           />
         </View>
-        <Text style={styles.subtitleb}> Goal Progress:</Text>
-        <View style={{flexDirection:'row'}}>
-          <Text style={styles.subtitle1}> $0/ ${Target}</Text>
-          <Text style={styles.subtitle2}> 0%</Text>
+        <View style={{height:65, borderBottomWidth:StyleSheet.hairlineWidth}}>
+          <Text style={styles.subtitleb}> Goal Progress:</Text>
+          <View style={{flexDirection:'row'}}>
+            <Text style={styles.subtitle1}> $0/ ${Target}</Text>
+            <Text style={styles.subtitle2}> 0%</Text>
+          </View>
+          <ProgressBar style={{margin:5, alignSelf:'center'}} progress={0} width={windowWidth}/>
         </View>
-        <ProgressBar style={{margin:5, alignSelf:'center'}} progress={0} width={windowWidth}/>
-        {goaltype=='long'?<SwiperFlatList
+        <View>
+          {goaltype=='long'?<SwiperFlatList
             index={0}
             data={STAGE}
             renderItem={renderStage}
-        />:null}
+          />:null}
+        </View>
         <View style={{flexDirection:'column',marginHorizontal:5}}>
           <Text style={styles.subtitleb}>Group description:</Text>
           <Text  numberOfLines={1} style={styles.subtitle2}>kashdiabdukabvnbm,nmnbvxchvjbkhgfxcvhbjnkjbhgcfjhgfhjkhgfhjklhghjkhgfhjkhjgnbfghjkhgfhjvdvajdhvadvjhdvajdj</Text>

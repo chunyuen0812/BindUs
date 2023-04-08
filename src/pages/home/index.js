@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable } from "react-native";
+import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable,Dimensions } from "react-native";
 import {NavBar,Button} from 'galio-framework';
 import {SearchBar, ListItem } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
  // npm this package for search bar functions
 
+ const windowHeight = Dimensions.get('window').height; 
 const DATA = [
   {
     gid: "1",
@@ -42,6 +43,7 @@ const DATA = [
     goaltype:'long',
     pending:0
   },
+  
 ];
 
 const navbutton1='Group'
@@ -126,7 +128,7 @@ class HomePage extends Component {
 
   render() {
     return (
-      <View style={{flexDirection:'column'}}> 
+      <View style={{flexDirection:'column', height:windowHeight}}> 
         <NavBar style={styles.header} titleStyle={styles.title} title="Home" />
         <View style={styles.container}>
           <SearchBar
@@ -138,7 +140,7 @@ class HomePage extends Component {
             autoCorrect={false}
           />
         </View>
-        <View style={{height:'68%'}}>
+        <View style={{height:'74%'}}>
             <FlatList
             data={this.state.data}
             renderItem={renderItem}
@@ -146,7 +148,7 @@ class HomePage extends Component {
             keyExtractor={(item) => item.gid}
             />    
         </View>
-        <View style={{justifyContent:'center', flexDirection:'row'}}>
+        <View style={{ flexDirection:'row', position:'absolute', bottom:50, right:5}}>
         <Button opacity={0.5} onlyIcon icon="plus" iconFamily="antdesign" iconSize={30} 
           color="success" iconColor="#fff" style={styles.plusbutton}
           onPress={() => {this.props.navigation.navigate('CreateGroup')}}
