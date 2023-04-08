@@ -11,7 +11,7 @@ const DATA = [
     groupimage: require('../../res/christmasparty.jpg'),
     title: "Christmas Party",
     description: "ABC",
-    grpprogress: 60, 
+    grpprogress: 62, 
     goaltype:'short',
     pending:1
   },
@@ -29,7 +29,7 @@ const DATA = [
     groupimage: require('../../res/igshop.jpg'),
     title: "New shop",
     description: "ABC",
-    grpprogress: 35,
+    grpprogress: 91,
     goaltype:'long',
     pending:1
   },
