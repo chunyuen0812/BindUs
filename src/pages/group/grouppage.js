@@ -156,7 +156,7 @@ const renderItemA = ({ item }) => <ItemA
   date={item.date}
   time={item.time}
   />;
-const GroupPage=({route})=> {
+const GroupPage=({route})=> {//main program---------------------------------------------------------------------
   var goaltype=route.params.goaltype;
   var histheight='27%'
   if (goaltype=='short'){
@@ -221,7 +221,7 @@ const GroupPage=({route})=> {
         <View style={{flexDirection:'row',justifyContent:'space-around', position:'absolute', bottom:5, alignSelf:'center', width:'90%'}}>
             <Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>navigation.navigate('Deposit')}>
+            onPress={()=>navigation.navigate('Deposit',{groupname:route.params.groupname})}>
             Deposit
             </Button>
             <Button 
