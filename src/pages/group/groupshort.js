@@ -2,16 +2,19 @@ import { Image,FlatList, StyleSheet, Text, View } from 'react-native';
 import{ NavBar, Button} from 'galio-framework';
 import React, { Component } from 'react';
 import ProgressBar from 'react-native-progress/Bar'; //npm install react-native-progress --save
+import { useNavigation } from '@react-navigation/native';
 // fetch group info from db
 
-const Target=100000;
+const Target=5000;
+
+const endDate='01/04/2023';
 
 const DATA = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 1',
-    Amount: 2000,
+    Amount: 1200,
     payment: 100,
     date:'13/03/2023',
     time:'21:03'
@@ -20,7 +23,7 @@ const DATA = [
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 2',
-    Amount: 3500,
+    Amount: 1000,
     payment: 200,
     date:'11/03/2023',
     time:'14:23'
@@ -29,7 +32,7 @@ const DATA = [
     id: '58694a0f-3da1-471f-bd96-145571e29d72',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 3',
-    Amount: 3600,
+    Amount: 900,
     payment: 300,
     date:'10/03/2023',
     time:'09:46'
@@ -83,17 +86,18 @@ const renderItemA = ({ item }) => <ItemA
   date={item.date}
   time={item.time}
   />;
-class GroupshortPage extends Component {
-
-  render(
-  ) {   
+const GroupshortPage=({route})=> {
+   const navigation=useNavigation();
     return (
       <View style={{flexDirection:'column'}}>
         <View>
           <NavBar style={styles.header} titleStyle={styles.title} back 
-          title="Group Name" 
-          onLeftPress={()=>this.props.navigation.goBack()} 
+          title={route.params.groupname} 
+          onLeftPress={()=>navigation.navigate('Home')} 
           leftStyle={{width:30,height:30}} leftIconSize={30}
+          right={
+            <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice');navigation.navigate('Notice')}}/>
+            }
           />
         </View>
         <Text style={styles.subtitleb}> Goal Progress:</Text>
@@ -105,7 +109,7 @@ class GroupshortPage extends Component {
           <ProgressBar style={{margin:5, alignSelf:'center'}} progress={sum/Target} width={300}/>
           <View style={{flexDirection:'row',marginVertical:5}}>
             <Text style={styles.subtitle1}> End Date:</Text>
-            <Text style={styles.subtitle2}>01/04/2023</Text>
+            <Text style={styles.subtitle2}>{endDate}</Text>
           </View>
         </View>
         <View style={{flexDirection:'column',margin:5}}>
@@ -132,15 +136,22 @@ class GroupshortPage extends Component {
             keyExtractor={item => item.id}
           />
         </View>
-        <Button 
-        size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-        onPress={()=>this.props.navigation.navigate('Deposit')}>
-        Deposit
-        </Button>
+        <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
+            <Button 
+            size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
+            onPress={()=>navigation.navigate('Deposit')}>
+            Deposit
+            </Button>
+            <Button 
+            size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
+            onPress={()=>navigation.navigate('Vote',{goaltype:route.params.goaltype, progress:sum, target:Target,endDate:endDate, memberCount:DATA.length})}>
+            Vote
+            </Button>
+        </View>
       </View>
     )
   }
-}
+
 
 const styles= StyleSheet.create({
   header:{

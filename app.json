@@ -11,6 +11,14 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+          [
+            "expo-contacts",
+            {
+              "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
+            }
+          ]],
+    
     "updates": {
       "fallbackToCacheTimeout": 0
     },

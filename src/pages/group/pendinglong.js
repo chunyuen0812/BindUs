@@ -1,4 +1,4 @@
-import { Image,FlatList, StyleSheet, Text, View, Dimensions } from 'react-native';
+import { Alert, Image,FlatList, StyleSheet, Text, View, Dimensions } from 'react-native';
 import{ NavBar, Button} from 'galio-framework';
 import React, { Component } from 'react';
 import ProgressBar from 'react-native-progress/Bar'; 
@@ -7,8 +7,9 @@ import { useNavigation } from '@react-navigation/native';
 //npm install react-native-swiper-flatlist --save
 //npm install react-native-progress --save
 // fetch group info from db
-
-let n=0;
+var uservote=0;
+var vote='';
+var groupname='group name'
 
 const STAGE=[
 {
@@ -33,85 +34,45 @@ const STAGE=[
 },
 ];
 
-const endDate=STAGE[STAGE.length-1].date;
-
 const DATA = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 1',
-    Amount: 2000,
-    payment: 100,
-    date:'13/03/2023',
-    time:'21:03'
+    Amount: 0,
+    Uservote:1,
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 2',
-    Amount: 3500,
-    payment: 200,
-    date:'11/03/2023',
-    time:'14:23'
+    Amount: 0,
+    Uservote:2,
   },
   {
     id: '58694a0f-3da1-471f-bd96-145571e29d72',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 3',
-    Amount: 3600,
-    payment: 300,
-    date:'10/03/2023',
-    time:'09:46'
+    Amount: 0,
+    Uservote:0,
   },
 ];
 
-const sumamount = DATA.reduce((accumulator, object) => {
-    console.log(accumulator + object.Amount)
-  return accumulator + object.Amount;
-}, 0);
 
 const Target = STAGE.reduce((accumulator, object) => {
     console.log(accumulator + object.goal)
     return accumulator + object.goal;
   }, 0);
 
-function stageprogress(n){
-    let x=0;
-    x= sumamount;
-    for (let i = 0; i <= n; i++) {
-        x-=STAGE[i].goal;
-      }
-    x = x+STAGE[n].goal;
-      console.log(x);
-    if(x>=STAGE[n].goal){
-        return STAGE[n].goal;
-    } else{
-        return x
-    }
-}
 
-const ItemA = ({id, name, profpic, Amount}) => {
+
+const ItemA = ({id, name, profpic, Uservote}) => {
   return(
   <View style={{margin:5, flexDirection:'column', width:70}}>
-      <Image source={profpic} style={styles.image}/>
+      {Uservote==0?<Image source={profpic} style={styles.image}/>:null}
+      {Uservote==1?<Image source={profpic} style={styles.imageyes}/>:null}
+      {Uservote==2?<Image source={profpic} style={styles.imageno}/>:null}
       <Text numberOfLines={1} style={styles.name}>{name}</Text>
-      <Text numberOfLines={1} style={{color:'green', alignSelf:'center', fontSize:12, margin:1}}>{Math.round(Amount/Target*100)}%</Text>
-  </View>
-  );
-  
-};
-const ItemB = ({id, name, profpic,payment, date, time}) => {
-  return(
-  <View style={{margin:5, flexDirection:'row', borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'lightgrey', justifyContent:'space-around'}}>
-      <Image source={profpic} style={styles.image}/>
-      <View style={{margin:5, flexDirection:'row', justifyContent:'space-around'}}>
-        <Text numberOfLines={1} style={styles.name2}>{name}</Text>
-        <Text numberOfLines={1} style={{color:'green', alignSelf:'center', fontSize:16, margin:10}}>+{payment}</Text>
-      </View>
-      <View style={{flexDirection:'column', justifyContent:'center'}}>
-        <Text style={{fontSize:12,color:'grey'}}>{date}</Text>
-        <Text style={{fontSize:12,color:'grey',alignSelf:'flex-end'}}>{time}</Text>
-      </View>
   </View>
   );
   
@@ -127,11 +88,11 @@ const renderStage=({item, index})=> {
               <Text style={styles.subtitle2}>{item.id}/{STAGE.length}</Text>
             </View>
             <View style={{flexDirection:'row', margin:5}}>
-              <Text style={styles.subtitle1}> ${stageprogress(index)}/ ${item.goal}</Text>
-              <Text style={styles.subtitle2}> {Math.round(stageprogress(index)/item.goal*100)}%</Text>
+              <Text style={styles.subtitle1}> $0/ ${item.goal}</Text>
+              <Text style={styles.subtitle2}> 0%</Text>
             </View>
             <View style={{margin:5,marginBottom:10, borderBottomWidth:StyleSheet.hairlineWidth}}>
-                <ProgressBar style={{margin:5, alignSelf:'center'}} color={'lightblue'} progress={stageprogress(index)/item.goal} width={windowWidth}/>
+                <ProgressBar style={{margin:5, alignSelf:'center'}} color={'lightblue'} progress={0/item.goal} width={windowWidth}/>
                 <View style={{flexDirection:'row'}}>
                     <Text style={styles.subtitle1}> End Date:</Text>
                     <Text style={styles.subtitle2}>{item.date}</Text>
@@ -145,41 +106,29 @@ const renderItemA = ({ item }) => <ItemA
   id={item.id}
   profpic={item.profpic} 
   name={item.name}
-  Amount={item.Amount}
+  Uservote={item.Uservote}
   />;
 
-  const renderItemB = ({ item }) => <ItemB 
-  id={item.id}
-  profpic={item.profpic} 
-  name={item.name}
-  payment={item.payment}
-  date={item.date}
-  time={item.time}
-  />;
-const GrouplongPage=({route})=> {
-  const navigation=useNavigation();   
+const Pendinglong=({route})=> {
+ const navigation=useNavigation();
     return (
       <View style={{flexDirection:'column'}}>
         <View>
           <NavBar style={styles.header} titleStyle={styles.title} back 
           right={
-          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); navigation.navigate('Notice')}}/>
+          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); this.props.navigation.navigate('Notice')}}/>
           } 
-          title={route.params.groupname} 
-          onLeftPress={()=>navigation.navigate('Home')} 
+          title={route.params.groupname}  
+          onLeftPress={()=>navigation.goBack()} 
           leftStyle={{width:30,height:30}} leftIconSize={30}
           />
         </View>
         <Text style={styles.subtitleb}> Goal Progress:</Text>
         <View style={{flexDirection:'row'}}>
-          <Text style={styles.subtitle1}> ${sumamount}/ ${Target}</Text>
-          <Text style={styles.subtitle2}> {Math.round(sumamount/Target*100)}%</Text>
+          <Text style={styles.subtitle1}> $0/ ${Target}</Text>
+          <Text style={styles.subtitle2}> 0%</Text>
         </View>
-        <ProgressBar style={{margin:5, alignSelf:'center'}} progress={sumamount/Target} width={windowWidth}/>
-        <View style={{flexDirection:'row'}}>
-            <Text style={styles.subtitle1}> End Date:</Text>
-            <Text style={styles.subtitle2}>{endDate}</Text>
-          </View>
+        <ProgressBar style={{margin:5, alignSelf:'center'}} progress={0} width={windowWidth}/>
         <SwiperFlatList
             index={0}
             data={STAGE}
@@ -191,8 +140,7 @@ const GrouplongPage=({route})=> {
           <Text style={styles.hyperlink} onPress={()=>console.log('group description')}>Read more...</Text>
         </View>
         <View style={{flexDirection:'row',borderTopWidth:StyleSheet.hairlineWidth, height:30,margin:5}}>
-          <Text style={styles.subtitlea}>Contribution:</Text>
-          <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={25} color="lightgreen" iconColor="#fff" style={{ width: 30, height: 30, right: 10 }} onPress={()=>console.log('To contact list')}/>
+          <Text style={styles.subtitlea}>Members:</Text>
         </View>
         <FlatList
           style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey'}}
@@ -200,26 +148,19 @@ const GrouplongPage=({route})=> {
           data={DATA}
           renderItem={renderItemA}
           keyExtractor={item => item.id}/>
-        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'26%'}}>
-          <Text style={styles.subtitleb}> History</Text>
-          <FlatList
-            style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth}}
-            data={DATA}
-            renderItem={renderItemB}
-            keyExtractor={item => item.id}
-          />
-        </View>
         <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
-            <Button 
-            size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>navigation.navigate('Deposit')}>
-            Deposit
-            </Button>
-            <Button 
-            size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>navigation.navigate('Vote',{goaltype:route.params.goaltype, progress:sumamount, target:Target,endDate:endDate, memberCount:DATA.length})}>
-            Vote
-            </Button>
+          {uservote==0?<Button 
+            size={'small'} color={'success'} round style={{alignSelf:'center', margin:10}}
+            onPress={()=>{uservote=1; vote='yes';console.log(vote); Alert.alert('You have accepted the invitation of '+groupname+'.');navigation.goBack()}}>
+            Yes
+            </Button>:null}
+          {uservote==0?<Button 
+            size={'small'} color="red" round style={{alignSelf:'center', margin:10}}
+            onPress={()=>{uservote=1; vote='no';console.log(vote); Alert.alert('You have declined the invitation of '+groupname+'.');navigation.goBack()}}>
+            No
+            </Button>:null}
+          {vote=='yes'?<Text style={styles.subtitle2}>You have accepted the invitation, now waiting...</Text>:null}
+          {vote=='no'?<Text style={styles.subtitle2}>You have declined the invitation.</Text>:null}     
         </View>
       </View>
     )
@@ -238,12 +179,12 @@ const styles= StyleSheet.create({
   },
   subtitlea:{
     flex:1,
-    fontSize: 18,
+    fontSize: 20,
     fontWeight:'bold',
     marginHorizontal:10
   },
   subtitleb:{
-    fontSize: 18,
+    fontSize: 20,
     fontWeight:'bold',
     marginHorizontal:10
   },
@@ -263,14 +204,36 @@ const styles= StyleSheet.create({
     borderRadius: 30,
     marginVertical: 3,
     marginRight: 10,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor:"lightgray",
+    borderWidth: 2,
+    borderColor:"gray",
+    resizeMode: "center",
+  },
+  imageyes:{
+    alignSelf:'center',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginVertical: 3,
+    marginRight: 10,
+    borderWidth: 2,
+    borderColor:"green",
+    resizeMode: "center",
+  },
+  imageno:{
+    alignSelf:'center',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginVertical: 3,
+    marginRight: 10,
+    borderWidth: 2,
+    borderColor:"red",
     resizeMode: "center",
   },
   name:{
     alignSelf:'center',
     fontWeight:"bold",
-    fontSize: 16,
+    fontSize: 12,
   },
   name2:{
     width:'30%',
@@ -286,4 +249,4 @@ const styles= StyleSheet.create({
   }
 })
 
-export default GrouplongPage
+export default Pendinglong

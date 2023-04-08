@@ -45,7 +45,7 @@ export class Notice extends Component {
     return (
       <View>
         <NavBar style={styles.header} titleStyle={styles.title} back  title="Notice" 
-        onLeftPress={()=>this.props.navigation.navigate('Grouplong')} leftStyle={{width:30,height:30}} leftIconSize={30}
+        onLeftPress={()=>this.props.navigation.goBack()} leftStyle={{width:30,height:30}} leftIconSize={30}
         />
         <View>
             <FlatList 
