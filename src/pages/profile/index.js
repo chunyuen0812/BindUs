@@ -12,8 +12,11 @@ const thumbMeasure = (width - 48 - 32) / 3;
 class Index extends Component {
 
 
-    state = {  } 
+    state = { 
 
+     } 
+
+    
     handleUpdate = () =>{
         axios({
             method: 'post',
@@ -36,7 +39,7 @@ class Index extends Component {
             <Block flex style={styles.profile}>
               <Block flex>
                 <ImageBackground
-                  source={require("../../res/profile-screen-bg.png")}
+                  source={require("../../res/register-bg.png")}
                   style={styles.profileContainer}
                   imageStyle={styles.profileBackground}
                 >
