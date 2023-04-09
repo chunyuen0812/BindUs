@@ -76,8 +76,7 @@ const Target = STAGE.reduce((accumulator, object) => {
   }, 0);
 
 function stageprogress(n){
-    let x=0;
-    x= sumamount;
+    var x= sumamount;
     for (let i = 0; i <= n; i++) {
         x-=STAGE[i].goal;
       }
