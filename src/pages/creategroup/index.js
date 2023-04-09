@@ -107,7 +107,7 @@ const SignUp = () => {
             </View>
             <View style={{flexDirection:'row', margin:5, justifyContent:'space-around',}}>
                 <Text style={styles.subtitle}>Members:</Text>
-                <Button onPress={()=>{ state.Members+=1; console.log('To Contact list',JSON.stringify(state.Members));}} size={'small'}> Add </Button>
+                <Button onPress={()=>{ state.Members+=1; console.log('To Contact list',JSON.stringify(state.Members));navigation.navigate('ContactList')}} size={'small'}> Add </Button>
             </View>
             <View style={{borderWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'42%'}}>
               <FlatList 

@@ -1,69 +1,109 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable } from "react-native";
+import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable,Dimensions } from "react-native";
 import {NavBar,Button} from 'galio-framework';
 import {SearchBar, ListItem } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
  // npm this package for search bar functions
 
+ const windowHeight = Dimensions.get('window').height; 
 const DATA = [
   {
-    id: "1",
+    gid: "1",
     groupimage: require('../../res/christmasparty.jpg'),
     title: "Christmas Party",
     description: "ABC",
-    grpprogress: 60, 
+    grpprogress: 62, 
     goaltype:'short',
+    pending:1
   },
   {
-    id: "2",
+    gid: "2",
     groupimage: require('../../res/gradtrip.jpg'),
     title: "Grad trip",
     description: "ABC",
-    grpprogress: 65,
+    grpprogress: 0,
     goaltype:'short',
+    pending:0
   },
   {
-    id: "3",
+    gid: "3",
     groupimage: require('../../res/igshop.jpg'),
     title: "New shop",
     description: "ABC",
-    grpprogress: 35,
+    grpprogress: 91,
     goaltype:'long',
+    pending:1
   },
+  {
+    gid: "4",
+    groupimage: require('../../res/igshop.jpg'),
+    title: "Long goal pending",
+    description: "ABC",
+    grpprogress: 0,
+    goaltype:'long',
+    pending:0
+  },
+  
 ];
 
-const navbutton='Group'
+const navbutton1='Group'
+const navbutton2='Pending'
 
 // pixel per item 85p
-const Item = ({id, groupimage, title, description, grpprogress,goaltype}) => {
+const Item = ({gid, groupimage, title, description, grpprogress,goaltype,pending}) => {
   const navigation=useNavigation();
-  return (
-    <Pressable onPress={() => {console.log({id});navigation.navigate(navbutton.concat(goaltype))}} style={styles.item}>
-      <Image source={groupimage} style={styles.image}/> 
-      <View style={styles.grpinfo}>
-        <View style={styles.row}>
-          <Text numberOfLines={1} style={styles.name}>
-          {title}: {id}
-          </Text>
-          <Text>
-          Group progress: {grpprogress}% 
-          </Text>
+
+  if (pending==1){
+    return (
+      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton1,{groupname:title, goaltype:goaltype})}} style={styles.item}>
+        <Image source={groupimage} style={styles.image}/> 
+        <View style={styles.grpinfo}>
+          <View style={styles.row}>
+            <Text numberOfLines={1} style={styles.name}>
+            {title}: {gid}
+            </Text>
+            <Text>
+            Group progress: {grpprogress}% 
+            </Text>
+          </View>
+        <Text numberOfLines={2} style={styles.subtitle}>
+        Description: {description}
+        </Text>
         </View>
-      <Text numberOfLines={2} style={styles.subtitle}>
-      Description: {description}
-      </Text>
-      </View>
-    </Pressable>
-  );
+      </Pressable>
+    );
+  }else if(pending==0){
+    return (
+      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton2,{groupname:title, goaltype:goaltype})}} style={styles.item}>
+        <Image source={groupimage} style={styles.image}/> 
+        <View style={styles.grpinfo}>
+          <View style={styles.row}>
+            <Text numberOfLines={1} style={styles.name}>
+            {title}: {gid}
+            </Text>
+            <Text>
+            Pending
+            </Text>
+          </View>
+        <Text numberOfLines={2} style={styles.subtitle}>
+        Description: {description}
+        </Text>
+        </View>
+      </Pressable>
+    );
+  }
+
+  
 };
 
 const renderItem = ({ item }) => <Item 
-id={item.id}
+gid={item.gid}
 groupimage={item.groupimage} 
 title={item.title} 
 description={item.description} 
 grpprogress={item.grpprogress}
-goaltype={item.goaltype} />;
+goaltype={item.goaltype} 
+pending={item.pending}/>;
 
 class HomePage extends Component {
   constructor(props) {
@@ -88,7 +128,7 @@ class HomePage extends Component {
 
   render() {
     return (
-      <View style={{flexDirection:'column'}}> 
+      <View style={{flexDirection:'column', height:windowHeight}}> 
         <NavBar style={styles.header} titleStyle={styles.title} title="Home" />
         <View style={styles.container}>
           <SearchBar
@@ -100,15 +140,15 @@ class HomePage extends Component {
             autoCorrect={false}
           />
         </View>
-        <View style={{height:'68%'}}>
+        <View style={{height:'74%'}}>
             <FlatList
             data={this.state.data}
             renderItem={renderItem}
             contentContainerStyle={styles.listcontainer}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.gid}
             />    
         </View>
-        <View style={{justifyContent:'center', flexDirection:'row'}}>
+        <View style={{ flexDirection:'row', position:'absolute', bottom:50, right:5}}>
         <Button opacity={0.5} onlyIcon icon="plus" iconFamily="antdesign" iconSize={30} 
           color="success" iconColor="#fff" style={styles.plusbutton}
           onPress={() => {this.props.navigation.navigate('CreateGroup')}}

@@ -3,12 +3,13 @@ import{ NavBar, Button} from 'galio-framework';
 import React, { Component } from 'react';
 import ProgressBar from 'react-native-progress/Bar'; 
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import { useNavigation } from '@react-navigation/native';
 //npm install react-native-swiper-flatlist --save
 //npm install react-native-progress --save
 // fetch group info from db
 
 let n=0;
-
+const windowHeight = Dimensions.get('window').height;
 const STAGE=[
 {
     id:'1',
@@ -31,6 +32,8 @@ const STAGE=[
     date:'20/03/2023',
 },
 ];
+
+const endDate=STAGE[STAGE.length-1].date;
 
 const DATA = [
   {
@@ -89,7 +92,7 @@ function stageprogress(n){
 
 const ItemA = ({id, name, profpic, Amount}) => {
   return(
-  <View style={{margin:5, flexDirection:'column', width:70}}>
+  <View style={{margin:5, flexDirection:'column',height:70, width:70}}>
       <Image source={profpic} style={styles.image}/>
       <Text numberOfLines={1} style={styles.name}>{name}</Text>
       <Text numberOfLines={1} style={{color:'green', alignSelf:'center', fontSize:12, margin:1}}>{Math.round(Amount/Target*100)}%</Text>
@@ -119,7 +122,7 @@ const windowWidth = Dimensions.get('window').width-20;
 const renderStage=({item, index})=> {
     return(
         <View>
-            <View style={{flexDirection:'row', margin:5, borderTopWidth:StyleSheet.hairlineWidth}}>
+            <View style={{flexDirection:'row', margin:5}}>
               <Text style={styles.subtitle1}> Stage: {item.id}</Text>
               <Text style={styles.subtitle2}>{item.id}/{STAGE.length}</Text>
             </View>
@@ -153,19 +156,22 @@ const renderItemA = ({ item }) => <ItemA
   date={item.date}
   time={item.time}
   />;
-class GrouplongPage extends Component {
-
-  render(
-  ) {   
+const GroupPage=({route})=> {//main program---------------------------------------------------------------------
+  var goaltype=route.params.goaltype;
+  var histheight='27%'
+  if (goaltype=='short'){
+    histheight='41%'
+  }
+  const navigation=useNavigation();   
     return (
-      <View style={{flexDirection:'column'}}>
+      <View style={{flexDirection:'column', height:windowHeight}}>
         <View>
           <NavBar style={styles.header} titleStyle={styles.title} back 
           right={
-          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); this.props.navigation.navigate('Notice')}}/>
+          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); navigation.navigate('Notice')}}/>
           } 
-          title="Group Name" 
-          onLeftPress={()=>this.props.navigation.goBack()} 
+          title={route.params.groupname} 
+          onLeftPress={()=>navigation.navigate('Home')} 
           leftStyle={{width:30,height:30}} leftIconSize={30}
           />
         </View>
@@ -175,51 +181,59 @@ class GrouplongPage extends Component {
           <Text style={styles.subtitle2}> {Math.round(sumamount/Target*100)}%</Text>
         </View>
         <ProgressBar style={{margin:5, alignSelf:'center'}} progress={sumamount/Target} width={windowWidth}/>
-        <SwiperFlatList
+        <View style={{flexDirection:'row', borderBottomWidth:StyleSheet.hairlineWidth}}>
+            <Text style={styles.subtitle1}> End Date:</Text>
+            <Text style={styles.subtitle2}>{endDate}</Text>
+        </View>
+        <View>
+        {goaltype=='long'?<SwiperFlatList
             index={0}
             data={STAGE}
             renderItem={renderStage}
-        />
+        />:null}
+        </View>
         <View style={{flexDirection:'column',marginHorizontal:5}}>
           <Text style={styles.subtitleb}>Group description:</Text>
           <Text  numberOfLines={1} style={styles.subtitle2}>kashdiabdukabvnbm,nmnbvxchvjbkhgfxcvhbjnkjbhgcfjhgfhjkhgfhjklhghjkhgfhjkhjgnbfghjkhgfhjvdvajdhvadvjhdvajdj</Text>
           <Text style={styles.hyperlink} onPress={()=>console.log('group description')}>Read more...</Text>
         </View>
-        <View style={{flexDirection:'row',borderTopWidth:StyleSheet.hairlineWidth, height:30,margin:5}}>
-          <Text style={styles.subtitlea}>Contribution:</Text>
-          <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={25} color="lightgreen" iconColor="#fff" style={{ width: 30, height: 30, right: 10 }} onPress={()=>console.log('To contact list')}/>
-        </View>
-        <FlatList
-          style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey'}}
+        <View style={{height:'20%'}}>
+          <View style={{flexDirection:'row',borderTopWidth:StyleSheet.hairlineWidth, height:24,margin:5}}>
+            <Text style={styles.subtitlea}>Contribution:</Text>
+            <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={25} color="lightgreen" iconColor="#fff" style={{ width: 30, height: 30, right: 10 }} onPress={()=>console.log('To contact list')}/>
+          </View>
+          <FlatList
+          style={{marginHorizontal:10, marginVertical:5, borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey'}}
           horizontal
           data={DATA}
           renderItem={renderItemA}
           keyExtractor={item => item.id}/>
-        <View style={{flexDirection:'column', margin:5,borderBottomWidth:StyleSheet.hairlineWidth,borderColor:'dimgrey', height:'26%'}}>
-          <Text style={styles.subtitleb}> History</Text>
+        </View>
+        <View style={{flexDirection:'column', margin:5, height:histheight}}>
+          <Text style={styles.subtitleb}>History:</Text>
           <FlatList
-            style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth}}
+            style={{marginHorizontal:10,marginVertical:5, borderBottomWidth:StyleSheet.hairlineWidth}}
             data={DATA}
             renderItem={renderItemB}
             keyExtractor={item => item.id}
           />
         </View>
-        <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
+        <View style={{flexDirection:'row',justifyContent:'space-around', position:'absolute', bottom:5, alignSelf:'center', width:'90%'}}>
             <Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>this.props.navigation.navigate('Deposit')}>
+            onPress={()=>navigation.navigate('Deposit',{groupname:route.params.groupname})}>
             Deposit
             </Button>
             <Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>this.props.navigation.navigate('Vote')}>
+            onPress={()=>navigation.navigate('Vote',{goaltype:route.params.goaltype, progress:sumamount, target:Target,endDate:endDate, memberCount:DATA.length})}>
             Vote
             </Button>
         </View>
       </View>
     )
   }
-}
+
 
 const styles= StyleSheet.create({
   header:{
@@ -233,22 +247,22 @@ const styles= StyleSheet.create({
   },
   subtitlea:{
     flex:1,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight:'bold',
     marginHorizontal:10
   },
   subtitleb:{
-    fontSize: 20,
+    fontSize: 18,
     fontWeight:'bold',
     marginHorizontal:10
   },
   subtitle1:{
     flex:1,
-    fontSize: 18,
+    fontSize: 16,
     marginHorizontal:10
   },
   subtitle2:{
-    fontSize: 18,
+    fontSize: 16,
     marginHorizontal:10
   },
   image:{
@@ -281,4 +295,4 @@ const styles= StyleSheet.create({
   }
 })
 
-export default GrouplongPage
+export default GroupPage

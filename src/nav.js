@@ -8,12 +8,13 @@ import Login from '../src/pages/login';
 import home from '../src/pages/home';
 import Profile from '../src/pages/profile';
 import SignUp from './pages/login/signup';
-import GroupshortPage from './pages/group/groupshort';
-import GrouplongPage from './pages/group/grouplong';
+import GroupPage from './pages/group/grouppage';
+import Pending from './pages/group/pending';
 import Notice from './pages/group/notice';
 import CreateGroup from './pages/creategroup';
 import Deposit from './pages/group/deposit';
 import Vote from './pages/group/vote';
+import ContactList from './pages/contact';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -45,11 +46,12 @@ function Nav() {
         <Stack.Screen name="Profile" component={MainTabs}/>
         <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Groupshort" component={GroupshortPage}/>
-        <Stack.Screen name="Grouplong" component={GrouplongPage}/>
+        <Stack.Screen name="Group" component={GroupPage}/>
+        <Stack.Screen name="Pending" component={Pending}/>
         <Stack.Screen name="Notice" component={Notice}/>
         <Stack.Screen name="Deposit" component={Deposit}/>
         <Stack.Screen name="Vote" component={Vote}/>
+        <Stack.Screen name="ContactList" component={ContactList}/>
         <Stack.Screen name="CreateGroup" component={CreateGroup}/>
       </Stack.Navigator>
     </NavigationContainer>

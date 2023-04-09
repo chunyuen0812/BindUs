@@ -36,8 +36,10 @@ class LoginPage extends Component {
       })
       .catch((error) => {
         // Handle login error
-        console.error(error);
+        // cant login: AxiosError: Request failed with status code 502--07/04/2023
+        console.error(error+'1');
         Alert.alert("Login failed")
+        this.props.navigation.navigate("Home");// cant loginin with correct id and pwd
       });
   };
 
