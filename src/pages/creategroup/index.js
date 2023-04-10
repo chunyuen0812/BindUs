@@ -1,8 +1,11 @@
 import { Pressable,Alert, FlatList, Image, StyleSheet, Text, View } from 'react-native'
 import {NavBar, Input,Button} from 'galio-framework';
+import { RadioButton } from 'react-native-paper';
 import React, { Component, useState } from 'react';
 import DateTimePicker,{ DateTimePickerAndroid,RNDateTimePicker} from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
+
+
 
 const DATA = [
     {
@@ -50,14 +53,12 @@ const DATA = [
 
   const state = { 
       GrpName: "",
-	    GrpDescript: "",
-	    GoalTarget: "",
-	    GoalTimeLimit: "",
-	    Members: 0,
+	    Grptype: "",
+	    GoalTarget:0,
+	    GoalTimeLimit: new Date(),
      };
     
-function CreateGroup () {
-    
+function CreateGroup () {    
 
 const navigation=useNavigation();
 const [date, setDate] = useState(new Date());
@@ -77,19 +78,24 @@ const showDatepicker = () => {
         };
 const SignUp = () => {
           // 註冊帳號
-          const { GrpName,GrpDescript,GoalTarget,GoalTimeLimit,Members} = state;
+          
+          state.Grptype=type;
+          const { GrpName,Grptype,GoalTarget,GoalTimeLimit} = state;
           // if not any input
-          if (!GrpName || !GrpDescript || !Members || !GoalTimeLimit || !GoalTarget) {
+          if (!GrpName || !Grptype || !GoalTimeLimit || !GoalTarget) {
             Alert.alert('Error', 'Please enter all.');
-            console.log({GrpName},{GrpDescript},{Members},{GoalTarget},{GoalTimeLimit})
+            console.log(GrpName,Grptype,GoalTarget,GoalTimeLimit)
             return;
           } else {
               console.log('Check flags');
               console.log('Input to database');
-              Alert.alert({GrpName},{GrpDescript},{Members},{GoalTarget},{GoalTimeLimit})
+              Alert.alert('Alert',GrpName+'\n'+Grptype+'\n'+GoalTarget+'\n'+GoalTimeLimit)
              navigation.navigate('Home');
           };};   
-      
+
+
+const [type, setType]=useState('short')
+  
     return (
     <View>
         <NavBar style={styles.header} titleStyle={styles.title} back  title="Create Group" 
@@ -97,26 +103,32 @@ const SignUp = () => {
         />
         <View style={styles.container}>
             <Input style={{width:"90%",marginLeft: 20}} placeholder="Group Name" onChangeText={(text) =>{state.GrpName=text}}/>
-            <Input style={{width:"90%",marginLeft: 20}} placeholder="Description" onChangeText={(text) => {state.GrpDescript=text}}/>
-            <Input style={{width:"90%",marginLeft: 20}} placeholder="Goal Target Amount" type={'number-pad'} onChangeText={(text) => { state.GoalTarget=text }}/>           
+            <Input style={{width:"90%",marginLeft: 20}} placeholder="Goal Target Amount" type={'number-pad'} onChangeText={(text) => { state.GoalTarget=parseInt(text) }}/>           
+            <View style={{flexDirection:'row', margin:10, justifyContent:'space-around'}}>
+              <Text style={{alignSelf:'center', fontSize:15, fontWeight:'bold'}}>Goal type:</Text>
+              <Text style={{alignSelf:'center', fontSize:15}}>Long</Text>
+              <RadioButton value="Long" color="dimgrey" status={ type == 'long' ? 'checked' : 'unchecked' } onPress={()=>setType('long')}/>
+              <Text style={{alignSelf:'center', fontSize:15}}>Short</Text>
+              <RadioButton value="Short" color="dimgrey" status={ type=='short' ? 'checked' : 'unchecked' } onPress={()=>setType('short')}/>
+            </View>
             <View style={{flexDirection:'row', marginHorizontal:10}}>
               <Text style={{alignSelf:'center', fontSize:15, fontWeight:'bold'}}>Goal End Date: </Text>
               <Text style={{alignSelf:'center'}}>{date.toDateString()}</Text>
               <Button round style={{alignSelf:'center', height:25, width:65}} color='success' onPress={showDatepicker}>Choose</Button>
-              <Button round color='success' style={{alignSelf:'center',width:65, height:25}} onPress={()=>{state.GoalTimeLimit=date.toDateString()}}>Confirm</Button>
+              <Button round color='success' style={{alignSelf:'center',width:65, height:25}} onPress={()=>{state.GoalTimeLimit=date}}>Confirm</Button>
             </View>
             <View style={{flexDirection:'row', margin:5, justifyContent:'space-around',}}>
                 <Text style={styles.subtitle}>Members:</Text>
-                <Button onPress={()=>{ state.Members+=1; console.log('To Contact list',JSON.stringify(state.Members));navigation.navigate('ContactList')}} size={'small'}> Add </Button>
+                <Button onPress={()=>{ state.Members+=1; console.log('To Contact list');navigation.navigate('ContactList')}} size={'small'}> Add </Button>
             </View>
-            <View style={{borderWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'42%'}}>
+            <View style={{borderWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'48%'}}>
               <FlatList 
               data={DATA}
               renderItem={renderItem}
               keyExtractor={item => item.id}/>  
             </View>     
             <View style={{alignItems:'center'}}>
-                <Button color="#5BC0DE" round style={{width:"40%"}} onPress={SignUp}>Submit</Button>
+                <Button color="#5BC0DE" round style={{width:"40%"}} onPress={()=>{SignUp;}}>Submit</Button>
             </View>
         </View>
     </View>

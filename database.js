@@ -1,6 +1,58 @@
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase('maindb.db');
+var db = SQLite.openDatabase('maindb.db');
+
+export const selectAccountData=(ID)=>{
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+              // print table info
+              'SELECT * FROM Account WHERE Account_ID = ?;',
+              [ID],
+              (tx, result) => {
+                    resolve(result.rows.item(0));
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+          });
+    });
+}
+
+export const selectGoalData=(ID)=>{
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'SELECT * FROM Goal WHERE Goal_ID = ?;',
+                [ID],
+                (tx, result) => {
+                    resolve(result.rows.item(0));
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+}
+
+export const selectDepositData=(ID)=>{
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'SELECT * FROM Deposit WHERE Deposit_ID = ?;',
+                [ID],
+                (tx, result) => {
+                    resolve(result.rows);
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+}
 
 export const insertAccountData = (ID,name,password,bank,bank_card,balance) => {
     return new Promise((resolve, reject) => {
@@ -36,12 +88,13 @@ export const insertDepositData = (Account_ID,Goal_ID,Deposit_amount,Deposit_time
     });
 };
 
-export const insertGoalData = (Account_ID,Goal_ID,Goal_amount,Goal_time) => {
+export const insertGoalData = (Goal_name,Goal_type, Goal_target, end_time) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
+            console.log('inserting goal')
             tx.executeSql(
-                'INSERT INTO Goal (Account_ID, Goal_ID, Goal_amount, Goal_time) VALUES (?,?,?,?);',
-                [Account_ID, Goal_ID, Goal_amount, Goal_time],
+                'INSERT INTO Goal (Goal_name, Goal_type, Goal_target, end_time) VALUES (?,?,?,?,TO_DATE(?, DD/MM/YYYY));',
+                [Goal_name, Goal_type, Goal_target, end_time],
                 (tx, result) => {
                     resolve(result);
                 },
@@ -60,7 +113,7 @@ export const deleteAccountData = (ID) => {
                 'DELETE FROM Account WHERE Account_ID =?;',
                 [ID],
                 (tx, result) => {
-                    resolve(result);
+                    resolve(result.rows);
                 },
                 (tx, error) => {
                     reject(error);
@@ -77,7 +130,7 @@ export const deleteDepositData = (ID) => {
                 'DELETE FROM Deposit WHERE Deposit_ID =?;',
                 [ID],
                 (tx, result) => {
-                    resolve(result);
+                    resolve(result.rows);
                 },
                 (tx, error) => {
                     reject(error);
@@ -94,7 +147,7 @@ export const deleteGoalData = (ID) => {
                 'DELETE FROM Goal WHERE Goal_ID =?;',
                 [ID],
                 (tx, result) => {
-                    resolve(result);
+                    resolve(result.rows);
                 },
                 (tx, error) => {
                     reject(error);

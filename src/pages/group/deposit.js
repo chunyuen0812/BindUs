@@ -55,11 +55,13 @@ const Item=({bank, no, id})=>{
   );
 }
 
-  const outputAlert=()=>{    
+  const outputAlert=()=>{  
     const x=Payment[parseInt(select)-1];
     var method='';
     var no='';
-    if (x.bank==''){method='Credit card'; no='************'+(x.no%10000)} else{method=x.bank; no='********'+(x.no%10000)}
+    if(select!='') {
+    if (x.bank==''){method='Credit card'; no='************'+(x.no%10000)} else {method=x.bank; no='********'+(x.no%10000)}
+  }
     if (amount!=0&&select!=''){
     Alert.alert('Deposit','Group: '+groupname+'\n'+method+': '+no+'\nAmount: $'+amount.toString(), [
       {
@@ -67,7 +69,7 @@ const Item=({bank, no, id})=>{
         onPress: () => console.log('Cancel'),
         style: 'cancel',
       },
-      {text: 'OK', onPress: () => {navigation.navigate('Home')}},
+      {text: 'OK', onPress: () => {navigation.goBack()}},
     ]);
     } else if(amount==0){
       Alert.alert('Warning','You have not deposit anything.');
@@ -99,8 +101,8 @@ const Item=({bank, no, id})=>{
             <Button round color='red' style={styles.button} onPress={()=>{console.log('Minus '+amount);{amount>=10?setAmount(amount-10):null}}}>-10</Button>
             <Button round color='red' style={styles.button} onPress={()=>{console.log('Minus '+amount);{amount>=100?setAmount(amount-100):null}}}>-100</Button>
             <Text style={{alignSelf:'center', fontSize:20}}>$</Text><TextInput style={styles.textbox} keyboardType="numeric" onChangeText={(text)=>setAmount(parseInt(text))}>{amount}</TextInput>
-            <Button round color='green' style={styles.button} onPress={()=>{console.log('Plus '+amount);{amount<limit?setAmount(amount+100):null}}}>+100</Button>
-            <Button round color='green' style={styles.button} onPress={()=>{console.log('Plus '+amount);{amount<limit?setAmount(amount+10):null}}}>+10</Button>
+            <Button round color='green' style={styles.button} onPress={()=>{console.log('Plus '+amount);{(limit-amount)>=100?setAmount(amount+100):null}}}>+100</Button>
+            <Button round color='green' style={styles.button} onPress={()=>{console.log('Plus '+amount);{(limit-amount)>=10?setAmount(amount+10):null}}}>+10</Button>
           </View>
           <Button color='success' round style={styles.confirmbutton} onPress={()=>outputAlert()}>Confirm</Button>
         </View>
