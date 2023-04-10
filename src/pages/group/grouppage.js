@@ -40,7 +40,7 @@ const DATA = [
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 1',
-    Amount: 2000,
+    Amount: 2100,
     payment: 100,
     date:'13/03/2023',
     time:'21:03'
@@ -49,7 +49,7 @@ const DATA = [
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 2',
-    Amount: 3500,
+    Amount: 1500,
     payment: 200,
     date:'11/03/2023',
     time:'14:23'
@@ -58,7 +58,7 @@ const DATA = [
     id: '58694a0f-3da1-471f-bd96-145571e29d72',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 3',
-    Amount: 3600,
+    Amount: 1800,
     payment: 300,
     date:'10/03/2023',
     time:'09:46'
@@ -76,8 +76,7 @@ const Target = STAGE.reduce((accumulator, object) => {
   }, 0);
 
 function stageprogress(n){
-    let x=0;
-    x= sumamount;
+    var x= sumamount;
     for (let i = 0; i <= n; i++) {
         x-=STAGE[i].goal;
       }
@@ -158,9 +157,9 @@ const renderItemA = ({ item }) => <ItemA
   />;
 const GroupPage=({route})=> {//main program---------------------------------------------------------------------
   var goaltype=route.params.goaltype;
-  var histheight='27%'
+  var histheight='35%'
   if (goaltype=='short'){
-    histheight='41%'
+    histheight='50%'
   }
   const navigation=useNavigation();   
     return (
@@ -192,13 +191,8 @@ const GroupPage=({route})=> {//main program-------------------------------------
             renderItem={renderStage}
         />:null}
         </View>
-        <View style={{flexDirection:'column',marginHorizontal:5}}>
-          <Text style={styles.subtitleb}>Group description:</Text>
-          <Text  numberOfLines={1} style={styles.subtitle2}>kashdiabdukabvnbm,nmnbvxchvjbkhgfxcvhbjnkjbhgcfjhgfhjkhgfhjklhghjkhgfhjkhjgnbfghjkhgfhjvdvajdhvadvjhdvajdj</Text>
-          <Text style={styles.hyperlink} onPress={()=>console.log('group description')}>Read more...</Text>
-        </View>
         <View style={{height:'20%'}}>
-          <View style={{flexDirection:'row',borderTopWidth:StyleSheet.hairlineWidth, height:24,margin:5}}>
+          <View style={{flexDirection:'row', height:24,margin:5}}>
             <Text style={styles.subtitlea}>Contribution:</Text>
             <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={25} color="lightgreen" iconColor="#fff" style={{ width: 30, height: 30, right: 10 }} onPress={()=>console.log('To contact list')}/>
           </View>
@@ -219,16 +213,17 @@ const GroupPage=({route})=> {//main program-------------------------------------
           />
         </View>
         <View style={{flexDirection:'row',justifyContent:'space-around', position:'absolute', bottom:5, alignSelf:'center', width:'90%'}}>
-            <Button 
+            {sumamount>=Target?<Button size={'small'} color={'success'} round style={{alignSelf:'center', margin:10}}>DONE!!</Button>:null}
+            {sumamount<Target?<Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
             onPress={()=>navigation.navigate('Deposit',{groupname:route.params.groupname})}>
             Deposit
-            </Button>
-            <Button 
+            </Button>:null}
+            {sumamount<Target?<Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
             onPress={()=>navigation.navigate('Vote',{goaltype:route.params.goaltype, progress:sumamount, target:Target,endDate:endDate, memberCount:DATA.length})}>
             Vote
-            </Button>
+            </Button>:null}
         </View>
       </View>
     )

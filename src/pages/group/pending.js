@@ -82,7 +82,7 @@ const windowWidth = Dimensions.get('window').width-20;
 
 const renderStage=({item, index})=> {
     return(
-        <View>
+        <View height={50}>
             <View style={{flexDirection:'row', margin:5}}>
               <Text style={styles.subtitle1}> Stage: {item.id}</Text>
               <Text style={styles.subtitle2}>{item.id}/{STAGE.length}</Text>

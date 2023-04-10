@@ -41,7 +41,7 @@ function MainTabs() {
 function Nav() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="MainTabs">
+      <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Login">
         <Stack.Screen name="Home" component={MainTabs}/>
         <Stack.Screen name="Profile" component={MainTabs}/>
         <Stack.Screen name="SignUp" component={SignUp}/>

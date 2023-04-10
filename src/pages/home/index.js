@@ -1,17 +1,18 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable,Dimensions } from "react-native";
 import {NavBar,Button} from 'galio-framework';
 import {SearchBar, ListItem } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
  // npm this package for search bar functions
 
- const windowHeight = Dimensions.get('window').height; 
+
+
+const windowHeight = Dimensions.get('window').height; 
 const DATA = [
   {
     gid: "1",
     groupimage: require('../../res/christmasparty.jpg'),
     title: "Christmas Party",
-    description: "ABC",
     grpprogress: 62, 
     goaltype:'short',
     pending:1
@@ -20,7 +21,6 @@ const DATA = [
     gid: "2",
     groupimage: require('../../res/gradtrip.jpg'),
     title: "Grad trip",
-    description: "ABC",
     grpprogress: 0,
     goaltype:'short',
     pending:0
@@ -29,7 +29,6 @@ const DATA = [
     gid: "3",
     groupimage: require('../../res/igshop.jpg'),
     title: "New shop",
-    description: "ABC",
     grpprogress: 91,
     goaltype:'long',
     pending:1
@@ -46,54 +45,24 @@ const DATA = [
   
 ];
 
-const navbutton1='Group'
-const navbutton2='Pending'
-
 // pixel per item 85p
 const Item = ({gid, groupimage, title, description, grpprogress,goaltype,pending}) => {
   const navigation=useNavigation();
-
-  if (pending==1){
+  var navbutton='';
+  {pending==1?navbutton='Group':navbutton='Pending'}
     return (
-      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton1,{groupname:title, goaltype:goaltype})}} style={styles.item}>
+      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton,{groupname:title, goaltype:goaltype})}} style={styles.item}>
         <Image source={groupimage} style={styles.image}/> 
         <View style={styles.grpinfo}>
           <View style={styles.row}>
             <Text numberOfLines={1} style={styles.name}>
-            {title}: {gid}
+            {title}
             </Text>
-            <Text>
-            Group progress: {grpprogress}% 
-            </Text>
+            {pending==1?<Text>{grpprogress}% </Text>:<Text>Pending</Text>}
           </View>
-        <Text numberOfLines={2} style={styles.subtitle}>
-        Description: {description}
-        </Text>
         </View>
       </Pressable>
-    );
-  }else if(pending==0){
-    return (
-      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton2,{groupname:title, goaltype:goaltype})}} style={styles.item}>
-        <Image source={groupimage} style={styles.image}/> 
-        <View style={styles.grpinfo}>
-          <View style={styles.row}>
-            <Text numberOfLines={1} style={styles.name}>
-            {title}: {gid}
-            </Text>
-            <Text>
-            Pending
-            </Text>
-          </View>
-        <Text numberOfLines={2} style={styles.subtitle}>
-        Description: {description}
-        </Text>
-        </View>
-      </Pressable>
-    );
-  }
-
-  
+    );  
 };
 
 const renderItem = ({ item }) => <Item 
@@ -193,7 +162,7 @@ const styles = StyleSheet.create({
   name:{
     flex: 1,
     fontWeight:"bold",
-    fontSize: 18,
+    fontSize: 20,
   },
   subtitle:{
     color: "dimgray",
