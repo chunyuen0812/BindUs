@@ -2,12 +2,12 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('maindb.db');
 
-export const insertAccountData = (ID,name,password,bank,bank_card,balance) => {
+export const insertAccountData = (ID,name,password,phone,bank,bank_card,balance) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
-                'INSERT INTO Account (Account_ID,name,password,bank,bank_card,balance) VALUES (?,?,?,?,?,?);',
-                [ID,name,password,bank,bank_card,balance],
+                'INSERT INTO Account (Account_ID,name,phone,password,bank,bank_card,balance) VALUES (?,?,?,?,?,?,?);',
+                [ID,name,phone,password,bank,bank_card,balance],
                 (tx, result) => {
                     resolve(result);
                 },

@@ -16,7 +16,6 @@ class Index extends Component {
 
      } 
 
-    
     handleUpdate = () =>{
         axios({
             method: 'post',
@@ -32,7 +31,11 @@ class Index extends Component {
             console.error(error);
           });
 
-    }
+    };
+
+    handleBinding = () =>{
+
+    };
 
     render() { 
         return (
@@ -66,10 +69,17 @@ class Index extends Component {
                   >
                     <Button
                       small
-                      style={{ backgroundColor: argonTheme.COLORS.INFO }}
+                      style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
                       onPress={this.handleUpdate}
                     >
                       Update
+                    </Button>
+                    <Button
+                      small
+                      style={{ backgroundColor: argonTheme.COLORS.ACTIVE }}
+                      onPress={this.handleBinding}
+                    >
+                      Bind
                     </Button>
                   </Block>
 
@@ -114,7 +124,8 @@ class Index extends Component {
                           
                         </Block>
                         <Text></Text>
-                        <Block row space ='evenly'>
+
+                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
                           <Text bold size={16} color="#525F7F" >
                             customerId
                           </Text>
@@ -123,7 +134,7 @@ class Index extends Component {
                           </Text>
                         </Block>
 
-                        <Block row space ='evenly'>
+                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
                           <Text bold size={16} color="#525F7F" >
                             last name
                           </Text>
@@ -132,7 +143,7 @@ class Index extends Component {
                           </Text>
                         </Block>
 
-                        <Block row space ='evenly'>
+                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
                           <Text bold size={16} color="#525F7F" >
                             first name
                           </Text>
@@ -141,7 +152,7 @@ class Index extends Component {
                           </Text>
                         </Block>
 
-                        <Block row space ='evenly'>
+                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
                           <Text bold size={16} color="#525F7F" >
                             birthday
                           </Text>
@@ -150,7 +161,7 @@ class Index extends Component {
                           </Text>
                         </Block>
 
-                        <Block row space ='evenly'>
+                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
                           <Text bold size={16} color="#525F7F" >
                             bank card
                           </Text>
@@ -159,11 +170,13 @@ class Index extends Component {
                           </Text>
                         </Block>
 
-                        <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
+
+                        <Block style={{ paddingBottom: - HeaderHeight * 2 }}>
                           <Block row space="between" style={{ flexWrap: "wrap" }}>
                             
                           </Block>
                         </Block>
+
                       </Block>
                     </Block>
                   </ScrollView>

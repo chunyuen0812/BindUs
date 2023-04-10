@@ -27,6 +27,7 @@ class Index extends Component {
           password TEXT, \
           name TEXT, \
           bank TEXT, \
+          phone INTEGER, \
           bank_card INTEGER, \
           balance INTEGER);',
         [],
@@ -52,11 +53,14 @@ class Index extends Component {
 
 
       // Create Goal Table if not exists
+      // %YY%MM%DD%HH%MM%SS
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS Goal \
         (Goal_ID INTEGER PRIMARY KEY AUTOINCREMENT, \
           Goal_name TEXT, \
+          Goal_type TEXT, \
           Goal_amount INTEGER, \
+          is_pending INTEGER, \
           start_time timestamp, \
           end_time timestamp);',
           [],
@@ -110,10 +114,70 @@ class Index extends Component {
             // print creation error
             console.error('Error creating table', error);
           }
-      );          
+      );
+      
+      // create Vote table
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS Vote \
+        ( Account_ID INTEGER, \
+          Goal_ID INTEGER, \
+          vote_type TEXT, \
+          vote_detail TEXT, \
+          is_vote INTEGER, \
+          FOREIGN KEY (Account_ID) REFERENCES Account (ID), \
+          FOREIGN KEY (Goal_ID) REFERENCES Goal(ID));',
+          [],
+          (tx, result) => {
+            // print table info
+            console.log('Table created successfully');
+            tx.executeSql(
+              'SELECT * FROM Vote;',
+              [],
+              (tx, resultSet) => {
+                console.log('Table content:', resultSet.rows);
+              },
+              (tx, error) => {
+                console.error('Error selecting data', error);
+              }
+            );},
+            
+          (tx, error) => {
+            // print creation error
+            console.error('Error creating table', error);
+          }
+      );    
+
+      // create group table
+      tx.executeSql(
+
+        'CREATE TABLE IF NOT EXISTS Goal_Group \
+        ( Account_ID INTEGER, \
+          Goal_ID INTEGER, \
+          FOREIGN KEY (Account_ID) REFERENCES Account (ID), \
+          FOREIGN KEY (Goal_ID) REFERENCES Goal(ID));',
+          [],
+          (tx, result) => {
+            // print table info
+            console.log('Table created successfully');
+            tx.executeSql(
+              'SELECT * FROM Goal_Group;',
+              [],
+              (tx, resultSet) => {
+                console.log('Table content:', resultSet.rows);
+              },
+              (tx, error) => {
+                console.error('Error selecting data', error);
+              }
+            );},
+            
+          (tx, error) => {
+            // print creation error
+            console.error('Error creating table', error);
+          }
+      );
       
       // insertion example
-      // insertAccountData('1','TEST','123456','test','123456789','1000').
+      // insertAccountData('1','TEST','123456','123456','test','123456789','1000').
       // then(res => {
       //   console.log("insertion valid",res);
       // }).catch(err => {
