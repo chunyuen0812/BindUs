@@ -1,4 +1,4 @@
-import {StyleSheet,Text, View, TextInput, Alert } from 'react-native'
+import {StyleSheet,Text, View, TextInput, Alert,Image } from 'react-native'
 import{ NavBar, Button, } from 'galio-framework';
 import React, { Component, useState } from 'react'
 import { Dropdown } from 'react-native-element-dropdown';
@@ -85,12 +85,27 @@ const renderLoan=()=>{
 
 const renderMember=()=>{ //----------------------------------------------------------------------<<<<<<<Contact
   return(
-    <View style={styles.container}>
-      <View style={{flexDirection:'row', justifyContent:'center'}}>
-      <Text style={styles.subtitle1}>Member:</Text>
-      <Button color='#aaa' style={{width:65, height:22}} onPress={()=>console.log('tocontact')}>Add</Button>
+    <View>
+      <View style={styles.container}>
+        <View style={{flexDirection:'row', justifyContent:'center'}}>
+          <Text style={styles.subtitle1}>Member:</Text>
+          <Button color='#aaa' style={{width:65, height:22}} onPress={()=>console.log('tocontact')}>Add</Button>
+        </View>
+      </View>
+      <View style={styles.container}>
+        <View style={{flexDirection:'row', justifyContent:'center'}}>
+        <Image source={require('../../res/profilepic.jpg')} style={styles.image}/>
+        <View style={{flexDirection:'column'}}>
+            <View style={{flexDirection:'row',flex:1, width:300}}>
+                <Text style={styles.name}>John Smith</Text>
+                <Text style={{alignSelf:'center'}}>67891325</Text>
+            </View>
+            <Text numberOfLines={1} style={{fontSize:15, color:'grey'}}>25</Text>
+        </View>          
+        </View>
       </View>
     </View>
+    
   );
 }
 
@@ -165,7 +180,7 @@ const outputAlert=()=>{
       votedetail='Loan amount: $'+loan;
       break;
     case '4':
-      votedetail='New member: '+'member name';
+      votedetail='New member: '+'John Smith';
       break;
     case '5':
       votedetail='End Date extend to: '+date.toDateString();
@@ -269,7 +284,10 @@ const styles= StyleSheet.create({
       fontWeight:'bold'
     },
     name:{
-      fontSize:18,
+      flex: 1,
+      fontWeight:"bold",
+      fontSize: 18,
+      alignSelf:'center'
     },
     subtitle:{
       fontsize:20,
@@ -305,6 +323,17 @@ const styles= StyleSheet.create({
     iconStyle: {
       width: 20,
       height: 20,
+    },
+    image:{
+      alignSelf:'flex-start',
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      marginVertical: 3,
+      marginRight: 10,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor:"lightgray",
+      resizeMode: "center",
     },
     },)
 

@@ -32,7 +32,7 @@ const confirmMember=()=>{
     var n=checkedItems.length;
     for (i=0; i<n; i++){
         var result=temp.find(item=>item.Account_ID===checkedItems[i]);
-        member.push(result.name+'') 
+        member.push(" "+result.name) 
     }
 }
 
@@ -77,7 +77,7 @@ const renderItem=({item})=><Item
 const outputAlert=()=>{  
     if (checkedItems.length!=0){
     confirmMember();
-    Alert.alert('Alert','Group members:'+member, [
+    Alert.alert('Alert','Group members: '+member, [
       {
         text: 'Cancel',
         onPress: () => console.log('Cancel'),
@@ -139,6 +139,7 @@ contactCon: {
     justifyContent: "center",
   },
   contactDat: {
+    margin:10,
     flex: 1,
     justifyContent: "center",
     paddingLeft: 5,

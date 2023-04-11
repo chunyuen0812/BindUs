@@ -3,9 +3,27 @@ import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable,Dimensio
 import {NavBar,Button} from 'galio-framework';
 import {SearchBar, ListItem } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
+import * as SQLite from 'expo-sqlite';
  // npm this package for search bar functions
 
-
+//const db = SQLite.openDatabase('maindb.db');
+//var temp = [];
+//db.transaction(tx=>{
+//    tx.executeSql(
+//        // print table info
+//        'SELECT Goal_ID,Goal_name,Goal_type,Goal_amount,is_pending FROM Goal;',
+//        [],
+//        (tx, results) => {
+//           console.log('group data');
+//            for (let i = 0; i < results.rows.length; ++i)
+//              temp.push(results.rows.item(i));
+//            console.log(temp);
+//        },
+//        (tx, error) => {
+//          console.error('Error selecting data', error);
+//        }
+//      );
+//})
 
 const windowHeight = Dimensions.get('window').height; 
 const DATA = [
@@ -13,7 +31,7 @@ const DATA = [
     gid: "1",
     groupimage: require('../../res/christmasparty.jpg'),
     title: "Christmas Party",
-    grpprogress: 62, 
+    grpprogress: 54, 
     goaltype:'short',
     pending:1
   },
@@ -29,7 +47,7 @@ const DATA = [
     gid: "3",
     groupimage: require('../../res/igshop.jpg'),
     title: "New shop",
-    grpprogress: 91,
+    grpprogress: 54,
     goaltype:'long',
     pending:1
   },

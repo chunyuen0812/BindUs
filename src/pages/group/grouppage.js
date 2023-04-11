@@ -40,7 +40,7 @@ const DATA = [
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
     profpic: require('../../res/profilepic.jpg'),
     name: 'User 1',
-    Amount: 2100,
+    Amount: 6700,
     payment: 100,
     date:'13/03/2023',
     time:'21:03'
@@ -213,7 +213,7 @@ const GroupPage=({route})=> {//main program-------------------------------------
           />
         </View>
         <View style={{flexDirection:'row',justifyContent:'space-around', position:'absolute', bottom:5, alignSelf:'center', width:'90%'}}>
-            {sumamount>=Target?<Button size={'small'} color={'success'} round style={{alignSelf:'center', margin:10}}>DONE!!</Button>:null}
+            {sumamount>=Target?<Button size={'small'} color={'success'} round style={{alignSelf:'center', margin:10}} onPress={()=>navigation.navigate('Assign')}>DONE!!</Button>:null}
             {sumamount<Target?<Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
             onPress={()=>navigation.navigate('Deposit',{groupname:route.params.groupname})}>

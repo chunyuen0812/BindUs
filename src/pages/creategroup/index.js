@@ -7,7 +7,24 @@ import { useNavigation } from '@react-navigation/native';
 import { insertGoalData, selectAccountData } from '../../../database';
 import * as SQLite from 'expo-sqlite';
 import { useEffect } from 'react';
+
 const db = SQLite.openDatabase('maindb.db');
+var temp = [];
+db.transaction(tx=>{
+    tx.executeSql(
+        // print table info
+        'SELECT Account_ID, name, phone FROM Account WHERE Account_ID != 1;',
+        [],
+        (tx, results) => {
+            for (let i = 0; i < results.rows.length; i++)
+              temp.push(results.rows.item(i));
+            console.log(temp);
+        },
+        (tx, error) => {
+          console.error('Error selecting data', error);
+        }
+      );
+})
 
   const Item = ({id, name,phoneno}) => {
     return(
@@ -36,31 +53,30 @@ const db = SQLite.openDatabase('maindb.db');
 	    Grptype: "",
 	    GoalTarget:0,
 	    GoalTimeLimit: new Date(),
-     };
-    var temp=[];   
+     };   
 const CreateGroup=({route})=> {
-  useEffect(()=>{
- 
-  if (route.params){
-    memberlist=route.params.memberlist;
-    for (i=0;i<memberlist.lenght;i++){
-      db.transaction(tx=>{
-        tx.executeSql(
-          // print table info
-          'SELECT * FROM Account WHERE Account_ID =?;',
-          [memberlist[i]],
-          (tx, results) => {
-              for (let i = 0; i < results.rows.length; ++i)
-                temp.push(results.rows.item(i));
-              console.log(temp);
-          },
-          (tx, error) => {
-            console.error('Error selecting data', error);
-          }
-        );
-      })
-    }}
-  })   
+// useEffect(()=>{
+//
+//  if (route.params){
+//    memberlist=route.params.memberlist;
+//    for (i=0;i<memberlist.lenght;i++){
+//      db.transaction(tx=>{
+//        tx.executeSql(
+//          // print table info
+//          'SELECT * FROM Account WHERE Account_ID =?;',
+//          [memberlist[i]],
+//          (tx, results) => {
+//              for (let i = 0; i < results.rows.length; ++i)
+//                temp.push(results.rows.item(i));
+//              console.log(temp);
+//          },
+//          (tx, error) => {
+//            console.error('Error selecting data', error);
+//          }
+//        );
+//      })
+//    }}
+//  })   
 
    //   selectAccountData(memberlist[i]).
    //   then(res => {
@@ -70,7 +86,10 @@ const CreateGroup=({route})=> {
    //    console.log("select invalid",err);
    //  });
     
-  
+const insertDATA=()=>{
+  const { GrpName,Grptype,GoalTarget,GoalTimeLimit} = state;
+  insertGoalData(GrpName,Grptype,GoalTarget,GoalTimeLimit)
+}
 
 
 const navigation=useNavigation();
@@ -108,7 +127,7 @@ const SignUp = () => {
                   onPress: () => console.log('Cancel'),
                   style: 'cancel',
                 },
-                {text: 'OK', onPress: () => {insertGoalData(GrpName,Grptype,GoalTarget,GoalTimeLimit),navigation.goBack()}},
+                {text: 'OK', onPress: () => {insertDATA; navigation.goBack()}},
               ])
           };};   
 
@@ -157,7 +176,7 @@ const [type, setType]=useState('short')
               keyExtractor={item => item.Account_ID}/>  
             </View>     
             <View style={{alignItems:'center'}}>
-                <Button color="#5BC0DE" round style={{width:"40%"}} onPress={()=>SignUp}>Submit</Button>
+                <Button color="#5BC0DE" round style={{width:"40%"}} onPress={SignUp}>Submit</Button>
             </View>
         </View>
     </View>

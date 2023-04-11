@@ -185,21 +185,21 @@ class Index extends Component {
       );
       
       // insertion example
-      /*insertAccountDatawithID('4','USER3','orange','91234567','test','100000003','1500').
+      /*insertAccountData('User3','orange','91234567','test','100000003','1500').
        then(res => {
          console.log("insertion valid",res);
        }).catch(err => {
         console.log("insertion invalid",err);
-      });
+      });*/
       
-     /* selectAccountData('1').
+      /*selectAccountData('5').
       then(res => {
         console.log("select valid",res);
       }).catch(err => {
        console.log("select invalid",err);
      });
     
-    /* deleteAccountData('4')
+     /*deleteAccountData('5')
      .then(res => {
       console.log("delete valid",res);
     }).catch(err => {
