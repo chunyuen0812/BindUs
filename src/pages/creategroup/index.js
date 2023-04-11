@@ -4,8 +4,10 @@ import { RadioButton } from 'react-native-paper';
 import React, { Component, useState } from 'react';
 import DateTimePicker,{ DateTimePickerAndroid,RNDateTimePicker} from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
+import { insertGoalData } from '../../../database';
+import * as SQLite from 'expo-sqlite';
 
-
+var db = SQLite.openDatabase('maindb.db');
 
 const DATA = [
     {
@@ -73,7 +75,7 @@ const showDatepicker = () => {
             value: date,
             onChange,
             mode: 'date',
-            dateFormat:"dayofweek day month",
+            dateFormat:"day month time",
           });
         };
 const SignUp = () => {
@@ -89,8 +91,14 @@ const SignUp = () => {
           } else {
               console.log('Check flags');
               console.log('Input to database');
-              Alert.alert('Alert',GrpName+'\n'+Grptype+'\n'+GoalTarget+'\n'+GoalTimeLimit)
-             navigation.navigate('Home');
+              Alert.alert('Alert',GrpName+'\n'+Grptype+'\n'+GoalTarget+'\n'+GoalTimeLimit,[
+                {
+                  text: 'Cancel',
+                  onPress: () => console.log('Cancel'),
+                  style: 'cancel',
+                },
+                {text: 'OK', onPress: () => {insertGoalData(GrpName,Grptype,GoalTarget,GoalTimeLimit),navigation.goBack()}},
+              ])
           };};   
 
 
@@ -128,7 +136,7 @@ const [type, setType]=useState('short')
               keyExtractor={item => item.id}/>  
             </View>     
             <View style={{alignItems:'center'}}>
-                <Button color="#5BC0DE" round style={{width:"40%"}} onPress={()=>{SignUp;}}>Submit</Button>
+                <Button color="#5BC0DE" round style={{width:"40%"}} onPress={()=>SignUp}>Submit</Button>
             </View>
         </View>
     </View>

@@ -37,6 +37,40 @@ export const selectGoalData=(ID)=>{
     });
 }
 
+export const selectGroupMember=(ID)=>{
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'SELECT Account_ID FROM Goal_Group WHERE Goal_ID = ?;',
+                [ID],
+                (tx, result) => {
+                    resolve(result.rows.item(0));
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+}
+
+export const selectGroupList=(ID)=>{
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'SELECT Goal_ID FROM Goal_Group WHERE Account_ID= ?;',
+                [ID],
+                (tx, result) => {
+                    resolve(result.rows.item(0));
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+}
+
 export const selectDepositData=(ID)=>{
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
@@ -54,14 +88,14 @@ export const selectDepositData=(ID)=>{
     });
 }
 
-export const insertAccountData = (ID,name,password,phone,bank,bank_card,balance) => {
+export const insertAccountData = (name,password,phone,bank,bank_card,balance) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
-                'INSERT INTO Account (Account_ID,name,phone,password,bank,bank_card,balance) VALUES (?,?,?,?,?,?,?);',
-                [ID,name,phone,password,bank,bank_card,balance],
+                'INSERT INTO Account (name,phone,password,bank,bank_card,balance) VALUES (?,?,?,?,?,?);',
+                [name,phone,password,bank,bank_card,balance],
                 (tx, result) => {
-                    resolve(result);
+                    resolve(result.rows);
                 },
                 (tx, error) => {
                     reject(error);
@@ -71,14 +105,48 @@ export const insertAccountData = (ID,name,password,phone,bank,bank_card,balance)
     });
 };
 
-export const insertDepositData = (Account_ID,Goal_ID,Deposit_amount,Deposit_time) => {
+export const insertVoteData = (Vote_ID,Account_ID, Goal_ID, vote_type, vote_detail) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
-                'INSERT INTO Deposit (Account_ID, Goal_ID, Deposit_amount, Deposit_time) VALUES (?,?,?,?);',
-                [Account_ID, Goal_ID, Deposit_amount, Deposit_time],
-                (tx, result) => {
-                    resolve(result);
+                'INSERT INTO Vote (Vote_ID, Account_ID, Goal_ID, vote_type, vote_detail, is_vote) VALUES (?,?,?,?,?,0);',
+                [Vote_ID, Account_ID, Goal_ID, vote_type, vote_detail],
+                (tx, result) => {  
+                    resolve(result.rows);
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
+export const insertGroupData = (Account_ID,Goal_ID) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'INSERT INTO Goal_Group (Account_ID, Goal_ID) VALUES (?,?);',
+                [Account_ID, Goal_ID],
+                (tx, result) => {   
+                    resolve(result.rows);
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
+export const insertDepositData = (Account_ID,Goal_ID,Deposit_amount) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'INSERT INTO Deposit (Account_ID, Goal_ID, Deposit_amount, Deposit_time) VALUES (?,?,?,CURRENT_TIMESTAMP);',
+                [Account_ID, Goal_ID, Deposit_amount],
+                (tx, result) => {   
+                    resolve(result.rows);
                 },
                 (tx, error) => {
                     reject(error);
@@ -93,10 +161,10 @@ export const insertGoalData = (Goal_name,Goal_type, Goal_target, end_time) => {
         db.transaction(tx => {
             console.log('inserting goal')
             tx.executeSql(
-                'INSERT INTO Goal (Goal_name, Goal_type, Goal_target, end_time) VALUES (?,?,?,?,TO_DATE(?, DD/MM/YYYY));',
+                'INSERT INTO Goal (Goal_name, Goal_type, Goal_amount,is_pending, start_time,end_time) VALUES (?,?,?,0,CURRENT_TIMESTAMP,TO_DATE(?, DD/MM/YYYY));',
                 [Goal_name, Goal_type, Goal_target, end_time],
                 (tx, result) => {
-                    resolve(result);
+                    resolve(result.rows);
                 },
                 (tx, error) => {
                     reject(error);
@@ -156,4 +224,41 @@ export const deleteGoalData = (ID) => {
         });
     });
 };
+
+export const deleteVoteData = (gID, vID) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'DELETE FROM Vote WHERE Goal_ID =? AND Vote_ID =?;',
+                [gID, vID],
+                (tx, result) => {
+                    resolve(result.rows);
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
+
+export const deleteGroupData = (ID) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'DELETE FROM Goal_Group WHERE Goal_ID =?;',
+                [ID],
+                (tx, result) => {
+                    resolve(result.rows);
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
+
 

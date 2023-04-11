@@ -9,6 +9,7 @@ import {
   deleteAccountData,
   deleteGoalData,
   deleteDepositData,
+  selectAccountData,
 } from './database'
 
 const db = SQLite.openDatabase('maindb.db');
@@ -22,6 +23,7 @@ class Index extends Component {
     // Create Account Table if not exists
     db.transaction(tx => {
       tx.executeSql(
+        //'DROP TABLE Account;\
         'CREATE TABLE IF NOT EXISTS Account \
         (Account_ID INTEGER PRIMARY KEY AUTOINCREMENT, \
           password TEXT, \
@@ -55,6 +57,7 @@ class Index extends Component {
       // Create Goal Table if not exists
       // %YY%MM%DD%HH%MM%SS
       tx.executeSql(
+        //'DROP TABLE Goal;\
         'CREATE TABLE IF NOT EXISTS Goal \
         (Goal_ID INTEGER PRIMARY KEY AUTOINCREMENT, \
           Goal_name TEXT, \
@@ -87,6 +90,7 @@ class Index extends Component {
 
       // Create Deposit Table if not exists
       tx.executeSql(
+        //'DROP TABLE Deposit;\
         'CREATE TABLE IF NOT EXISTS Deposit \
         (Account_ID INTEGER, \
           Goal_ID INTEGER, \
@@ -118,8 +122,10 @@ class Index extends Component {
       
       // create Vote table
       tx.executeSql(
+        //'DROP TABLE Vote;\
         'CREATE TABLE IF NOT EXISTS Vote \
-        ( Account_ID INTEGER, \
+        ( Vote_ID INTEGER,\
+          Account_ID INTEGER, \
           Goal_ID INTEGER, \
           vote_type TEXT, \
           vote_detail TEXT, \
@@ -150,6 +156,7 @@ class Index extends Component {
       // create group table
       tx.executeSql(
 
+        //'DROP TABLE Goal_Group;\
         'CREATE TABLE IF NOT EXISTS Goal_Group \
         ( Account_ID INTEGER, \
           Goal_ID INTEGER, \
@@ -177,12 +184,19 @@ class Index extends Component {
       );
       
       // insertion example
-      // insertAccountData('1','TEST','123456','123456','test','123456789','1000').
-      // then(res => {
-      //   console.log("insertion valid",res);
-      // }).catch(err => {
-      //   console.log("insertion invalid",err);
-      // });
+      insertAccountData('TEST','123456','98123456','test','123456789','1000').
+       then(res => {
+         console.log("insertion valid",res);
+       }).catch(err => {
+        console.log("insertion invalid",err);
+      });
+      
+      selectAccountData('1').
+      then(res => {
+        console.log("select valid",res);
+      }).catch(err => {
+       console.log("select invalid",err);
+     });
 
 
     });
