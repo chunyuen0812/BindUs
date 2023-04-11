@@ -4,36 +4,15 @@ import { RadioButton } from 'react-native-paper';
 import React, { Component, useState } from 'react';
 import DateTimePicker,{ DateTimePickerAndroid,RNDateTimePicker} from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
-import { insertGoalData } from '../../../database';
+import { insertGoalData, selectAccountData } from '../../../database';
 import * as SQLite from 'expo-sqlite';
+import { useEffect } from 'react';
+const db = SQLite.openDatabase('maindb.db');
 
-var db = SQLite.openDatabase('maindb.db');
-
-const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      profpic: require('../../res/profilepic.jpg'),
-      name: 'User 1',
-      phoneno:'12345678',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      profpic: require('../../res/profilepic.jpg'),
-      name: 'User 2',
-      phoneno:'12345678',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      profpic: require('../../res/profilepic.jpg'),
-      name: 'User 3',
-      phoneno:'12345678',
-    },
-  ];
-
-  const Item = ({id, name, profpic, phoneno}) => {
+  const Item = ({id, name,phoneno}) => {
     return(
     <Pressable style={styles.membercontainer} onPress={()=>console.log({name},' profile page')}>
-        <Image source={profpic} style={styles.image}/>
+        <Image source={require('../../res/profilepic.jpg')} style={styles.image}/>
         <View style={{flexDirection:'column'}}>
             <View style={{flexDirection:'row',flex:1, width:300}}>
                 <Text style={styles.name}>{name}</Text>
@@ -48,10 +27,9 @@ const DATA = [
 
 
   const renderItem = ({ item }) => <Item 
-    id={item.id}
-    profpic={item.profpic} 
+    id={item.Account_ID}
     name={item.name}
-    phoneno={item.phoneno} />;
+    phoneno={item.phone} />;
 
   const state = { 
       GrpName: "",
@@ -59,8 +37,41 @@ const DATA = [
 	    GoalTarget:0,
 	    GoalTimeLimit: new Date(),
      };
+    var temp=[];   
+const CreateGroup=({route})=> {
+  useEffect(()=>{
+ 
+  if (route.params){
+    memberlist=route.params.memberlist;
+    for (i=0;i<memberlist.lenght;i++){
+      db.transaction(tx=>{
+        tx.executeSql(
+          // print table info
+          'SELECT * FROM Account WHERE Account_ID =?;',
+          [memberlist[i]],
+          (tx, results) => {
+              for (let i = 0; i < results.rows.length; ++i)
+                temp.push(results.rows.item(i));
+              console.log(temp);
+          },
+          (tx, error) => {
+            console.error('Error selecting data', error);
+          }
+        );
+      })
+    }}
+  })   
+
+   //   selectAccountData(memberlist[i]).
+   //   then(res => {
+   //     setTemp(temp=>[...temp, res]);
+   //     console.log(temp)
+   //   }).catch(err => {
+   //    console.log("select invalid",err);
+   //  });
     
-function CreateGroup () {    
+  
+
 
 const navigation=useNavigation();
 const [date, setDate] = useState(new Date());
@@ -129,11 +140,21 @@ const [type, setType]=useState('short')
                 <Text style={styles.subtitle}>Members:</Text>
                 <Button onPress={()=>{ state.Members+=1; console.log('To Contact list');navigation.navigate('ContactList')}} size={'small'}> Add </Button>
             </View>
-            <View style={{borderWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'48%'}}>
+            <View style={{borderWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'52%'}}>
+              <Pressable style={styles.membercontainer} onPress={()=>console.log('TEST',' profile page')}>
+                <Image source={require('../../res/profilepic.jpg')} style={styles.image}/>
+                <View style={{flexDirection:'column'}}>
+                    <View style={{flexDirection:'row',flex:1, width:300}}>
+                      <Text style={styles.name}>TEST</Text>
+                      <Text style={{alignSelf:'center'}}>98123456</Text>
+                    </View>
+                    <Text numberOfLines={1} style={{fontSize:15, color:'grey'}}>1</Text>
+                </View>
+              </Pressable>
               <FlatList 
-              data={DATA}
+              data={temp}
               renderItem={renderItem}
-              keyExtractor={item => item.id}/>  
+              keyExtractor={item => item.Account_ID}/>  
             </View>     
             <View style={{alignItems:'center'}}>
                 <Button color="#5BC0DE" round style={{width:"40%"}} onPress={()=>SignUp}>Submit</Button>

@@ -4,6 +4,7 @@ import Nav from './src/nav'
 import * as SQLite from 'expo-sqlite';
 import {
   insertAccountData,
+  insertAccountDatawithID,
   insertGoalData,
   insertDepositData,
   deleteAccountData,
@@ -40,7 +41,7 @@ class Index extends Component {
             'SELECT * FROM Account;',
             [],
             (tx, resultSet) => {
-              console.log('Table content:', resultSet.rows);
+              console.log('Account content:', resultSet.rows);
             },
             (tx, error) => {
               console.error('Error selecting data', error);
@@ -184,20 +185,27 @@ class Index extends Component {
       );
       
       // insertion example
-      insertAccountData('TEST','123456','98123456','test','123456789','1000').
+      /*insertAccountDatawithID('4','USER3','orange','91234567','test','100000003','1500').
        then(res => {
          console.log("insertion valid",res);
        }).catch(err => {
         console.log("insertion invalid",err);
       });
       
-      selectAccountData('1').
+     /* selectAccountData('1').
       then(res => {
         console.log("select valid",res);
       }).catch(err => {
        console.log("select invalid",err);
      });
-
+    
+    /* deleteAccountData('4')
+     .then(res => {
+      console.log("delete valid",res);
+    }).catch(err => {
+     console.log("delete invalid",err);
+   });
+   /**/
 
     });
   }

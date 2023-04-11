@@ -88,6 +88,23 @@ export const selectDepositData=(ID)=>{
     });
 }
 
+export const insertAccountDatawithID = (id, name,password,phone,bank,bank_card,balance) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                'INSERT INTO Account (Account_ID,name,phone,password,bank,bank_card,balance) VALUES (?,?,?,?,?,?,?);',
+                [id,name,phone,password,bank,bank_card,balance],
+                (tx, result) => {
+                    resolve(result.rows);
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
 export const insertAccountData = (name,password,phone,bank,bank_card,balance) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
