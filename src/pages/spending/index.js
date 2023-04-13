@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native'
 import React, { useState } from 'react'
-import { NavBar,Icon } from 'galio-framework'
+import { NavBar,Icon, Button } from 'galio-framework'
 import { useNavigation } from '@react-navigation/native';
 import Accordion from 'react-native-collapsible/Accordion';
 
 const windowWidth=Dimensions.get('window').width-10;
+const windowHeight=Dimensions.get('window').height;
+
 const target=10000;
 const section=[
 { id:'1',
@@ -29,7 +31,11 @@ const Spending = () => {
     function renderHeader(section, _, isActive) {
       return (
         <View style={styles.container}>
-        <Text style={styles.accordTitle}>{section.id}.  { section.event }</Text>
+          <View style={{flexDirection:'row', justifyContent:'space-around'}}>
+            <Text style={styles.accordTitle}>{section.id}.  { section.event }</Text>
+            <Button onlyIcon icon='camerao' iconFamily='antdesign' iconSize={20} color='#999' style={{alignSelf:'center',width:25,height:25, marginHorizontal:10}}/>
+          </View>
+        
           <View style={{flexDirection:'row', justifyContent:'space-around'}}>
             <Text>Person in Charge: {section.user}</Text>
             <Text>Spending Goal: ${section.fund}</Text>
@@ -52,7 +58,7 @@ const Spending = () => {
       );
     }
   return (
-    <View>
+    <View style={height=windowHeight}>
         <NavBar style={styles.header} titleStyle={styles.title} back  title="Spend" 
         onLeftPress={()=>navigation.navigate('Assign')} leftStyle={{width:30,height:30}} leftIconSize={30}
         />
@@ -98,6 +104,7 @@ const styles = StyleSheet.create({
       paddingBottom: 4
     },
     accordTitle: {
+      flex:1,
       fontSize: 20,
       fontWeight:'bold',
       color:'black'
