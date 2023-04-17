@@ -38,16 +38,16 @@ const endDate=STAGE[STAGE.length-1].date;
 const DATA = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    profpic: require('../../res/profilepic.jpg'),
+    profpic: require('../../res/icon.jpeg'),
     name: 'User 1',
-    Amount: 6700,
+    Amount: 2100,
     payment: 100,
     date:'13/03/2023',
     time:'21:03'
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    profpic: require('../../res/profilepic.jpg'),
+    profpic: require('../../res/icon.jpeg'),
     name: 'User 2',
     Amount: 1500,
     payment: 200,
@@ -56,7 +56,7 @@ const DATA = [
   },
   {
     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    profpic: require('../../res/profilepic.jpg'),
+    profpic: require('../../res/icon.jpeg'),
     name: 'User 3',
     Amount: 1800,
     payment: 300,

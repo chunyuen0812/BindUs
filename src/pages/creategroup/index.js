@@ -29,7 +29,7 @@ db.transaction(tx=>{
   const Item = ({id, name,phoneno}) => {
     return(
     <Pressable style={styles.membercontainer} onPress={()=>console.log({name},' profile page')}>
-        <Image source={require('../../res/profilepic.jpg')} style={styles.image}/>
+        <Image source={require('../../res/icon.jpeg')} style={styles.image}/>
         <View style={{flexDirection:'column'}}>
             <View style={{flexDirection:'row',flex:1, width:300}}>
                 <Text style={styles.name}>{name}</Text>
@@ -161,7 +161,7 @@ const [type, setType]=useState('short')
             </View>
             <View style={{borderWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'52%'}}>
               <Pressable style={styles.membercontainer} onPress={()=>console.log('TEST',' profile page')}>
-                <Image source={require('../../res/profilepic.jpg')} style={styles.image}/>
+                <Image source={require('../../res/icon.jpeg')} style={styles.image}/>
                 <View style={{flexDirection:'column'}}>
                     <View style={{flexDirection:'row',flex:1, width:300}}>
                       <Text style={styles.name}>TEST</Text>

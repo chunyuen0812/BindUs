@@ -37,21 +37,21 @@ const STAGE=[
 const DATA = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    profpic: require('../../res/profilepic.jpg'),
+    profpic: require('../../res/icon.jpeg'),
     name: 'User 1',
     Amount: 0,
     Uservote:1,
   },
   {
     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    profpic: require('../../res/profilepic.jpg'),
+    profpic: require('../../res/icon.jpeg'),
     name: 'User 2',
     Amount: 0,
     Uservote:2,
   },
   {
     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    profpic: require('../../res/profilepic.jpg'),
+    profpic: require('../../res/icon.jpeg'),
     name: 'User 3',
     Amount: 0,
     Uservote:0,
