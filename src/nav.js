@@ -15,8 +15,6 @@ import CreateGroup from './pages/creategroup';
 import Deposit from './pages/group/deposit';
 import Vote from './pages/group/vote';
 import ContactList from './pages/contact';
-import Assign from './pages/spending/assign';
-import Spending from './pages/spending';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,7 +29,7 @@ function MainTabs() {
             <Ionicons name="home-outline" size={size} color={color} />
           ),}}/>
       <Tab.Screen name="Profile" 
-      component={Profile} 
+      component={Profile}
       options={{headerShown:false,
         tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
@@ -45,7 +43,7 @@ function Nav() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Home">
         <Stack.Screen name="Home" component={MainTabs}/>
-        <Stack.Screen name="Profile" component={MainTabs}/>
+        <Stack.Screen name="Bind" component={BindCard}/>
         <Stack.Screen name="SignUp" component={SignUp}/>
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="Group" component={GroupPage}/>
