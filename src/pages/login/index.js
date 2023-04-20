@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import { ImageBackground, StyleSheet, View, Text, Alert} from 'react-native';
 import { Input,Button} from 'galio-framework';
 import request from "../../utils/request";
-import signup from './signup'
 import { ACCOUNT_LOGIN } from '../../utils/pathMap';
+import axios from 'axios';
 
 
 class LoginPage extends Component {
@@ -11,10 +11,11 @@ class LoginPage extends Component {
   state = {
     loginname: '',
     loginpwd: '',
+    token: "",
   }
 
   handleLogin = () => {
-    const { loginname, loginpwd } = this.state;
+    const { loginname, loginpwd} = this.state;
     // if not any input
     if (!loginname || !loginpwd) {
       Alert.alert('Error', 'Please enter both username and password.');
@@ -28,7 +29,24 @@ class LoginPage extends Component {
         // Handle successful login
         console.log(response);
         if (response.data.msg ==  "Operation success"){
+          const token = response.data.data;
+          this.setState({token: token});
           this.props.navigation.navigate("Home");
+          // read the updated personal information
+          axios({
+            method: 'post',
+            url: 'https://datastudio.simnectzplatform.com/gateway/SIMNECTZ/1676014870768//e-wallet/sys/loginuserenquiry',
+            headers:{token:token},
+            data:{}
+          }).then((response) => {
+            console.log(response);
+            // updated local database
+          })
+          .catch((error) => {
+            // Handle error
+            console.error(error);
+          });
+
         }
         else{
           Alert.alert("Login failed");

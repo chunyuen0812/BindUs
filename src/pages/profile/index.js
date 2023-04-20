@@ -3,41 +3,29 @@ import { View, ImageBackground, StyleSheet,ScrollView,Dimensions,Image} from 're
 import { Block,Text,theme,Button} from 'galio-framework';
 import { HeaderHeight } from '../../utils/styleKits';
 import { argonTheme} from '../../utils'
-import axios from 'axios';
-import {token} from '../../utils/pathMap'
 
 const { width, height } = Dimensions.get("screen");
 const thumbMeasure = (width - 48 - 32) / 3;
 
+
+
 class Index extends Component {
 
+    state= {
 
-    state = { 
-
-     } 
+    }
 
     handleUpdate = () =>{
-        axios({
-            method: 'post',
-            url: 'https://datastudio.simnectzplatform.com/gateway/SIMNECTZ/1676014870768//e-wallet/sys/loginuserenquiry',
-            headers:{token:token},
-            data:{}
-          }).then((response) => {
-            console.log(response);
-            // 拉取并更新数据
-          })
-          .catch((error) => {
-            // Handle error
-            console.error(error);
-          });
-
+      
     };
 
     handleBinding = () =>{
+      this.props.navigation.navigate("Bind");
 
     };
 
     render() { 
+
         return (
             <Block flex style={styles.profile}>
               <Block flex>
@@ -125,45 +113,45 @@ class Index extends Component {
                         </Block>
                         <Text></Text>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            customerId
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            CustomerId
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
                             1111111
                           </Text>
                         </Block>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            last name
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            Last Name
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
                             1111111
                           </Text>
                         </Block>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            first name
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            First Name
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
                             1111111
                           </Text>
                         </Block>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            birthday
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            Birthday
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
                             1111111
                           </Text>
                         </Block>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            bank card
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            Bank Card
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
                             1111111
