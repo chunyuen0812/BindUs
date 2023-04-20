@@ -12,11 +12,16 @@ const thumbMeasure = (width - 48 - 32) / 3;
 class Index extends Component {
 
     state= {
-
+      balance: 1111,
+      lastUpdateTime: '',
+      username: '',
+      customerId: '',
+      birthday: '',
+      bankCard: '',
     }
 
     handleUpdate = () =>{
-      
+
     };
 
     handleBinding = () =>{
@@ -79,7 +84,7 @@ class Index extends Component {
                               color="#525F7F"
                               style={{ marginBottom: 4 }}
                             >
-                              $ XXX
+                              ${this.state.balance}
                             </Text>
                             <Text size={12} color={argonTheme.COLORS.TEXT}>Balance</Text>
                           </Block>
@@ -90,7 +95,7 @@ class Index extends Component {
                               size={18}
                               style={{ marginBottom: 4 }}
                             >
-                              XX-XX-XXXX
+                              {this.state.lastUpdateTime}
                             </Text>
                             <Text size={12} color={argonTheme.COLORS.TEXT}>Last Update Time</Text>
                           </Block>
@@ -118,25 +123,7 @@ class Index extends Component {
                             CustomerId
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
-                          </Text>
-                        </Block>
-
-                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
-                          <Text bold size={20} color="#525F7F" >
-                            Last Name
-                          </Text>
-                          <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
-                          </Text>
-                        </Block>
-
-                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
-                          <Text bold size={20} color="#525F7F" >
-                            First Name
-                          </Text>
-                          <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
+                            {this.state.customerId}
                           </Text>
                         </Block>
 
@@ -145,7 +132,7 @@ class Index extends Component {
                             Birthday
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
+                            {this.state.birthday}
                           </Text>
                         </Block>
 
@@ -154,7 +141,34 @@ class Index extends Component {
                             Bank Card
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
+                            {this.state.bankCard}
+                          </Text>
+                        </Block>
+
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                          {this.state.group1}
+                          </Text>
+                          <Text style={{ color: "#525F7F", fontSize: 16}}>
+                            {this.state.group1_depoist}
+                          </Text>
+                        </Block>
+
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            {this.state.group2}
+                          </Text>
+                          <Text style={{ color: "#525F7F", fontSize: 16}}>
+                            {this.state.group2_deposit}
+                          </Text>
+                        </Block>
+
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                          {this.state.group3}
+                          </Text>
+                          <Text style={{ color: "#525F7F", fontSize: 16}}>
+                            {this.state.group3_deposit}
                           </Text>
                         </Block>
 
