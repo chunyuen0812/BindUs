@@ -24,7 +24,7 @@ const Tab = createBottomTabNavigator();
 function MainTabs() {
   return (
     <Tab.Navigator >
-      <Tab.Screen name="Home" 
+      <Tab.Screen name="Home Page" 
       component={home} 
       options={{headerShown:false,
         tabBarIcon: ({ color, size }) => (

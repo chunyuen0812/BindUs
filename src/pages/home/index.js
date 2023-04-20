@@ -40,52 +40,39 @@ db.transaction(tx=>{
           console.error('Error selecting data', error);
         }
       );
+      
 })
-grouplist.forEach(item=>{
-  flag=0;
-  for (i=0;i<grpprogress.length;i++){
-    if(item.Goal_ID===grpprogress[i].Goal_ID&&flag==0){
-    Object.assign(item, {[progress]:grpprogress[i].SUM(Deposit_amount)})
-    flag=1;
-  }
-  }
-  if(flag==0){
-    Object.assign(item, {[progress]:'0'})
-  }
-})
-
-
+var merged=[];
 const windowHeight = Dimensions.get('window').height; 
 
 // pixel per item 85p
-const Item = ({gid, groupimage, title,goaltype,goaltarget,pending, progress}) => {
+const Item = ({gid, title,goaltype,goaltarget,pending, progress}) => {
   const navigation=useNavigation();
   var navbutton='';
-  flag=0;
-  goalprogress='0';
+  console.log(progress+1)
   {pending==0?navbutton='Group':navbutton='Pending'}
     return (
-      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton,{groupname:title, goaltype:goaltype})}} style={styles.item}>
-        <Image source={groupimage} style={styles.image}/> 
+      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton,{gid:gid,groupname:title, goaltype:goaltype})}} style={styles.item}>
+        <Image source={require('../../res/groupicon.png')} style={styles.image}/> 
         <View style={styles.grpinfo}>
           <View style={styles.row}>
             <Text numberOfLines={1} style={styles.name}>
             {title}
             </Text>
-            {pending==0?<Text>{Math.round(progress/goaltarget)}% </Text>:<Text>Pending</Text>}
+            {pending==0?<Text>{Math.round(progress/goaltarget*100)}% </Text>:<Text>Pending</Text>}
           </View>
         </View>
       </Pressable>
     );  
 };
 
-const renderItem = ({ item, progress }) => <Item 
+const renderItem = ({ item }) => <Item 
 gid={item.Goal_ID}
 title={item.Goal_name} 
 goaltype={item.Goal_type}
 goaltarget={item.Goal_amount} 
 pending={item.is_pending}
-progress={item.progress}
+progress={item['SUM(Deposit_amount)']}
 />;
 
 class HomePage extends Component {
@@ -93,11 +80,11 @@ class HomePage extends Component {
     super(props);
     this.state = {
       loading: false,
-      data: grouplist,
+      data: merged,
       error: null,
       searchValue: "",
     };
-    this.arrayholder = grouplist;
+    this.arrayholder = merged;
   }
 
   searchFunction = (text) => {
@@ -110,6 +97,13 @@ class HomePage extends Component {
   };
 
   render() {
+for(let i=0; i<grouplist.length; i++) {
+  merged.push({
+   ...grouplist[i], 
+   ...(grpprogress.find((itmInner) => itmInner.Goal_ID === grouplist[i].Goal_ID))}
+  );
+}
+console.log('test: ', merged[2]);
     return (
       <View style={{flexDirection:'column', height:windowHeight}}> 
         <NavBar style={styles.header} titleStyle={styles.title} title="Home" />
