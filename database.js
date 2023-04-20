@@ -178,7 +178,7 @@ export const insertGoalData = (Goal_name,Goal_type, Goal_target, end_time) => {
         db.transaction(tx => {
             console.log('inserting goal')
             tx.executeSql(
-                'INSERT INTO Goal (Goal_name, Goal_type, Goal_amount,is_pending, start_time,end_time) VALUES (?,?,?,0,CURRENT_TIMESTAMP,TO_DATE(?, DD/MM/YYYY));',
+                'INSERT INTO Goal (Goal_name, Goal_type, Goal_amount,is_pending, start_time,end_time) VALUES (?,?,?,0,CURRENT_TIMESTAMP,?);',
                 [Goal_name, Goal_type, Goal_target, end_time],
                 (tx, result) => {
                     resolve(result.rows);

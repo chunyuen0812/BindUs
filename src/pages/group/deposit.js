@@ -59,11 +59,12 @@ const Item=({bank, no, id})=>{
     const x=Payment[parseInt(select)-1];
     var method='';
     var no='';
+    var date = new Date();
     if(select!='') {
     if (x.bank==''){method='Credit card'; no='************'+(x.no%10000)} else {method=x.bank; no='********'+(x.no%10000)}
   }
     if (amount!=0&&select!=''){
-    Alert.alert('Deposit','Group: '+groupname+'\n'+method+': '+no+'\nAmount: $'+amount.toString(), [
+    Alert.alert('Deposit','Group: '+groupname+'\n'+method+': '+no+'\nAmount: $'+amount.toString()+'\nDate: '+date, [
       {
         text: 'Cancel',
         onPress: () => console.log('Cancel'),
@@ -138,7 +139,7 @@ const styles= StyleSheet.create({
       fontWeight:'bold'
     },
     subtitle:{
-      fontsize:18,
+      fontSize:18,
     },
     container:{
       justifyContent:'center',

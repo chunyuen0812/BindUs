@@ -13,12 +13,15 @@ var temp = [];
 db.transaction(tx=>{
     tx.executeSql(
         // print table info
-        'SELECT Account_ID, name, phone FROM Account WHERE Account_ID != 1;',
+        'SELECT Account_ID, name, phone FROM Account;',
         [],
         (tx, results) => {
-            for (let i = 0; i < results.rows.length; i++)
+            for (let i = 0; i < results.rows.length; i++){
               temp.push(results.rows.item(i));
-            console.log(temp);
+            }
+              
+            console.log('create group')
+            console.log(temp.length);
         },
         (tx, error) => {
           console.error('Error selecting data', error);
@@ -55,36 +58,29 @@ db.transaction(tx=>{
 	    GoalTimeLimit: new Date(),
      };   
 const CreateGroup=({route})=> {
-// useEffect(()=>{
-//
-//  if (route.params){
-//    memberlist=route.params.memberlist;
-//    for (i=0;i<memberlist.lenght;i++){
-//      db.transaction(tx=>{
-//        tx.executeSql(
-//          // print table info
-//          'SELECT * FROM Account WHERE Account_ID =?;',
-//          [memberlist[i]],
-//          (tx, results) => {
-//              for (let i = 0; i < results.rows.length; ++i)
-//                temp.push(results.rows.item(i));
-//              console.log(temp);
-//          },
-//          (tx, error) => {
-//            console.error('Error selecting data', error);
-//          }
-//        );
-//      })
-//    }}
-//  })   
 
-   //   selectAccountData(memberlist[i]).
-   //   then(res => {
-   //     setTemp(temp=>[...temp, res]);
-   //     console.log(temp)
-   //   }).catch(err => {
-   //    console.log("select invalid",err);
-   //  });
+var memberno=['1']
+var memberlist=[]
+ if (route.params){
+  memberno=['1'];
+  memberlist=[];
+  for (i=0; i<route.params.memberlist.length;i++){
+    memberno.push(route.params.memberlist[i])
+  }
+  console.log(memberno)
+
+ }
+  for (let j=0;j<memberno.length;j++){
+    flag=0;
+    for (let i=0;i<temp.length;i++){
+      if (temp[i].Account_ID==memberno[j]&&flag==0){
+        memberlist.push(temp[i]);
+        flag=1;
+        console.log(temp[i])
+      }
+     }
+     console.log(memberlist)
+  }  
     
 const insertDATA=()=>{
   const { GrpName,Grptype,GoalTarget,GoalTimeLimit} = state;
@@ -110,7 +106,6 @@ const showDatepicker = () => {
         };
 const SignUp = () => {
           // 註冊帳號
-          
           state.Grptype=type;
           const { GrpName,Grptype,GoalTarget,GoalTimeLimit} = state;
           // if not any input
@@ -160,18 +155,8 @@ const [type, setType]=useState('short')
                 <Button onPress={()=>{ state.Members+=1; console.log('To Contact list');navigation.navigate('ContactList')}} size={'small'}> Add </Button>
             </View>
             <View style={{borderWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'52%'}}>
-              <Pressable style={styles.membercontainer} onPress={()=>console.log('TEST',' profile page')}>
-                <Image source={require('../../res/icon.jpeg')} style={styles.image}/>
-                <View style={{flexDirection:'column'}}>
-                    <View style={{flexDirection:'row',flex:1, width:300}}>
-                      <Text style={styles.name}>TEST</Text>
-                      <Text style={{alignSelf:'center'}}>98123456</Text>
-                    </View>
-                    <Text numberOfLines={1} style={{fontSize:15, color:'grey'}}>1</Text>
-                </View>
-              </Pressable>
               <FlatList 
-              data={temp}
+              data={memberlist}
               renderItem={renderItem}
               keyExtractor={item => item.Account_ID}/>  
             </View>     

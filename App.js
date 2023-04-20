@@ -11,6 +11,7 @@ import {
   deleteGoalData,
   deleteDepositData,
   selectAccountData,
+  insertGroupData,
 } from './database'
 
 const db = SQLite.openDatabase('maindb.db');
@@ -185,12 +186,46 @@ class Index extends Component {
       );
       
       // insertion example
-      /*insertAccountData('User3','orange','91234567','test','100000003','1500').
-       then(res => {
-         console.log("insertion valid",res);
-       }).catch(err => {
-        console.log("insertion invalid",err);
-      });*/
+    //  for(i=1;i<5;i++){
+    //    for(j=1;j<4;j++){
+    //      insertDepositData(i,j,'100').
+    //  then(res => {
+    //    console.log("insert valid",res);
+    //  }).catch(err => {
+    //   console.log("insert invalid",err);
+    // });
+    //    }
+    //  }
+   //  for(i=1;i<5;i++){
+   //    for(j=1;j<4;j++){
+   //      insertGroupData(i,j).
+   //  then(res => {
+   //    console.log("insert valid",res);
+   //  }).catch(err => {
+   //   console.log("insert invalid",err);
+   // });
+   //    }
+   //  }
+      
+    //  insertDepositData('1','2','250').
+    //  then(res => {
+    //    console.log("insertion valid",res);
+    //  }).catch(err => {
+    //   console.log("insertion invalid",err);
+    // });
+      
+    //  insertGoalData('Grad Trip','short','15000','15-06-2023').
+    //  then(res => {
+    //    console.log("insertion valid",res);
+    //  }).catch(err => {
+    //   console.log("insertion invalid",err);
+    // });
+   //  insertAccountData('User 3','orange','90000003','test','100000000003','2000').
+   //   then(res => {
+   //     console.log("insertion valid",res);
+   //   }).catch(err => {
+   //    console.log("insertion invalid",err);
+   //  });
       
       /*selectAccountData('5').
       then(res => {
