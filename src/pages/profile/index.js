@@ -3,41 +3,34 @@ import { View, ImageBackground, StyleSheet,ScrollView,Dimensions,Image} from 're
 import { Block,Text,theme,Button} from 'galio-framework';
 import { HeaderHeight } from '../../utils/styleKits';
 import { argonTheme} from '../../utils'
-import axios from 'axios';
-import {token} from '../../utils/pathMap'
 
 const { width, height } = Dimensions.get("screen");
 const thumbMeasure = (width - 48 - 32) / 3;
 
+
+
 class Index extends Component {
 
-
-    state = { 
-
-     } 
+    state= {
+      balance: 1111,
+      lastUpdateTime: '',
+      username: '',
+      customerId: '',
+      birthday: '',
+      bankCard: '',
+    }
 
     handleUpdate = () =>{
-        axios({
-            method: 'post',
-            url: 'https://datastudio.simnectzplatform.com/gateway/SIMNECTZ/1676014870768//e-wallet/sys/loginuserenquiry',
-            headers:{token:token},
-            data:{}
-          }).then((response) => {
-            console.log(response);
-            // 拉取并更新数据
-          })
-          .catch((error) => {
-            // Handle error
-            console.error(error);
-          });
 
     };
 
     handleBinding = () =>{
+      this.props.navigation.navigate("Bind");
 
     };
 
     render() { 
+
         return (
             <Block flex style={styles.profile}>
               <Block flex>
@@ -91,7 +84,7 @@ class Index extends Component {
                               color="#525F7F"
                               style={{ marginBottom: 4 }}
                             >
-                              $ XXX
+                              ${this.state.balance}
                             </Text>
                             <Text size={12} color={argonTheme.COLORS.TEXT}>Balance</Text>
                           </Block>
@@ -102,7 +95,7 @@ class Index extends Component {
                               size={18}
                               style={{ marginBottom: 4 }}
                             >
-                              XX-XX-XXXX
+                              {this.state.lastUpdateTime}
                             </Text>
                             <Text size={12} color={argonTheme.COLORS.TEXT}>Last Update Time</Text>
                           </Block>
@@ -125,48 +118,57 @@ class Index extends Component {
                         </Block>
                         <Text></Text>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            customerId
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            CustomerId
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
+                            {this.state.customerId}
                           </Text>
                         </Block>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            last name
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            Birthday
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
+                            {this.state.birthday}
                           </Text>
                         </Block>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            first name
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            Bank Card
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
+                            {this.state.bankCard}
                           </Text>
                         </Block>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            birthday
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                          {this.state.group1}
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
+                            {this.state.group1_depoist}
                           </Text>
                         </Block>
 
-                        <Block style={{flexBasis: "50%", justifyContent: 'space-between'}}>
-                          <Text bold size={16} color="#525F7F" >
-                            bank card
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                            {this.state.group2}
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            1111111
+                            {this.state.group2_deposit}
+                          </Text>
+                        </Block>
+
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                          {this.state.group3}
+                          </Text>
+                          <Text style={{ color: "#525F7F", fontSize: 16}}>
+                            {this.state.group3_deposit}
                           </Text>
                         </Block>
 
