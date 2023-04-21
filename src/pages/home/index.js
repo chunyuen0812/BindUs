@@ -4,7 +4,6 @@ import {NavBar,Button} from 'galio-framework';
 import {SearchBar, ListItem } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import * as SQLite from 'expo-sqlite';
-import Deposit from "../group/deposit";
  // npm this package for search bar functions
 
 const db = SQLite.openDatabase('maindb.db');
