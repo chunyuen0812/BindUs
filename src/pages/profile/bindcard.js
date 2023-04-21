@@ -54,7 +54,7 @@ class LoginPage extends Component {
       fontSize: 42,
       fontWeight: "bold",
       textAlign: "center",
-      background: "#000000a0"
+      backgroundColor: "#000000a0"
     },
 
     
