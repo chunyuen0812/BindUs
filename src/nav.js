@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Login from '../src/pages/login';
 import home from '../src/pages/home';
 import Profile from '../src/pages/profile';
+import BindCard from '../src/pages/profile/bindcard';
 import SignUp from './pages/login/signup';
 import GroupPage from './pages/group/grouppage';
 import Pending from './pages/group/pending';
@@ -15,6 +16,8 @@ import CreateGroup from './pages/creategroup';
 import Deposit from './pages/group/deposit';
 import Vote from './pages/group/vote';
 import ContactList from './pages/contact';
+import Spending from './pages/spending';
+import Assign from './pages/spending/assign';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
