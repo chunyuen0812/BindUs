@@ -42,6 +42,13 @@ db.transaction(tx=>{
       
 })
 var merged=[];
+for(let i=0; i<grouplist.length; i++) {
+  merged.push({
+   ...grouplist[i], 
+   ...(grpprogress.find((itmInner) => itmInner.Goal_ID === grouplist[i].Goal_ID))}
+  );
+}
+console.log('test: ', merged[2]);
 const windowHeight = Dimensions.get('window').height; 
 
 // pixel per item 85p
@@ -65,13 +72,13 @@ const Item = ({gid, title,goaltype,goaltarget,pending, progress}) => {
     );  
 };
 
-const renderItem = ({ item }) => <Item 
+const renderItem = ({ item, index }) => <Item 
 gid={item.Goal_ID}
 title={item.Goal_name} 
 goaltype={item.Goal_type}
 goaltarget={item.Goal_amount} 
 pending={item.is_pending}
-progress={item['SUM(Deposit_amount)']}
+progress={grpprogress[index]['SUM(Deposit_amount)']}
 />;
 
 class HomePage extends Component {
@@ -79,11 +86,11 @@ class HomePage extends Component {
     super(props);
     this.state = {
       loading: false,
-      data: merged,
+      data: grouplist,
       error: null,
       searchValue: "",
     };
-    this.arrayholder = merged;
+    this.arrayholder = grouplist;
   }
 
   searchFunction = (text) => {
@@ -96,13 +103,6 @@ class HomePage extends Component {
   };
 
   render() {
-for(let i=0; i<grouplist.length; i++) {
-  merged.push({
-   ...grouplist[i], 
-   ...(grpprogress.find((itmInner) => itmInner.Goal_ID === grouplist[i].Goal_ID))}
-  );
-}
-console.log('test: ', merged[2]);
     return (
       <View style={{flexDirection:'column', height:windowHeight}}> 
         <NavBar style={styles.header} titleStyle={styles.title} title="Home" />
