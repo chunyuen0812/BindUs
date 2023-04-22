@@ -8,12 +8,11 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('maindb.db');
 var grouplist = [];
-var grpprogress=[]
 
 db.transaction(tx=>{
     tx.executeSql(
         // print table info
-        'SELECT Goal_ID,Goal_name,Goal_type,Goal_amount,is_pending FROM Goal;',
+        'SELECT Goal.Goal_ID AS gid,Goal_name,Goal_type,Goal_amount,is_pending, SUM(Deposit_amount) AS GoalProgress FROM Goal INNER JOIN Deposit GROUP BY gid;',
         [],
         (tx, results) => {
            console.log('group data');
@@ -24,31 +23,10 @@ db.transaction(tx=>{
         (tx, error) => {
           console.error('Error selecting data', error);
         }
-      );
-      tx.executeSql(
-        // print table info
-        'SELECT Goal_ID, SUM(Deposit_amount) FROM Deposit GROUP BY Goal_ID;',
-        [],
-        (tx, results) => {
-           console.log('progress data');
-            for (let i = 0; i < results.rows.length; ++i)
-              grpprogress.push(results.rows.item(i));
-            console.log(grpprogress);
-        },
-        (tx, error) => {
-          console.error('Error selecting data', error);
-        }
-      );
-      
+      );      
 })
-var merged=[];
-for(let i=0; i<grouplist.length; i++) {
-  merged.push({
-   ...grouplist[i], 
-   ...(grpprogress.find((itmInner) => itmInner.Goal_ID === grouplist[i].Goal_ID))}
-  );
-}
-console.log('test: ', merged[2]);
+
+console.log('test: ', grouplist);
 const windowHeight = Dimensions.get('window').height; 
 
 // pixel per item 85p
@@ -56,7 +34,7 @@ const Item = ({gid, title,goaltype,goaltarget,pending, progress}) => {
   const navigation=useNavigation();
   var navbutton='';
   console.log(progress+1)
-  {pending==0?navbutton='Group':navbutton='Pending'}
+  {pending==1?navbutton='Group':navbutton='Pending'}
     return (
       <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton,{gid:gid,groupname:title, goaltype:goaltype})}} style={styles.item}>
         <Image source={require('../../res/groupicon.png')} style={styles.image}/> 
@@ -65,7 +43,7 @@ const Item = ({gid, title,goaltype,goaltarget,pending, progress}) => {
             <Text numberOfLines={1} style={styles.name}>
             {title}
             </Text>
-            {pending==0?<Text>{Math.round(progress/goaltarget*100)}% </Text>:<Text>Pending</Text>}
+            {pending==1?<Text>{Math.round(progress/goaltarget*100)}% </Text>:<Text>Pending</Text>}
           </View>
         </View>
       </Pressable>
@@ -73,12 +51,12 @@ const Item = ({gid, title,goaltype,goaltarget,pending, progress}) => {
 };
 
 const renderItem = ({ item, index }) => <Item 
-gid={item.Goal_ID}
+gid={item.gid}
 title={item.Goal_name} 
 goaltype={item.Goal_type}
 goaltarget={item.Goal_amount} 
 pending={item.is_pending}
-progress={grpprogress[index]['SUM(Deposit_amount)']}
+progress={item.GoalProgress}
 />;
 
 class HomePage extends Component {
@@ -121,7 +99,7 @@ class HomePage extends Component {
             data={this.state.data}
             renderItem={renderItem}
             contentContainerStyle={styles.listcontainer}
-            keyExtractor={(item) => item.Goal_ID}
+            keyExtractor={(item) => item.gid}
             />    
         </View>
         <View style={{ flexDirection:'row', position:'absolute', bottom:50, right:5}}>

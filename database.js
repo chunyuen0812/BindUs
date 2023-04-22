@@ -122,7 +122,7 @@ export const insertAccountData = (name,password,phone,bank,bank_card,balance) =>
     });
 };
 
-export const insertVoteData = (Vote_ID,Account_ID, Goal_ID, vote_type, vote_detail) => {
+export const insertVoteData = (Vote_ID, Account_ID, Goal_ID, vote_type, vote_detail) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
@@ -182,6 +182,7 @@ export const insertGoalData = (Goal_name,Goal_type, Goal_target, end_time) => {
                 [Goal_name, Goal_type, Goal_target, end_time],
                 (tx, result) => {
                     resolve(result.rows);
+                    
                 },
                 (tx, error) => {
                     reject(error);

@@ -12,6 +12,8 @@ import {
   deleteDepositData,
   selectAccountData,
   insertGroupData,
+  deleteGroupData,
+  insertVoteData,
 } from './database'
 
 const db = SQLite.openDatabase('maindb.db');
@@ -172,7 +174,7 @@ class Index extends Component {
               'SELECT * FROM Goal_Group;',
               [],
               (tx, resultSet) => {
-                console.log('Table content:', resultSet.rows);
+                console.log('Group content:', resultSet.rows);
               },
               (tx, error) => {
                 console.error('Error selecting data', error);
@@ -185,6 +187,34 @@ class Index extends Component {
           }
       );
       
+      //for(i=1;i<5;i++){
+      //  insertVoteData(0,i,4,'New group','').
+      //  then(res => {
+      //    console.log("insertion valid",res);
+      //  }).catch(err => {
+      //   console.log("insertion invalid",err);
+      // });
+      //}
+      
+      //update table
+      //tx.executeSql(
+      //    'UPDATE Goal SET is_pending="1"',
+      //    [],
+      //    (tx, result) => {
+      //      tx.executeSql(
+      //        'SELECT * FROM Goal;',
+      //        [],
+      //        (tx, resultSet) => {
+      //          console.log('Goal:', resultSet.rows);
+      //        },
+      //        (tx, error) => {
+      //          console.error('Error selecting data', error);
+      //        }
+      //      );},            
+      //    (tx, error) => {
+      //      console.error('Update table', error);
+      //    }
+      //);
       // insertion example
     //  for(i=1;i<5;i++){
     //    for(j=1;j<4;j++){
@@ -196,16 +226,16 @@ class Index extends Component {
     // });
     //    }
     //  }
-   //  for(i=1;i<5;i++){
-   //    for(j=1;j<4;j++){
-   //      insertGroupData(i,j).
-   //  then(res => {
-   //    console.log("insert valid",res);
-   //  }).catch(err => {
-   //   console.log("insert invalid",err);
-   // });
-   //    }
-   //  }
+
+    //   for(j=1;j<4;j++){
+    //     insertGroupData(i,j).
+    // then(res => {
+    //   console.log("insert valid",res);
+    // }).catch(err => {
+    //  console.log("insert invalid",err);
+    //});
+    //   }
+     
       
     //  insertDepositData('1','2','250').
     //  then(res => {
@@ -214,12 +244,12 @@ class Index extends Component {
     //   console.log("insertion invalid",err);
     // });
       
-    //  insertGoalData('Grad Trip','short','15000','15-06-2023').
-    //  then(res => {
-    //    console.log("insertion valid",res);
-    //  }).catch(err => {
-    //   console.log("insertion invalid",err);
-    // });
+   //  insertGoalData('Party','short','4000','2023-05-30').
+   //  then(res => {
+   //    console.log("insertion valid",res);
+   //  }).catch(err => {
+   //   console.log("insertion invalid",err);
+   // });
    //  insertAccountData('User 3','orange','90000003','test','100000000003','2000').
    //   then(res => {
    //     console.log("insertion valid",res);
@@ -227,19 +257,19 @@ class Index extends Component {
    //    console.log("insertion invalid",err);
    //  });
       
-      /*selectAccountData('5').
-      then(res => {
-        console.log("select valid",res);
-      }).catch(err => {
-       console.log("select invalid",err);
-     });
+    //  selectAccountData('5').
+    //  then(res => {
+    //    console.log("select valid",res);
+    //  }).catch(err => {
+    //   console.log("select invalid",err);
+    // });
     
-     /*deleteAccountData('5')
-     .then(res => {
-      console.log("delete valid",res);
-    }).catch(err => {
-     console.log("delete invalid",err);
-   });
+   // deleteGroupData('4')
+   // .then(res => {
+   //  console.log("delete valid",res);
+   //}).catch(err => {
+   // console.log("delete invalid",err);
+   //});
    /**/
 
     });

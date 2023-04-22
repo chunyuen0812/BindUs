@@ -4,74 +4,48 @@ import React, { Component } from 'react';
 import ProgressBar from 'react-native-progress/Bar'; 
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
+import * as SQLite from 'expo-sqlite';
+import { useState } from 'react';
 //npm install react-native-swiper-flatlist --save
 //npm install react-native-progress --save
 // fetch group info from db
-var uservote=0;
-var vote='';
+
+const db = SQLite.openDatabase('maindb.db');
 var groupname='group name'
+var memberlist=[];
+var votelist=[];
+var gid='4'
 
 const STAGE=[
 {
     id:'1',
-    goal: 4000,
+    goal: 8000,
     date:'10/02/2023',
 },
 {
     id:'2',
-    goal: 3000,
+    goal: 6000,
     date:'20/02/2023',
 },
 {
     id:'3',
-    goal: 2000,
+    goal: 4000,
     date:'07/03/2023',
 },
 {
     id:'4',
-    goal: 1000,
+    goal: 2000,
     date:'20/03/2023',
 },
 ];
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    profpic: require('../../res/icon.jpeg'),
-    name: 'User 1',
-    Amount: 0,
-    Uservote:1,
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    profpic: require('../../res/icon.jpeg'),
-    name: 'User 2',
-    Amount: 0,
-    Uservote:2,
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    profpic: require('../../res/icon.jpeg'),
-    name: 'User 3',
-    Amount: 0,
-    Uservote:0,
-  },
-];
-
-
-const Target = STAGE.reduce((accumulator, object) => {
-    console.log(accumulator + object.goal)
-    return accumulator + object.goal;
-  }, 0);
-
-
-
-const ItemA = ({id, name, profpic, Uservote}) => {
+const ItemA = ({id, name, profpic, vote}) => {
   return(
   <View style={{margin:5, flexDirection:'column', width:70}}>
-      {Uservote==0?<Image source={profpic} style={styles.image}/>:null}
-      {Uservote==1?<Image source={profpic} style={styles.imageyes}/>:null}
-      {Uservote==2?<Image source={profpic} style={styles.imageno}/>:null}
+      {vote==0?<Image source={require('../../res/icon.jpeg')} style={styles.image}/>:null}
+      {vote==1?<Image source={require('../../res/icon.jpeg')} style={styles.imageyes}/>:null}
+      {vote==2?<Image source={require('../../res/icon.jpeg')} style={styles.imageno}/>:null}
       <Text numberOfLines={1} style={styles.name}>{name}</Text>
   </View>
   );
@@ -102,22 +76,84 @@ const renderStage=({item, index})=> {
     );
 }
 
-const renderItemA = ({ item }) => <ItemA 
-  id={item.id}
-  profpic={item.profpic} 
+const renderItemA = ({ item,index }) => <ItemA 
+  id={item.aid}
   name={item.name}
-  Uservote={item.Uservote}
+  vote={votelist[index].is_vote}
   />;
 
-  const windowHeight = Dimensions.get('window').height; 
+const windowHeight = Dimensions.get('window').height; 
 
-const Pending=({route})=> {
+function insertVote(vote){
+  db.transaction(tx=>{
+    tx.executeSql(
+      'UPDATE Vote SET is_vote=? WHERE Goal_ID=? AND Vote_ID=0 AND Account_ID=1',
+      [vote, gid],
+      (tx, result)=>{
+        console.log(result.rows.item(0));
+      },
+      (tx, error)=>{
+        console.log(error)
+      });
+  })
+}
+
+const Pending=({route})=> { //main -------------------------------------------------------------------------------------------------------------------------
  const navigation=useNavigation();
  var goaltype=route.params.goaltype;
   var histheight='27%'
   if (goaltype=='short'){
     histheight='41%'
   }
+  if (route.params.gid){
+    gid=route.params.gid;
+  }
+
+  const [target, setTarget]=useState(20000)
+  const [uservote, setUservote]=useState(0);
+  const [memberno, setMemberno]=useState(1);
+  var memberlist=[];
+  useEffect(()=>{
+    db.transaction(tx=>{
+      tx.executeSql(
+        'SELECT Goal_Group.Account_ID AS aid, name FROM Goal_Group INNER JOIN Account on Goal_Group.Account_ID=Account.Account_ID WHERE Goal_Group.Goal_ID=?',
+        [gid],
+        (tx, result)=>{
+         for(i=0;i<result.rows.length;i++){
+          memberlist.push(result.rows.item(i))
+         }
+         console.log(memberlist);
+         setMemberno(result.rows.length);
+        },
+        (tx, error)=>{
+          console.log(error)
+        });
+        tx.executeSql(
+          'SELECT is_vote, Account_ID FROM Vote WHERE Goal_ID=? AND Vote_ID="0"',
+          [gid],
+          (tx, result)=>{
+           for(i=0;i<result.rows.length;i++){
+            votelist.push(result.rows.item(i))
+           }
+           console.log(votelist);
+           setUservote(votelist[0].is_vote);
+          },
+          (tx, error)=>{
+            console.log(error)
+          });
+          tx.executeSql(
+            'SELECT Goal_amount FROM Goal WHERE Goal_ID=?',
+            [gid],
+            (tx, result)=>{
+              setTarget(result.rows.item(0).Goal_amount);
+              console.log(target);
+            },
+            (tx, error)=>{
+              console.log(error)
+            });
+    })
+  },[])
+  
     return (
       <View style={{flexDirection:'column', height:windowHeight}}>
         <View>
@@ -130,7 +166,7 @@ const Pending=({route})=> {
         <View style={{height:65, borderBottomWidth:StyleSheet.hairlineWidth}}>
           <Text style={styles.subtitleb}> Goal Progress:</Text>
           <View style={{flexDirection:'row'}}>
-            <Text style={styles.subtitle1}> $0/ ${Target}</Text>
+            <Text style={styles.subtitle1}> $0/ ${target}</Text>
             <Text style={styles.subtitle2}> 0%</Text>
           </View>
           <ProgressBar style={{margin:5, alignSelf:'center'}} progress={0} width={windowWidth}/>
@@ -142,33 +178,33 @@ const Pending=({route})=> {
             renderItem={renderStage}
           />:null}
         </View>
-        <View style={{flexDirection:'column',marginHorizontal:5}}>
-          <Text style={styles.subtitleb}>Group description:</Text>
-          <Text  numberOfLines={1} style={styles.subtitle2}>kashdiabdukabvnbm,nmnbvxchvjbkhgfxcvhbjnkjbhgcfjhgfhjkhgfhjklhghjkhgfhjkhjgnbfghjkhgfhjvdvajdhvadvjhdvajdj</Text>
-          <Text style={styles.hyperlink} onPress={()=>console.log('group description')}>Read more...</Text>
-        </View>
         <View style={{flexDirection:'row',borderTopWidth:StyleSheet.hairlineWidth, height:30,margin:5}}>
           <Text style={styles.subtitlea}>Members:</Text>
         </View>
-        <FlatList
+        <View>
+          <FlatList
           style={{marginHorizontal:10, borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey'}}
           horizontal
-          data={DATA}
+          data={memberlist}
           renderItem={renderItemA}
-          keyExtractor={item => item.id}/>
-        <View style={{flexDirection:'row',justifyContent:'space-evenly', marginVertical:10}}>
+          keyExtractor={item => item.aid}/>
+        </View>        
+          <View style={styles.container}>
+            <Text style={{fontSize:18}}>Each member is responsible for: ${target/memberno}</Text>
+          </View>
+        <View style={{flexDirection:'row',justifyContent:'space-evenly', marginVertical:10, position:'absolute', bottom:10, alignSelf:'center'}}>
           {uservote==0?<Button 
             size={'small'} color={'success'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>{uservote=1; vote='yes';console.log(vote); Alert.alert('You have accepted the invitation of '+groupname+'.');navigation.goBack()}}>
+            onPress={()=>{setUservote(1); insertVote(1);console.log(vote); Alert.alert('You have accepted the invitation of '+groupname+'.');navigation.goBack()}}>
             Yes
             </Button>:null}
           {uservote==0?<Button 
             size={'small'} color="red" round style={{alignSelf:'center', margin:10}}
-            onPress={()=>{uservote=1; vote='no';console.log(vote); Alert.alert('You have declined the invitation of '+groupname+'.');navigation.goBack()}}>
+            onPress={()=>{setUservote(2);insertVote(2);console.log(vote); Alert.alert('You have declined the invitation of '+groupname+'.');navigation.goBack()}}>
             No
             </Button>:null}
-          {vote=='yes'?<Text style={styles.subtitle3}>You have accepted the invitation, now waiting...</Text>:null}
-          {vote=='no'?<Text style={styles.subtitle3}>You have declined the invitation.</Text>:null}     
+          {uservote==1?<Text style={styles.subtitle3}>You have accepted the invitation, now waiting...</Text>:null}
+          {uservote==2?<Text style={styles.subtitle3}>You have declined the invitation.</Text>:null}     
         </View>
       </View>
     )
@@ -253,12 +289,18 @@ const styles= StyleSheet.create({
     fontWeight:"bold",
     fontSize: 14,
   },
-  hyperlink:{
-    color:'blue',
-    fontSize: 16,
-    marginHorizontal:10,
-    textDecorationLine: 'underline'
-  }
+  container:{
+    justifyContent:'center',
+    marginHorizontal:5,
+    marginBottom:5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff',
+    borderBottomWidth:StyleSheet.hairlineWidth,
+  },
 })
 
 export default Pending
