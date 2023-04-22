@@ -18,6 +18,8 @@ import Vote from './pages/group/vote';
 import ContactList from './pages/contact';
 import Spending from './pages/spending';
 import Assign from './pages/spending/assign';
+import Payment from './pages/spending/payment';
+import Photo from './pages/spending/photo';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,7 +46,7 @@ function MainTabs() {
 function Nav() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Home">
+      <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Login">
         <Stack.Screen name="Home" component={MainTabs}/>
         <Stack.Screen name="Bind" component={BindCard}/>
         <Stack.Screen name="SignUp" component={SignUp}/>
@@ -56,6 +58,8 @@ function Nav() {
         <Stack.Screen name="Vote" component={Vote}/>
         <Stack.Screen name='Spend'component={Spending}/>
         <Stack.Screen name='Assign' component={Assign}/>
+        <Stack.Screen name='Payment' component={Payment}/>
+        <Stack.Screen name='Photo' component={Photo}/>
         <Stack.Screen name="ContactList" component={ContactList}/>
         <Stack.Screen name="CreateGroup" component={CreateGroup}/>
       </Stack.Navigator>
