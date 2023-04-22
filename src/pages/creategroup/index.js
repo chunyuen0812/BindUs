@@ -4,12 +4,14 @@ import { RadioButton } from 'react-native-paper';
 import React, { Component, useState } from 'react';
 import DateTimePicker,{ DateTimePickerAndroid,RNDateTimePicker} from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
-import { insertGoalData, selectAccountData } from '../../../database';
+import { insertGoalData, insertGroupData, selectAccountData } from '../../../database';
 import * as SQLite from 'expo-sqlite';
 import { useEffect } from 'react';
 
 const db = SQLite.openDatabase('maindb.db');
 var temp = [];
+var goals=[];
+var memberlist=[]
 db.transaction(tx=>{
     tx.executeSql(
         // print table info
@@ -22,6 +24,21 @@ db.transaction(tx=>{
               
             console.log('create group')
             console.log(temp.length);
+        },
+        (tx, error) => {
+          console.error('Error selecting data', error);
+        }
+      );
+      tx.executeSql(
+        // print table info
+        'SELECT Goal_ID FROM Goal;',
+        [],
+        (tx, results) => {
+            for (let i = 0; i < results.rows.length; i++){
+              goals.push(results.rows.item(i));
+            }
+            console.log('Goal IDs:')
+            console.log(goals, goals.length);
         },
         (tx, error) => {
           console.error('Error selecting data', error);
@@ -45,22 +62,45 @@ db.transaction(tx=>{
     
   };
 
+  function insertDATA(goalname, type, target, date, memberlist){
+    console.log( goalname, type, target, date, memberlist[0].Account_ID)
+    db.transaction(tx=>{
+      console.log('Inserting group info')
+        tx.executeSql(
+          'INSERT INTO Goal (Goal_name, Goal_type, Goal_amount,is_pending, start_time,end_time) VALUES (?,?,?,0,CURRENT_TIMESTAMP,?);',
+          [goalname, type, target, date],
+          (tx, result)=>{
+            console.log('Insert group info')
+            console.log(result)
+          },
+          (tx, error)=>{
+            console.log(error)
+          });
+        for (i=0;i<memberlist.length;i++){
+          tx.executeSql(
+            'INSERT INTO Goal_Group (Account_ID,Goal_ID) VALUES (?,?);',
+            [memberlist[i].Account_ID, goals.length+1],
+            (tx, result)=>{
+              console.log('Insert group member ',i)
+              console.log(result)
+            },
+            (tx, error)=>{
+              console.log(error)
+            });
+        }
+        console.log('Inserted group info')
+      })
+  }
 
   const renderItem = ({ item }) => <Item 
     id={item.Account_ID}
     name={item.name}
     phoneno={item.phone} />;
-
-  const state = { 
-      GrpName: "",
-	    Grptype: "",
-	    GoalTarget:0,
-	    GoalTimeLimit: new Date(),
-     };   
-const CreateGroup=({route})=> {
+  
+const CreateGroup=({route})=> {//main------------------------------------------------------------------------------------
 
 var memberno=['1']
-var memberlist=[]
+memberlist=[]
  if (route.params){
   memberno=['1'];
   memberlist=[];
@@ -71,7 +111,7 @@ var memberlist=[]
 
  }
   for (let j=0;j<memberno.length;j++){
-    flag=0;
+    let flag=0;
     for (let i=0;i<temp.length;i++){
       if (temp[i].Account_ID==memberno[j]&&flag==0){
         memberlist.push(temp[i]);
@@ -79,21 +119,16 @@ var memberlist=[]
         console.log(temp[i])
       }
      }
-     console.log(memberlist)
+     console.log('Memberlist', memberlist)
   }  
-    
-const insertDATA=()=>{
-  const { GrpName,Grptype,GoalTarget,GoalTimeLimit} = state;
-  insertGoalData(GrpName,Grptype,GoalTarget,GoalTimeLimit)
-}
-
 
 const navigation=useNavigation();
+const [goalname, setGoalname]=useState('')
+const [target,setTarget]=useState(0);
+const [type, setType]=useState('short')
 const [date, setDate] = useState(new Date());
-const [show, setShow] = useState(false);
 const onChange = (event, selectedDate) => {
           const currentDate = selectedDate;
-          setShow(false);
           setDate(currentDate);
         };
 const showDatepicker = () => {
@@ -106,28 +141,23 @@ const showDatepicker = () => {
         };
 const SignUp = () => {
           // 註冊帳號
-          state.Grptype=type;
-          const { GrpName,Grptype,GoalTarget,GoalTimeLimit} = state;
           // if not any input
-          if (!GrpName || !Grptype || !GoalTimeLimit || !GoalTarget) {
+          if (!goalname || !type || !date || !target) {
             Alert.alert('Error', 'Please enter all.');
-            console.log(GrpName,Grptype,GoalTarget,GoalTimeLimit)
+            console.log(goalname,type,target,date)
             return;
           } else {
               console.log('Check flags');
               console.log('Input to database');
-              Alert.alert('Alert',GrpName+'\n'+Grptype+'\n'+GoalTarget+'\n'+GoalTimeLimit,[
+              Alert.alert('Alert',goalname+'\n'+type+'\n'+target+'\n Members: '+memberlist+'\n'+date,[
                 {
                   text: 'Cancel',
                   onPress: () => console.log('Cancel'),
                   style: 'cancel',
                 },
-                {text: 'OK', onPress: () => {insertDATA; navigation.goBack()}},
+                {text: 'OK', onPress:()=>{insertDATA(goalname, type, target, date, memberlist);Alert.alert('New Group Formed','',[{text: 'OK', onPress:()=>navigation.goBack()}])}},
               ])
           };};   
-
-
-const [type, setType]=useState('short')
   
     return (
     <View>
@@ -135,8 +165,8 @@ const [type, setType]=useState('short')
         onLeftPress={()=>navigation.goBack()} leftStyle={{width:30,height:30}} leftIconSize={30}
         />
         <View style={styles.container}>
-            <Input style={{width:"90%",marginLeft: 20}} placeholder="Group Name" onChangeText={(text) =>{state.GrpName=text}}/>
-            <Input style={{width:"90%",marginLeft: 20}} placeholder="Goal Target Amount" type={'number-pad'} onChangeText={(text) => { state.GoalTarget=parseInt(text) }}/>           
+            <Input style={{width:"90%",marginLeft: 20}} placeholder="Group Name" onChangeText={(text) =>{setGoalname(text)}}/>
+            <Input style={{width:"90%",marginLeft: 20}} placeholder="Goal Target Amount" type={'number-pad'} onChangeText={(text) => { setTarget(parseInt(text))}}/>           
             <View style={{flexDirection:'row', margin:10, justifyContent:'space-around'}}>
               <Text style={{alignSelf:'center', fontSize:15, fontWeight:'bold'}}>Goal type:</Text>
               <Text style={{alignSelf:'center', fontSize:15}}>Long</Text>
@@ -144,15 +174,14 @@ const [type, setType]=useState('short')
               <Text style={{alignSelf:'center', fontSize:15}}>Short</Text>
               <RadioButton value="Short" color="dimgrey" status={ type=='short' ? 'checked' : 'unchecked' } onPress={()=>setType('short')}/>
             </View>
-            <View style={{flexDirection:'row', marginHorizontal:10}}>
+            <View style={{flexDirection:'row', marginHorizontal:10, justifyContent:'space-around'}}>
               <Text style={{alignSelf:'center', fontSize:15, fontWeight:'bold'}}>Goal End Date: </Text>
               <Text style={{alignSelf:'center'}}>{date.toDateString()}</Text>
               <Button round style={{alignSelf:'center', height:25, width:65}} color='success' onPress={showDatepicker}>Choose</Button>
-              <Button round color='success' style={{alignSelf:'center',width:65, height:25}} onPress={()=>{state.GoalTimeLimit=date}}>Confirm</Button>
             </View>
             <View style={{flexDirection:'row', margin:5, justifyContent:'space-around',}}>
                 <Text style={styles.subtitle}>Members:</Text>
-                <Button onPress={()=>{ state.Members+=1; console.log('To Contact list');navigation.navigate('ContactList')}} size={'small'}> Add </Button>
+                <Button onPress={()=>{console.log('To Contact list');navigation.navigate('ContactList')}} size={'small'}> Add </Button>
             </View>
             <View style={{borderWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey', height:'52%'}}>
               <FlatList 
