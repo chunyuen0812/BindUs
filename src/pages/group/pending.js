@@ -13,7 +13,6 @@ import { useState } from 'react';
 
 const db = SQLite.openDatabase('maindb.db');
 var groupname='group name'
-var memberlist=[];
 var votelist=[];
 var gid='4'
 
@@ -40,18 +39,6 @@ const STAGE=[
 },
 ];
 
-const ItemA = ({id, name, profpic, vote}) => {
-  return(
-  <View style={{margin:5, flexDirection:'column', width:70}}>
-      {vote==0?<Image source={require('../../res/icon.jpeg')} style={styles.image}/>:null}
-      {vote==1?<Image source={require('../../res/icon.jpeg')} style={styles.imageyes}/>:null}
-      {vote==2?<Image source={require('../../res/icon.jpeg')} style={styles.imageno}/>:null}
-      <Text numberOfLines={1} style={styles.name}>{name}</Text>
-  </View>
-  );
-  
-};
-
 const windowWidth = Dimensions.get('window').width-20;
 
 const renderStage=({item, index})=> {
@@ -75,12 +62,6 @@ const renderStage=({item, index})=> {
         </View>
     );
 }
-
-const renderItemA = ({ item,index }) => <ItemA 
-  id={item.aid}
-  name={item.name}
-  vote={votelist[index].is_vote}
-  />;
 
 const windowHeight = Dimensions.get('window').height; 
 
@@ -154,6 +135,25 @@ const Pending=({route})=> { //main ---------------------------------------------
     })
   },[])
   
+  const ItemA = ({id, name, profpic, vote}) => {
+    return(
+    <View style={{margin:5, flexDirection:'column', width:70}}>
+        {vote==0?<Image source={require('../../res/icon.jpeg')} style={styles.image}/>:null}
+        {vote==1?<Image source={require('../../res/icon.jpeg')} style={styles.imageyes}/>:null}
+        {vote==2?<Image source={require('../../res/icon.jpeg')} style={styles.imageno}/>:null}
+        <Text numberOfLines={1} style={styles.name}>{name}</Text>
+    </View>
+    );
+    
+  };
+  
+  const renderItemA = ({ item,index }) => <ItemA 
+    id={item.aid}
+    name={item.name}
+    vote={votelist[index].is_vote}
+    />;
+  
+
     return (
       <View style={{flexDirection:'column', height:windowHeight}}>
         <View>
@@ -190,7 +190,7 @@ const Pending=({route})=> { //main ---------------------------------------------
           keyExtractor={item => item.aid}/>
         </View>        
           <View style={styles.container}>
-            <Text style={{fontSize:18}}>Each member is responsible for: ${target/memberno}</Text>
+            <Text style={{fontSize:18,marginHorizontal:10}}>Each member is responsible for: ${target/memberno}</Text>
           </View>
         <View style={{flexDirection:'row',justifyContent:'space-evenly', marginVertical:10, position:'absolute', bottom:10, alignSelf:'center'}}>
           {uservote==0?<Button 
