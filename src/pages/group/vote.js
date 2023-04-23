@@ -72,6 +72,13 @@ const Vote=({route})=>{// main program start------------------------------------
   const [groupinfo,setGroupinfo]=useState({})
   const [endtime,setEndtime]=useState('2024-04-30');
 
+  function itemset(){
+    setGoalprogress(groupinfo.GoalProgress)
+    setTarget(groupinfo.Goal_amount)
+    setEndtime(groupinfo.end_time)
+    setRemain(target-goalprogress)
+  }
+
   const renderGroupinfo=()=>{
     return(
       <View style={{flexDirection:'row',justifyContent:'center', padding:15}}>
@@ -207,10 +214,6 @@ useEffect(()=>{
       (tx, result)=>{
         setGroupinfo(result.rows.item(0))
         setGoaltype(groupinfo.Goal_type)
-        setGoalprogress(groupinfo.GoalProgress)
-        setTarget(groupinfo.Goal_amount)
-        setEndtime(groupinfo.end_time)
-        setRemain(target-goalprogress)
         console.log(groupinfo,goaltype)
       },
       (tx, error)=>{
@@ -295,6 +298,7 @@ const outputAlert=()=>{
         activeColor='lightgrey'
         value={voteType().value}
         onChange={item => {
+          itemset();
           setLabel(item.label);
           setValue(item.value);
         }}

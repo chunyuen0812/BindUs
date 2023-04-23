@@ -61,28 +61,20 @@ useEffect(()=>{
   })
 },[])
 
-const Item = ({id, votetype, info, voteflag, index}) => {
+const renderItem = (votecount, item, index) => {
   return(
     <View style={styles.votecontainer}>
-      <Text style= {styles.votetitle}>{info}</Text>
+      <Text style= {styles.votetitle}>{item.vote_detail}</Text>
       <View style={{flexDirection:'row',justifyContent:'space-between', marginHorizontal:10}}>
-        <Text style={styles.subtitle}>Current vote count: {votecount[index].v_count}</Text>
+        <Text style={styles.subtitle}>Current vote count: {votecount[index]==null?0:votecount[index].v_count}</Text>
       </View>
       <View style={{flexDirection:'row', justifyContent:'space-around'}}>
-        {voteflag==0?<Button size={'small'} style={{height:30, width:80}} round color='#2bc700'onPress={()=>{updateVote('1', id, gid); console.log(voteflag)}}>YES</Button>:null}
-        {voteflag==0?<Button size={'small'} style={{height:30, width:80}}round color='#ff2a00'onPress={()=>{updateVote('2', id, gid); console.log(voteflag)}}>NO</Button>:null}
+        {item.is_vote==0?<Button size={'small'} style={{height:30, width:80}} round color='#2bc700'onPress={()=>{updateVote('1', item.Vote_ID, gid);}}>YES</Button>:null}
+        {item.is_vote==0?<Button size={'small'} style={{height:30, width:80}}round color='#ff2a00'onPress={()=>{updateVote('2', item.Vote_ID, gid);}}>NO</Button>:null}
       </View>
     </View>
 );
 };
-
-const renderItem = ({ item, index }) => <Item 
-  id={item.Vote_ID}
-  votetype={item.Vote_type}
-  info={item.Vote_detail}
-  voteflag={item.is_vote}
-  index={index}
-/>;
 
     return (
       <View>
@@ -93,7 +85,7 @@ const renderItem = ({ item, index }) => <Item
             <FlatList 
               data={votelist}
               extraData={votecount}
-              renderItem={renderItem}
+              renderItem={({item, index})=>renderItem(votecount, item, index)}
               keyExtractor={item => item.Vote_ID}/>
         </View>
       </View>
@@ -131,7 +123,7 @@ const styles= StyleSheet.create({
     },
     subtitle:{
       alignSelf:'center',
-      fontsize:18,
+      fontSize:18,
     },
     },
   )
