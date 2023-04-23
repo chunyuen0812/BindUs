@@ -72,6 +72,7 @@ const confirmButton=()=>{
   if ( eventflag && userflag && budgetflag ){
     for (i=0;i<goods.length;i++){
       var obj={};
+      obj['id']=i+1;
       obj['User']=username[i];
       obj['Event']=goods[i];
       obj['Budget']=amount[i];
@@ -125,7 +126,7 @@ const Item=({title, index})=>{
           value={item=>item.name}
           onChange={item => {
             var arr=username;
-          arr[index]=item.aid;
+          arr[index]=item.name;
           setUser(arr);
           }}
           renderLeftIcon={() => (
@@ -158,6 +159,9 @@ const Item=({title, index})=>{
   );
 }
 useEffect(()=>{
+  if (route.params){
+    gid=route.params.gid;
+  }
   db.transaction(tx=>{
     tx.executeSql(
         // print table info
@@ -194,7 +198,7 @@ console.log('test 2', memberlist.map(x=>x.name));
   return (
     <View height={windowHeight}>
         <NavBar style={styles.header} titleStyle={styles.title} back  title="Assign" 
-        onLeftPress={()=>navigation.navigate('Spend')} leftStyle={{width:30,height:30}} leftIconSize={30}
+        onLeftPress={()=>navigation.goBack()} leftStyle={{width:30,height:30}} leftIconSize={30}
         />
         <View style={{flexDirection:'row',justifyContent:'center', paddingHorizontal:15}}>
           <Text style={{fontSize:20,flex:1}}>Goal name: </Text>

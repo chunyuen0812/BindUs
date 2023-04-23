@@ -240,7 +240,7 @@ const renderStage=({item, index})=> {
           />
         </View>
         <View style={{flexDirection:'row',justifyContent:'space-around', position:'absolute', bottom:5, alignSelf:'center', width:'90%'}}>
-            {goalprogress>=target?<Button size={'small'} color={'success'} round style={{alignSelf:'center', margin:10}}>DONE!!</Button>:null}
+            {goalprogress>=target?<Button size={'small'} color={'success'} round style={{alignSelf:'center', margin:10}} onPress={()=>navigation.navigate('Assign', {gid:gid})}>DONE!!</Button>:null}
             {goalprogress<target?<Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
             onPress={()=>navigation.navigate('Deposit',{groupname:route.params.groupname, gid:gid})}>

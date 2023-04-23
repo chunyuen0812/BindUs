@@ -39,14 +39,12 @@ const Spending = ({route}) => {//main program-----------------------------------
   if (route.params){
     if(route.params.gid&&route.params.list){
       gid=route.params.gid;
-      for(i=0;i<route.params.list.length;i++){
-        section[i]=route.params.list[i]
-      }
+      section=route.params.list
     }
     if (route.params.name && route.params.price && route.params.datetime){
       name=route.params.name
       price=route.params.price
-      datetime=route.params.datetime.toString
+      datetime=JSON.stringify(route.params.datetime).slice(1,11)+' '+JSON.stringify(route.params.datetime).slice(12,20)
     }
   }
 
