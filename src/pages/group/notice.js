@@ -46,7 +46,7 @@ useEffect(()=>{
       console.log(error)
     });  
     tx.executeSql(
-      'SELECT Vote_ID, SUM(is_vote) AS v_count FROM Vote WHERE Goal_ID=? AND is_vote!=0 GROUP BY Vote_ID',
+      'SELECT Vote_ID, SUM(is_vote) AS v_count FROM Vote WHERE Goal_ID=? AND is_vote!=0 GROUP BY vote_type',
       [gid],
       (tx,result)=>{
         var temp=[]

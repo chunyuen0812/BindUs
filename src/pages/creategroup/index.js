@@ -21,7 +21,6 @@ db.transaction(tx=>{
             for (let i = 0; i < results.rows.length; i++){
               temp.push(results.rows.item(i));
             }
-              
             console.log('create group')
             console.log(temp.length);
         },
@@ -149,7 +148,7 @@ const SignUp = () => {
           } else {
               console.log('Check flags');
               console.log('Input to database');
-              Alert.alert('Alert',goalname+'\n'+type+'\n'+target+'\n Members: '+memberlist+'\n'+date,[
+              Alert.alert('Alert',goalname+'\n Goal Type: '+type+'\n Goal Target: $'+target+'\n Members: '+JSON.stringify(memberlist.map(a=>a.name))+'\n'+date,[
                 {
                   text: 'Cancel',
                   onPress: () => console.log('Cancel'),

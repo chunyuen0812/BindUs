@@ -39,12 +39,16 @@ const shortdata= [
   ];
 
  function insertNewvote(gid,votetype,votedetail, memberno ){
-  db.transaction(tx=>{
-    var id='1';
-    tx.executeSql('SELECT COUNT(Vote_ID) AS number FROM Vote WHERE Goal_ID=?',
+  var id=1;
+  db.transaction(tx=>{ 
+    tx.executeSql('SELECT COUNT( DISTINCT Vote_ID) AS number FROM Vote WHERE Goal_ID=?',
     [gid],
     (tx, result)=>{
-      id=result.number;
+      id=result.number+1;
+      console.log(id)
+    },
+    (tx, error)=>{
+      console.log(error)
     });
     for(i=0;i<memberno;i++){
       insertVoteData(id, i, gid,votetype,votedetail).

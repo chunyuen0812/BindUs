@@ -14,6 +14,7 @@ import {
   insertGroupData,
   deleteGroupData,
   insertVoteData,
+  deleteVoteData,
 } from './database'
 
 const db = SQLite.openDatabase('maindb.db');
@@ -78,7 +79,7 @@ class Index extends Component {
               'SELECT * FROM Goal;',
               [],
               (tx, resultSet) => {
-                console.log('Table content:', resultSet.rows);
+                console.log('Goal content:', resultSet.rows);
               },
               (tx, error) => {
                 console.error('Error selecting data', error);
@@ -111,7 +112,7 @@ class Index extends Component {
               'SELECT * FROM Deposit;',
               [],
               (tx, resultSet) => {
-                console.log('Table content:', resultSet.rows);
+                console.log('Deposit content:', resultSet.rows);
               },
               (tx, error) => {
                 console.error('Error selecting data', error);
@@ -144,7 +145,7 @@ class Index extends Component {
               'SELECT * FROM Vote;',
               [],
               (tx, resultSet) => {
-                console.log('Table content:', resultSet.rows);
+                console.log('Vote content:', resultSet.rows);
               },
               (tx, error) => {
                 console.error('Error selecting data', error);
@@ -226,6 +227,14 @@ class Index extends Component {
     // });
     //    }
     //  }
+
+    //deleteVoteData('1', '1').
+    // then(res => {
+    //   console.log("insert valid",res);
+    // }).catch(err => {
+    //  console.log("insert invalid",err);
+    //});
+      
 
     //   for(j=1;j<4;j++){
     //     insertGroupData(i,j).

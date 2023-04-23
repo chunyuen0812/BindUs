@@ -8,17 +8,32 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('maindb.db');
 var grouplist = [];
+var groupprogress = [];
 
 db.transaction(tx=>{
     tx.executeSql(
         // print table info
-        'SELECT Goal.Goal_ID AS gid, Goal_name, Goal_type, Goal_amount, is_pending, SUM(Deposit_amount) AS GoalProgress FROM Goal INNER JOIN Deposit ON Goal.Goal_ID = Deposit.Goal_ID GROUP BY gid;',
+        'SELECT Goal_ID AS gid, Goal_name, Goal_type, Goal_amount, is_pending FROM Goal',
         [],
         (tx, results) => {
            console.log('group data');
             for (let i = 0; i < results.rows.length; ++i)
               grouplist.push(results.rows.item(i));
             console.log(grouplist);
+        },
+        (tx, error) => {
+          console.error('Error selecting data', error);
+        }
+      );
+      tx.executeSql(
+        // print table info
+        'SELECT Goal.Goal_ID AS gid, SUM(Deposit_amount) AS GoalProgress FROM Goal INNER JOIN Deposit ON Goal.Goal_ID = Deposit.Goal_ID GROUP BY gid;',
+        [],
+        (tx, results) => {
+           console.log('groupprogress');
+            for (let i = 0; i < results.rows.length; ++i)
+            groupprogress.push(results.rows.item(i));
+            console.log(groupprogress);
         },
         (tx, error) => {
           console.error('Error selecting data', error);
@@ -30,34 +45,25 @@ console.log('test: ', grouplist);
 const windowHeight = Dimensions.get('window').height; 
 
 // pixel per item 85p
-const Item = ({gid, title,goaltype,goaltarget,pending, progress}) => {
-  const navigation=useNavigation();
+
+const renderItem = (navigation,groupprogress, item, index ) =>{
+
   var navbutton='';
-  console.log(progress+1)
-  {pending==1?navbutton='Group':navbutton='Pending'}
+  {item.is_pending==1?navbutton='Group':navbutton='Pending'}
     return (
-      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton,{gid:gid,groupname:title, goaltype:goaltype})}} style={styles.item}>
+      <Pressable onPress={() => {console.log(item.gid);navigation.navigate(navbutton,{gid:item.gid,groupname:item.Goal_name, goaltype:item.Goal_type})}} style={styles.item}>
         <Image source={require('../../res/groupicon.png')} style={styles.image}/> 
         <View style={styles.grpinfo}>
           <View style={styles.row}>
             <Text numberOfLines={1} style={styles.name}>
-            {title}
+            {item.Goal_name}
             </Text>
-            {pending==1?<Text>{Math.round(progress/goaltarget*100)}% </Text>:<Text>Pending</Text>}
+            {item.is_pending==1?<Text>{Math.round(groupprogress[index].GoalProgress/item.Goal_amount*100)}% </Text>:<Text>Pending</Text>}
           </View>
         </View>
       </Pressable>
     );  
 };
-
-const renderItem = ({ item, index }) => <Item 
-gid={item.gid}
-title={item.Goal_name} 
-goaltype={item.Goal_type}
-goaltarget={item.Goal_amount} 
-pending={item.is_pending}
-progress={item.GoalProgress}
-/>;
 
 class HomePage extends Component {
   constructor(props) {
@@ -97,7 +103,8 @@ class HomePage extends Component {
         <View style={{height:'74%'}}>
             <FlatList
             data={this.state.data}
-            renderItem={renderItem}
+            extraData={groupprogress}
+            renderItem={({item, index})=>renderItem(this.props.navigation, groupprogress, item,index)}
             contentContainerStyle={styles.listcontainer}
             keyExtractor={(item) => item.gid}
             />    
