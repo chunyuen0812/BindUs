@@ -12,7 +12,7 @@ var grouplist = [];
 db.transaction(tx=>{
     tx.executeSql(
         // print table info
-        'SELECT Goal.Goal_ID AS gid,Goal_name,Goal_type,Goal_amount,is_pending, SUM(Deposit_amount) AS GoalProgress FROM Goal INNER JOIN Deposit GROUP BY gid;',
+        'SELECT Goal.Goal_ID AS gid, Goal_name, Goal_type, Goal_amount, is_pending, SUM(Deposit_amount) AS GoalProgress FROM Goal INNER JOIN Deposit ON Goal.Goal_ID = Deposit.Goal_ID GROUP BY gid;',
         [],
         (tx, results) => {
            console.log('group data');
