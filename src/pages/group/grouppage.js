@@ -248,7 +248,7 @@ const renderStage=({item, index})=> {
             </Button>:null}
             {goalprogress<target?<Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>navigation.navigate('Vote',{goaltype:route.params.goaltype, progress:goalprogress, target:target,endDate:endDate, memberCount:memberno})}>
+            onPress={()=>navigation.navigate('Vote',{gid:gid})}>
             Vote
             </Button>:null}
         </View>
