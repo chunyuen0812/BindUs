@@ -87,7 +87,7 @@ const renderItem = ({ item, index }) => <Item
     return (
       <View>
         <NavBar style={styles.header} titleStyle={styles.title} back  title="Notice" 
-        onLeftPress={()=>navigation.navigate('Group',{gid:gid})} leftStyle={{width:30,height:30}} leftIconSize={30}
+        onLeftPress={()=>navigation.goBack()} leftStyle={{width:30,height:30}} leftIconSize={30}
         />
         <View>
             <FlatList 

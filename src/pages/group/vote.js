@@ -72,13 +72,6 @@ const Vote=({route})=>{// main program start------------------------------------
   const [groupinfo,setGroupinfo]=useState({})
   const [endtime,setEndtime]=useState('2024-04-30');
 
-  function itemset(){
-    setGoalprogress(groupinfo.GoalProgress)
-    setTarget(groupinfo.Goal_amount)
-    setEndtime(groupinfo.end_time)
-    setRemain(target-goalprogress)
-  }
-
   const renderGroupinfo=()=>{
     return(
       <View style={{flexDirection:'row',justifyContent:'center', padding:15}}>
@@ -209,19 +202,29 @@ useEffect(()=>{
   console.log(gid)
   db.transaction(tx=>{
     tx.executeSql(
-      'SELECT Goal_amount, SUM(Deposit_amount) AS GoalProgress, Goal_name, end_time, Goal_type FROM Goal INNER JOIN Deposit ON Goal.Goal_ID=Depsoit.Goal_ID WHERE Goal.Goal_ID=?',
+      'SELECT Goal_amount, SUM(Deposit_amount) AS GoalProgress, Goal_name, end_time, Goal_type FROM Goal INNER JOIN Deposit ON Goal.Goal_ID=Deposit.Goal_ID WHERE Goal.Goal_ID=?',
       [gid],
       (tx, result)=>{
         setGroupinfo(result.rows.item(0))
         setGoaltype(groupinfo.Goal_type)
+        setGoalprogress(groupinfo.GoalProgress)
+        setTarget(groupinfo.Goal_amount)
+        setEndtime(groupinfo.end_time)
+        setRemain(target-goalprogress)
         console.log(groupinfo,goaltype)
+      },
+      (tx, error)=>{
+        console.log(error)
       });
     tx.executeSql(
-      'SELECT COUNT(Deposit_ID) AS Number FROM Goal_Group WHERE Goal_ID=?',
+      'SELECT COUNT(Account_ID) AS Number FROM Goal_Group WHERE Goal_ID=?',
       [gid],
       (tx, result)=>{
         setMemberno(result.rows.item(0).Number)
         console.log(memberno)
+      },
+      (tx, error)=>{
+        console.log(error)
       });
     tx.executeSql(
       'SELECT SUM(Deposit_amount) AS depositsum FROM Deposit WHERE Goal_ID=? AND Account_ID=?',
@@ -229,6 +232,9 @@ useEffect(()=>{
       (tx, result)=>{
         setUserdeposit(result.rows.item(0).depositsum)
         console.log(userdeposit)
+      },
+      (tx, error)=>{
+        console.log(error)
       });
   })
 },[])
@@ -289,7 +295,6 @@ const outputAlert=()=>{
         activeColor='lightgrey'
         value={voteType().value}
         onChange={item => {
-          itemset;
           setLabel(item.label);
           setValue(item.value);
         }}
