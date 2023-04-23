@@ -3,35 +3,160 @@ import { View, ImageBackground, StyleSheet,ScrollView,Dimensions,Image} from 're
 import { Block,Text,theme,Button} from 'galio-framework';
 import { HeaderHeight } from '../../utils/styleKits';
 import { argonTheme} from '../../utils'
+import axios from 'axios'; 
+import * as SQLite from 'expo-sqlite';
 
 const { width, height } = Dimensions.get("screen");
 const thumbMeasure = (width - 48 - 32) / 3;
-
+const db = SQLite.openDatabase('maindb4.db');
 
 
 class Index extends Component {
 
-    state= {
-      balance: 1111,
-      lastUpdateTime: '',
-      username: '',
-      customerId: '',
-      birthday: '',
-      bankCard: '',
-    }
-
-    handleUpdate = () =>{
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      profileData: null,
+      balance: null,
+      bankcard: null,
+      deposit2: null,
+      deposit3: null,
+      deposit4: null,
     };
+  }
+
+  componentDidMount() {
+    const { token,} = this.props;
+
+
+    axios({
+      method: 'post',
+      url: 'https://datastudio.simnectzplatform.com/gateway/SIMNECTZ/1676014870768/e-wallet/sys/loginuserenquiry',
+      headers: { token: token },
+      data: {},
+    })
+      .then((response) => {
+        console.log(response);
+        // Update the local state with the profile data
+        this.setState({ profileData: response.data});
+
+        db.transaction((tx) => {
+          // Define the SQL query to search for a record with a specific Account_ID
+          const query = 'SELECT * FROM Account WHERE phone = ?';
+          const params = [this.state.profileData?.data?.phone]; // Replace 1 with the Account_ID you want to search for
+
+          const query2 = ' \
+            SELECT d.Goal_ID, SUM(d.Deposit_amount) AS total_deposit \
+            FROM Deposit d \
+            JOIN Account a ON d.Account_ID = a.Account_ID \
+            WHERE a.phone = ? \
+            GROUP BY d.Goal_ID'
+            ;
+
+          const query3 = '\
+            SELECT Goal_name\
+            FROM Goal\
+            WHERE Goal_ID = ?';
+
+    
+          // Execute the SQL query with the specified parameters
+          tx.executeSql(query, params, (tx, results) => {
+            // Get the first record from the results array
+              const record = results.rows.item(0);
+              // Log the record to the console
+              console.log(record);
+              this.setState({bankcard: record.bank_card, balance: record.balance, username: record.name});
+            },(error) => {
+              console.error('Error retrieving data:', error);
+            });
+
+          // Execute the SQL query with the specified parameters
+           tx.executeSql(query2, params, (tx, results2) => {
+              // Get the results array
+              const record2 = results2.rows.item(0);
+              const record3 = results2.rows.item(1);
+              const record4 = results2.rows.item(2);
+              // Log the results to the console
+              console.log(record2);
+              console.log(record3);
+              console.log(record4);
+              // Update the local state with the deposit data
+              this.setState({ deposit2: record2 ,deposit3: record3 ,deposit4: record4 });
+            }, (error) => {
+              console.error('Error retrieving data:', error);
+            });
+            
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+      // axios({
+      //   method: 'get',
+      //   url: 'https://datastudio.simnectzplatform.com/gateway/SIMNECTZ/1676014874984/e-wallet/pay/eWalletBalance',
+      //   headers: { token: token },
+      //   data: {},
+      // })
+      //   .then((response) => {
+      //     console.log(response);
+      //     // Update the local state with the profile data
+      //     this.setState({ Balance: response.data });
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
+      // db.transaction((tx) => {
+      //   tx.executeSql(
+      //     'SELECT * FROM Account WHERE Account_ID LIKE ?',
+      //     [1],
+      //     (tx, results) => {
+      //       const rows = results.rows.raw();
+      //       console.log('Data retrieved successfully:', rows);
+      //       // Update the local state with the retrieved data
+      //       this.setState({ searchData: rows });
+      //     },
+      //     (error) => {
+      //       console.error('Error retrieving data:', error);
+      //     },
+      //   );
+      // });
+      // Open a transaction to execute a SQL query
+
+        
+
+  }
+
+    // handleUpdate = () =>{
+    //       const {token} = this.props;
+    //       axios({
+    //         method: 'post',
+    //         url: 'https://datastudio.simnectzplatform.com/gateway/SIMNECTZ/1676014870768//e-wallet/sys/loginuserenquiry',
+    //         headers:{token:token},
+    //         data:{}
+    //       }).then((response) => {
+    //         console.log(response);
+    //         this.setState({profileData:response.data})
+    //       })
+    //       .catch((error) => {
+    //         // Handle error
+    //         console.error(error);
+    //       });
+
+    // };
 
     handleBinding = () =>{
       this.props.navigation.navigate("Bind");
 
     };
 
-    render() { 
 
+    render() { 
+        const today = new Date();
+        const dateString = today.toLocaleDateString(); 
+        const{profileData, bankcard,balance,username, deposit2,deposit3,deposit4} = this.state;
         return (
+          
             <Block flex style={styles.profile}>
               <Block flex>
                 <ImageBackground
@@ -62,18 +187,18 @@ class Index extends Component {
                   >
                     <Button
                       small
-                      style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
-                      onPress={this.handleUpdate}
-                    >
-                      Update
-                    </Button>
-                    <Button
-                      small
                       style={{ backgroundColor: argonTheme.COLORS.ACTIVE }}
                       onPress={this.handleBinding}
                     >
                       Bind
                     </Button>
+                    {/* <Button
+                      small
+                      style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
+                      onPress={this.handleRecharging}
+                    >
+                      Recharge
+                    </Button> */}
                   </Block>
 
                         <Block row space="between">
@@ -84,7 +209,7 @@ class Index extends Component {
                               color="#525F7F"
                               style={{ marginBottom: 4 }}
                             >
-                              ${this.state.balance}
+                              ${balance}
                             </Text>
                             <Text size={12} color={argonTheme.COLORS.TEXT}>Balance</Text>
                           </Block>
@@ -95,7 +220,7 @@ class Index extends Component {
                               size={18}
                               style={{ marginBottom: 4 }}
                             >
-                              {this.state.lastUpdateTime}
+                              {dateString}
                             </Text>
                             <Text size={12} color={argonTheme.COLORS.TEXT}>Last Update Time</Text>
                           </Block>
@@ -108,11 +233,11 @@ class Index extends Component {
                         </Block>
                         <Block middle>
                           <Text
-                            size={16}
+                            size={22}
                             color="#525F7F"
                             style={{ textAlign: "center" }}
                           >
-                            Username
+                            {username}
                           </Text>
                           
                         </Block>
@@ -123,7 +248,7 @@ class Index extends Component {
                             CustomerId
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            {this.state.customerId}
+                            {profileData?.data?.customerId}
                           </Text>
                         </Block>
 
@@ -132,7 +257,7 @@ class Index extends Component {
                             Birthday
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            {this.state.birthday}
+                            {profileData?.data?.birthday}
                           </Text>
                         </Block>
 
@@ -141,34 +266,54 @@ class Index extends Component {
                             Bank Card
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            {this.state.bankCard}
+                            {bankcard}
                           </Text>
                         </Block>
 
                         <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
                           <Text bold size={20} color="#525F7F" >
-                          {this.state.group1}
+                            Phone
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            {this.state.group1_depoist}
+                            {profileData?.data?.phone}
+                          </Text>
+                        </Block>
+
+                        <Block middle>
+                          <Text
+                            size={22}
+                            color="#525F7F"
+                            style={{ textAlign: "center" }}
+                          >
+                            Group List
+                          </Text>
+                          
+                        </Block>
+
+                        <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
+                          <Text bold size={20} color="#525F7F" >
+                          {deposit2?.Goal_ID ? "New Shop" : ''}
+                          </Text>
+                          <Text style={{ color: "#525F7F", fontSize: 16}}>
+                          {deposit2?.total_deposit}
                           </Text>
                         </Block>
 
                         <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
                           <Text bold size={20} color="#525F7F" >
-                            {this.state.group2}
+                          {deposit3?.Goal_ID ? 'Christmas Party' : ''}
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            {this.state.group2_deposit}
+                          {deposit3?.total_deposit}
                           </Text>
                         </Block>
 
                         <Block style={{flexDirection:"row", justifyContent: 'space-between'}}>
                           <Text bold size={20} color="#525F7F" >
-                          {this.state.group3}
+                          {deposit4?.Goal_ID ? 'Grad Trip' : ''}
                           </Text>
                           <Text style={{ color: "#525F7F", fontSize: 16}}>
-                            {this.state.group3_deposit}
+                          {deposit4?.total_deposit}
                           </Text>
                         </Block>
 

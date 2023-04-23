@@ -20,7 +20,8 @@ import BindCard from './pages/profile/bindcard'
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function MainTabs() {
+function MainTabs({route, navigation}) {
+  const {token} = route.params;
   return (
     <Tab.Navigator >
       <Tab.Screen name="Home" 
@@ -30,7 +31,7 @@ function MainTabs() {
             <Ionicons name="home-outline" size={size} color={color} />
           ),}}/>
       <Tab.Screen name="Profile" 
-      component={Profile}
+      component={() => <Profile token={token} navigation={navigation} />}
       options={{headerShown:false,
         tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />

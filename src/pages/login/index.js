@@ -31,21 +31,22 @@ class LoginPage extends Component {
         if (response.data.msg ==  "Operation success"){
           const token = response.data.data;
           this.setState({token: token});
-          this.props.navigation.navigate("Home");
+          this.props.navigation.navigate("Home",{token:token});
           // read the updated personal information
-          axios({
-            method: 'post',
-            url: 'https://datastudio.simnectzplatform.com/gateway/SIMNECTZ/1676014870768//e-wallet/sys/loginuserenquiry',
-            headers:{token:token},
-            data:{}
-          }).then((response) => {
-            console.log(response);
-            // updated local database
-          })
-          .catch((error) => {
-            // Handle error
-            console.error(error);
-          });
+          // axios({
+          //   method: 'post',
+          //   url: 'https://datastudio.simnectzplatform.com/gateway/SIMNECTZ/1676014870768//e-wallet/sys/loginuserenquiry',
+          //   headers:{token:token},
+          //   data:{}
+          // }).then((response) => {
+          //   console.log(response);
+          //   // updated local database
+
+          // })
+          // .catch((error) => {
+          //   // Handle error
+          //   console.error(error);
+          // });
 
         }
         else{

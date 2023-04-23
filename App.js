@@ -2,16 +2,8 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import Nav from './src/nav'
 import * as SQLite from 'expo-sqlite';
-import {
-  insertAccountData,
-  insertGoalData,
-  insertDepositData,
-  deleteAccountData,
-  deleteGoalData,
-  deleteDepositData,
-} from './database'
 
-const db = SQLite.openDatabase('maindb.db');
+const db = SQLite.openDatabase('maindb4.db');
 
 class Index extends Component {
 
@@ -19,20 +11,48 @@ class Index extends Component {
 
   componentDidMount() {
 
-    // Create Account Table if not exists
+    // Insert Data
+    // db.transaction(tx => {
+    //   tx.executeSql(
+    //     'INSERT INTO Goal (Goal_ID,Goal_amount,Goal_name,Goal_type,end_time,is_pending,start_time) VALUES (?, ?,?,?,?,?,?);',
+    //     [2,5000,"Christmas Party","short","20-12-2023",0,"2023-04-20 07:28:12"],
+    //     (tx, result) => {
+    //       console.log('Data inserted successfully');
+    //     },
+    //     (tx, error) => {
+    //       console.error('Error inserting data', error);
+    //     }
+    //   );
+
+    // });
+    
+    // Update data
+    // db.transaction((tx) => {
+    //   // Define the SQL query to update the balance of a record with a specific Account_ID
+    //   const query = 'UPDATE Account SET phone = ? WHERE Account_ID = ?';
+    //   const params = [13666666666, 1]; // Replace newBalance and accountId with the new balance and Account_ID you want to update
+    
+    //   // Execute the SQL query with the specified parameters
+    //   tx.executeSql(query, params, (tx, results) => {
+    //     console.log('Record updated successfully');
+    //   }, (error) => {
+    //     console.error('Error updating record:', error);
+    //   });
+    // });
+
+  // Create Account Table if not exists
     db.transaction(tx => {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS Account \
         (Account_ID INTEGER PRIMARY KEY AUTOINCREMENT, \
           password TEXT, \
           name TEXT, \
-          bank TEXT, \
           phone INTEGER, \
+          bank TEXT, \
           bank_card INTEGER, \
           balance INTEGER);',
         [],
         (tx, result) => {
-          console.log('Table created successfully');
           tx.executeSql(
             // print table info
             'SELECT * FROM Account;',
@@ -52,8 +72,8 @@ class Index extends Component {
       );
 
 
-      // Create Goal Table if not exists
-      // %YY%MM%DD%HH%MM%SS
+   // Create Goal Table if not exists
+   // %YY%MM%DD%HH%MM%SS
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS Goal \
         (Goal_ID INTEGER PRIMARY KEY AUTOINCREMENT, \
@@ -66,7 +86,6 @@ class Index extends Component {
           [],
           (tx, result) => {
             // print table info
-            console.log('Table created successfully');
             tx.executeSql(
               'SELECT * FROM Goal;',
               [],
@@ -85,7 +104,7 @@ class Index extends Component {
       );
 
 
-      // Create Deposit Table if not exists
+   // Create Deposit Table if not exists
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS Deposit \
         (Account_ID INTEGER, \
@@ -98,7 +117,6 @@ class Index extends Component {
           [],
           (tx, result) => {
             // print table info
-            console.log('Table created successfully');
             tx.executeSql(
               'SELECT * FROM Deposit;',
               [],
@@ -129,7 +147,6 @@ class Index extends Component {
           [],
           (tx, result) => {
             // print table info
-            console.log('Table created successfully');
             tx.executeSql(
               'SELECT * FROM Vote;',
               [],
@@ -158,7 +175,6 @@ class Index extends Component {
           [],
           (tx, result) => {
             // print table info
-            console.log('Table created successfully');
             tx.executeSql(
               'SELECT * FROM Goal_Group;',
               [],
@@ -175,14 +191,8 @@ class Index extends Component {
             console.error('Error creating table', error);
           }
       );
-      
-      // insertion example
-      // insertAccountData('1','TEST','123456','123456','test','123456789','1000').
-      // then(res => {
-      //   console.log("insertion valid",res);
-      // }).catch(err => {
-      //   console.log("insertion invalid",err);
-      // });
+
+
 
 
     });

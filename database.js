@@ -54,12 +54,12 @@ export const selectDepositData=(ID)=>{
     });
 }
 
-export const insertAccountData = (ID,name,password,phone,bank,bank_card,balance) => {
+export const insertAccountData = (Account_ID,password,name,phone,bank,bank_card,balance) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
                 'INSERT INTO Account (Account_ID,name,phone,password,bank,bank_card,balance) VALUES (?,?,?,?,?,?,?);',
-                [ID,name,phone,password,bank,bank_card,balance],
+                [Account_ID,name,phone,password,bank,bank_card,balance],
                 (tx, result) => {
                     resolve(result);
                 },
@@ -71,12 +71,12 @@ export const insertAccountData = (ID,name,password,phone,bank,bank_card,balance)
     });
 };
 
-export const insertDepositData = (Account_ID,Goal_ID,Deposit_amount,Deposit_time) => {
+export const insertDepositData = (Account_ID,Goal_ID,Deposit_ID,Deposit_amount,Deposit_time) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
-                'INSERT INTO Deposit (Account_ID, Goal_ID, Deposit_amount, Deposit_time) VALUES (?,?,?,?);',
-                [Account_ID, Goal_ID, Deposit_amount, Deposit_time],
+                'INSERT INTO Deposit (Account_ID, Goal_ID, Deposit_ID, Deposit_amount, Deposit_time) VALUES (?,?,?,?,?);',
+                [Account_ID, Goal_ID, Deposit_ID, Deposit_amount, Deposit_time],
                 (tx, result) => {
                     resolve(result);
                 },
@@ -88,13 +88,49 @@ export const insertDepositData = (Account_ID,Goal_ID,Deposit_amount,Deposit_time
     });
 };
 
-export const insertGoalData = (Goal_name,Goal_type, Goal_target, end_time) => {
+export const insertGoalData = (Goal_ID,Goal_name,Goal_type,Goal_amount,is_pending,start_time, end_time) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             console.log('inserting goal')
             tx.executeSql(
-                'INSERT INTO Goal (Goal_name, Goal_type, Goal_target, end_time) VALUES (?,?,?,?,TO_DATE(?, DD/MM/YYYY));',
-                [Goal_name, Goal_type, Goal_target, end_time],
+                'INSERT INTO Goal (Goal_ID,Goal_name,Goal_type,Goal_amount,is_pending,start_time, end_time) VALUES (?,?,?,?,?,TO_DATE(?, DD/MM/YYYY),TO_DATE(?, DD/MM/YYYY));',
+                [Goal_ID,Goal_name,Goal_type,Goal_amount,is_pending,start_time, end_time],
+                (tx, result) => {
+                    resolve(result);
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
+export const insertVoteData = (Account_ID,Goal_ID,vote_type,vote_detail,is_vote) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            console.log('inserting Vote')
+            tx.executeSql(
+                'INSERT INTO Goal (Account_ID,Goal_ID,vote_type,vote_detail,is_vote) VALUES (?,?,?,?,?);',
+                [Account_ID,Goal_ID,vote_type,vote_detail,is_vote],
+                (tx, result) => {
+                    resolve(result);
+                },
+                (tx, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
+export const insertGoal_GroupData = (Account_ID,Goal_ID) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            console.log('inserting Vote')
+            tx.executeSql(
+                'INSERT INTO Goal (Account_ID,Goal_ID) VALUES (?,?);',
+                [Account_ID,Goal_ID],
                 (tx, result) => {
                     resolve(result);
                 },
@@ -122,6 +158,8 @@ export const deleteAccountData = (ID) => {
         });
     });
 };
+
+
 
 export const deleteDepositData = (ID) => {
     return new Promise((resolve, reject) => {

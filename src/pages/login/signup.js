@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import { ImageBackground, StyleSheet, View, Text, Alert, ScrollView,SafeAreaView} from 'react-native';
 import { Input,Button} from 'galio-framework';
 import request from "../../utils/request";
+import { ACCOUNT_SIGN } from '../../utils/pathMap';
 
 
 class Index extends Component {
     state = { 
-        birthday: "",
+      birthday: "",
 	    chineseName: "",
 	    customerId: "",
 	    firstName: "",
@@ -22,13 +23,8 @@ class Index extends Component {
         // 註冊帳號
         const { birthday,chineseName,username,phone,password,payPassword,lastName,firstName,customerId } = this.state;
         // if not any input
-        if (!birthday || !chineseName || !customerId || ! firstName || !lastName || !paypassword || !password || !phone || !username) {
-          Alert.alert('Error', 'Please enter all.');
-          return;
-        }
         // API handle
-        request
-          .post(ACCOUNT_SIGN,{ 
+        request.post(ACCOUNT_SIGN,{ 
             birthday:birthday, 
             password:password,
             username:username,
@@ -43,7 +39,7 @@ class Index extends Component {
           .then((response) => {
             // Handle successful login
             console.log(response);
-            if (response.data.code == "200"){
+            if (response.data.msg ==  "Operation success"){
               Alert.alert("Sign Up Success")
               this.props.navigation.navigate("Login");
               // data add
