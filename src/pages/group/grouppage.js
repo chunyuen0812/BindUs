@@ -212,7 +212,8 @@ const renderStage=({item, index})=> {
             <Text style={styles.subtitle2}>{goalinfo.end_time}</Text>
         </View>
         <View>
-        {goaltype=='long'?<SwiperFlatList
+        {goaltype=='long'?
+        <SwiperFlatList
             index={0}
             data={STAGE}
             renderItem={renderStage}
@@ -221,7 +222,6 @@ const renderStage=({item, index})=> {
         <View style={{height:'20%'}}>
           <View style={{flexDirection:'row', height:24,margin:5}}>
             <Text style={styles.subtitlea}>Contribution:</Text>
-            <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={25} color="lightgreen" iconColor="#fff" style={{ width: 30, height: 30, right: 10 }} onPress={()=>console.log('To contact list')}/>
           </View>
           <FlatList
           style={{marginHorizontal:10, marginVertical:5, borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey'}}
