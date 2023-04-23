@@ -3,87 +3,72 @@ import { ScrollView, StyleSheet, Image, Text, View, FlatList, Pressable,Dimensio
 import {NavBar,Button} from 'galio-framework';
 import {SearchBar, ListItem } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
+import * as SQLite from 'expo-sqlite';
  // npm this package for search bar functions
 
+const db = SQLite.openDatabase('maindb.db');
+var grouplist = [];
 
+db.transaction(tx=>{
+    tx.executeSql(
+        // print table info
+        'SELECT Goal.Goal_ID AS gid, Goal_name, Goal_type, Goal_amount, is_pending, SUM(Deposit_amount) AS GoalProgress FROM Goal INNER JOIN Deposit ON Goal.Goal_ID = Deposit.Goal_ID GROUP BY gid;',
+        [],
+        (tx, results) => {
+           console.log('group data');
+            for (let i = 0; i < results.rows.length; ++i)
+              grouplist.push(results.rows.item(i));
+            console.log(grouplist);
+        },
+        (tx, error) => {
+          console.error('Error selecting data', error);
+        }
+      );      
+})
 
+console.log('test: ', grouplist);
 const windowHeight = Dimensions.get('window').height; 
-const DATA = [
-  {
-    gid: "1",
-    groupimage: require('../../res/christmasparty.jpg'),
-    title: "Christmas Party",
-    grpprogress: 62, 
-    goaltype:'short',
-    pending:1
-  },
-  {
-    gid: "2",
-    groupimage: require('../../res/gradtrip.jpg'),
-    title: "Grad trip",
-    grpprogress: 0,
-    goaltype:'short',
-    pending:0
-  },
-  {
-    gid: "3",
-    groupimage: require('../../res/igshop.jpg'),
-    title: "New shop",
-    grpprogress: 91,
-    goaltype:'long',
-    pending:1
-  },
-  {
-    gid: "4",
-    groupimage: require('../../res/igshop.jpg'),
-    title: "Long goal pending",
-    description: "ABC",
-    grpprogress: 0,
-    goaltype:'long',
-    pending:0
-  },
-  
-];
 
 // pixel per item 85p
-const Item = ({gid, groupimage, title, description, grpprogress,goaltype,pending}) => {
+const Item = ({gid, title,goaltype,goaltarget,pending, progress}) => {
   const navigation=useNavigation();
   var navbutton='';
+  console.log(progress+1)
   {pending==1?navbutton='Group':navbutton='Pending'}
     return (
-      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton,{groupname:title, goaltype:goaltype})}} style={styles.item}>
-        <Image source={groupimage} style={styles.image}/> 
+      <Pressable onPress={() => {console.log({gid});navigation.navigate(navbutton,{gid:gid,groupname:title, goaltype:goaltype})}} style={styles.item}>
+        <Image source={require('../../res/groupicon.png')} style={styles.image}/> 
         <View style={styles.grpinfo}>
           <View style={styles.row}>
             <Text numberOfLines={1} style={styles.name}>
             {title}
             </Text>
-            {pending==1?<Text>{grpprogress}% </Text>:<Text>Pending</Text>}
+            {pending==1?<Text>{Math.round(progress/goaltarget*100)}% </Text>:<Text>Pending</Text>}
           </View>
         </View>
       </Pressable>
     );  
 };
 
-const renderItem = ({ item }) => <Item 
+const renderItem = ({ item, index }) => <Item 
 gid={item.gid}
-groupimage={item.groupimage} 
-title={item.title} 
-description={item.description} 
-grpprogress={item.grpprogress}
-goaltype={item.goaltype} 
-pending={item.pending}/>;
+title={item.Goal_name} 
+goaltype={item.Goal_type}
+goaltarget={item.Goal_amount} 
+pending={item.is_pending}
+progress={item.GoalProgress}
+/>;
 
 class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      data: DATA,
+      data: grouplist,
       error: null,
       searchValue: "",
     };
-    this.arrayholder = DATA;
+    this.arrayholder = grouplist;
   }
 
   searchFunction = (text) => {

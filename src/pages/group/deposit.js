@@ -4,72 +4,55 @@ import React, { Component, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import {insertDepositData} from '../../../database'
+import * as SQLite from 'expo-sqlite';
 
-const Payment=[{
+var db = SQLite.openDatabase('maindb.db');
+
+const Payment={
   id:'1',
   holder:'TEST',
-  bank:'TESTING BANK',
-  no:123789456321,
-},
-{
-  id:'2',
-  holder:'TEST',
-  bank:'',
-  no:1234567809876543,
-}
-];
+  bank:'test',
+  no:100000000001,
+};
 
+function depositMoney(id, gid, amount){
+  db.transaction(tx=>{
+    insertDepositData(id, gid, amount).
+     then(res => {
+       console.log("insertion valid",res);
+     }).catch(err => {
+      console.log("insertion invalid",err);
+    });
+  })
+}
 
 const windowHeight = Dimensions.get('window').height;
 
-const Deposit=({route})=> {
+const Deposit=({route})=> {// main----------------------------------------------------------------------------------------------------------
   const navigation=useNavigation();
   const groupname=route.params.groupname;
+  const gid=route.params.gid
   const limit=2000;
   const [amount,setAmount]=useState(0);
-
-const renderItem=({item})=><Item
-  bank={item.bank}
-  no={item.no}
-  id={item.id}
-/>
-const [select,setSelect]=useState('');
-
-const Item=({bank, no, id})=>{
-  return(
-    <Pressable style={styles.container1} flexDirection={'row'} onPress={()=>setSelect(id)}>
-      <View margin={5} marginRight={10}>
-        {bank!=''?<FontAwesome name="bank" size={35} color="dimgrey"/>:
-        <FontAwesome name="credit-card" size={35} color="dimgrey" />}
-      </View>
-      <View flexDirection={'row'}>
-        <View margin={5} width={'78%'}>
-        {bank!=''?<Text style={styles.name}>{bank}</Text>:<Text style={styles.name}>Credit Card</Text>}
-        {bank!=''?<Text style={styles.subtitle}>********{no%10000}</Text>:<Text style={styles.subtitle}>************{no%10000}</Text>}
-        </View> 
-        <View alignSelf={'center'}>
-          {select==id?<FontAwesome alignSelf={'center'} name="check-circle-o" size={40} color="green" />:null}
-        </View>
-      </View>      
-    </Pressable>
-  );
-}
+  const [select,setSelect]=useState('');
 
   const outputAlert=()=>{  
-    const x=Payment[parseInt(select)-1];
+    const x=Payment;
     var method='';
     var no='';
+    var date = new Date();
     if(select!='') {
-    if (x.bank==''){method='Credit card'; no='************'+(x.no%10000)} else {method=x.bank; no='********'+(x.no%10000)}
+    method=x.bank; no=x.no
   }
     if (amount!=0&&select!=''){
-    Alert.alert('Deposit','Group: '+groupname+'\n'+method+': '+no+'\nAmount: $'+amount.toString(), [
+    Alert.alert('Deposit','Group: '+groupname+'\n'+method+': '+no+'\nAmount: $'+amount.toString()+'\nDate: '+date, [
       {
         text: 'Cancel',
         onPress: () => console.log('Cancel'),
         style: 'cancel',
       },
-      {text: 'OK', onPress: () => {navigation.goBack()}},
+      {text: 'OK', onPress: () => {depositMoney(x.id,gid,amount);navigation.goBack()}},
     ]);
     } else if(amount==0){
       Alert.alert('Warning','You have not deposit anything.');
@@ -87,15 +70,20 @@ const Item=({bank, no, id})=>{
         <View>
           <Text style={styles.name2}>Choose payment method:</Text>
           <View height={'71%'}>
-            <View style={styles.container1} flexDirection={'row'}>
-              <Text style={styles.name1}>Add new payment method</Text>
-              <Button onlyIcon icon="plus" iconFamily="antdesign" iconSize={30} color="#ddd" iconColor="#222" style={{ width: 35, height: 35}} onPress={()=>console.log('add method')}/>
-            </View>
-            <FlatList
-             data={Payment}
-             renderItem={renderItem}
-             keyExtractor={(item) => item.bid}
-            />
+            <Pressable style={styles.container1} flexDirection={'row'} onPress={()=>{select==Payment.id?setSelect(''):setSelect(Payment.id)}}>
+              <View margin={5} marginRight={10}>
+                <FontAwesome name="bank" size={35} color="dimgrey"/>
+              </View>
+              <View flexDirection={'row'}>
+                <View margin={5} width={'78%'}>
+                  <Text style={styles.name}>Bank: {Payment.bank}</Text>
+                  <Text style={styles.subtitle}>{Payment.no}</Text>
+                </View> 
+                <View alignSelf={'center'}>
+                  {select==Payment.id?<FontAwesome alignSelf={'center'} name="check-circle-o" size={40} color="green" />:null}
+                </View>
+              </View>      
+            </Pressable>
           </View>
           <View style={styles.container} flexDirection={'row'}>
             <Button round color='red' style={styles.button} onPress={()=>{console.log('Minus '+amount);{amount>=10?setAmount(amount-10):null}}}>-10</Button>
@@ -138,7 +126,7 @@ const styles= StyleSheet.create({
       fontWeight:'bold'
     },
     subtitle:{
-      fontsize:18,
+      fontSize:18,
     },
     container:{
       justifyContent:'center',

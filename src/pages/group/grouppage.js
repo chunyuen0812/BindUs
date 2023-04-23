@@ -1,160 +1,43 @@
 import { Image,FlatList, StyleSheet, Text, View, Dimensions } from 'react-native';
 import{ NavBar, Button} from 'galio-framework';
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import ProgressBar from 'react-native-progress/Bar'; 
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import { useNavigation } from '@react-navigation/native';
+import * as SQLite from 'expo-sqlite';
 //npm install react-native-swiper-flatlist --save
 //npm install react-native-progress --save
 // fetch group info from db
 
+var gid='1';
+const db = SQLite.openDatabase('maindb.db');
 let n=0;
 const windowHeight = Dimensions.get('window').height;
 const STAGE=[
 {
     id:'1',
-    goal: 4000,
-    date:'10/02/2023',
+    goal: 8000,
+    date:'30/11/2023',
 },
 {
     id:'2',
-    goal: 3000,
-    date:'20/02/2023',
+    goal: 6000,
+    date:'30/01/2024',
 },
 {
     id:'3',
-    goal: 2000,
-    date:'07/03/2023',
+    goal: 4000,
+    date:'01/04/2024',
 },
 {
     id:'4',
-    goal: 1000,
-    date:'20/03/2023',
+    goal: 2000,
+    date:'30/04/2024',
 },
 ];
 
-const endDate=STAGE[STAGE.length-1].date;
-
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    profpic: require('../../res/profilepic.jpg'),
-    name: 'User 1',
-    Amount: 2100,
-    payment: 100,
-    date:'13/03/2023',
-    time:'21:03'
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    profpic: require('../../res/profilepic.jpg'),
-    name: 'User 2',
-    Amount: 1500,
-    payment: 200,
-    date:'11/03/2023',
-    time:'14:23'
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    profpic: require('../../res/profilepic.jpg'),
-    name: 'User 3',
-    Amount: 1800,
-    payment: 300,
-    date:'10/03/2023',
-    time:'09:46'
-  },
-];
-
-const sumamount = DATA.reduce((accumulator, object) => {
-    console.log(accumulator + object.Amount)
-  return accumulator + object.Amount;
-}, 0);
-
-const Target = STAGE.reduce((accumulator, object) => {
-    console.log(accumulator + object.goal)
-    return accumulator + object.goal;
-  }, 0);
-
-function stageprogress(n){
-    var x= sumamount;
-    for (let i = 0; i <= n; i++) {
-        x-=STAGE[i].goal;
-      }
-    x = x+STAGE[n].goal;
-      console.log(x);
-    if(x>=STAGE[n].goal){
-        return STAGE[n].goal;
-    } else{
-        return x
-    }
-}
-
-const ItemA = ({id, name, profpic, Amount}) => {
-  return(
-  <View style={{margin:5, flexDirection:'column',height:70, width:70}}>
-      <Image source={profpic} style={styles.image}/>
-      <Text numberOfLines={1} style={styles.name}>{name}</Text>
-      <Text numberOfLines={1} style={{color:'green', alignSelf:'center', fontSize:12, margin:1}}>{Math.round(Amount/Target*100)}%</Text>
-  </View>
-  );
-  
-};
-const ItemB = ({id, name, profpic,payment, date, time}) => {
-  return(
-  <View style={{margin:5, flexDirection:'row', borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'lightgrey', justifyContent:'space-around'}}>
-      <Image source={profpic} style={styles.image}/>
-      <View style={{margin:5, flexDirection:'row', justifyContent:'space-around'}}>
-        <Text numberOfLines={1} style={styles.name2}>{name}</Text>
-        <Text numberOfLines={1} style={{color:'green', alignSelf:'center', fontSize:16, margin:10}}>+{payment}</Text>
-      </View>
-      <View style={{flexDirection:'column', justifyContent:'center'}}>
-        <Text style={{fontSize:12,color:'grey'}}>{date}</Text>
-        <Text style={{fontSize:12,color:'grey',alignSelf:'flex-end'}}>{time}</Text>
-      </View>
-  </View>
-  );
-  
-};
-
 const windowWidth = Dimensions.get('window').width-20;
 
-const renderStage=({item, index})=> {
-    return(
-        <View>
-            <View style={{flexDirection:'row', margin:5}}>
-              <Text style={styles.subtitle1}> Stage: {item.id}</Text>
-              <Text style={styles.subtitle2}>{item.id}/{STAGE.length}</Text>
-            </View>
-            <View style={{flexDirection:'row', margin:5}}>
-              <Text style={styles.subtitle1}> ${stageprogress(index)}/ ${item.goal}</Text>
-              <Text style={styles.subtitle2}> {Math.round(stageprogress(index)/item.goal*100)}%</Text>
-            </View>
-            <View style={{margin:5,marginBottom:10, borderBottomWidth:StyleSheet.hairlineWidth}}>
-                <ProgressBar style={{margin:5, alignSelf:'center'}} color={'lightblue'} progress={stageprogress(index)/item.goal} width={windowWidth}/>
-                <View style={{flexDirection:'row'}}>
-                    <Text style={styles.subtitle1}> End Date:</Text>
-                    <Text style={styles.subtitle2}>{item.date}</Text>
-                </View>
-            </View>
-        </View>
-    );
-}
-
-const renderItemA = ({ item }) => <ItemA 
-  id={item.id}
-  profpic={item.profpic} 
-  name={item.name}
-  Amount={item.Amount}
-  />;
-
-  const renderItemB = ({ item }) => <ItemB 
-  id={item.id}
-  profpic={item.profpic} 
-  name={item.name}
-  payment={item.payment}
-  date={item.date}
-  time={item.time}
-  />;
 const GroupPage=({route})=> {//main program---------------------------------------------------------------------
   var goaltype=route.params.goaltype;
   var histheight='35%'
@@ -162,27 +45,171 @@ const GroupPage=({route})=> {//main program-------------------------------------
     histheight='50%'
   }
   const navigation=useNavigation();   
+  if(route.params){
+    gid=route.params.gid;
+  }
+
+  function stageprogress(n){
+    var x= goalprogress;
+    for (let i = 0; i <= n; i++) {
+        x-=STAGE[i].goal;
+      }
+    x = x+STAGE[n].goal;
+    if(x>=STAGE[n].goal){
+        return STAGE[n].goal;
+    } else if (x>=0){
+        return x
+    } else{
+      return 0
+    }
+}
+const renderStage=({item, index})=> {
+  return(
+      <View>
+          <View style={{flexDirection:'row', margin:5}}>
+            <Text style={styles.subtitle1}> Stage: {item.id}</Text>
+            <Text style={styles.subtitle2}>{item.id}/{STAGE.length}</Text>
+          </View>
+          <View style={{flexDirection:'row', margin:5}}>
+            <Text style={styles.subtitle1}> ${stageprogress(index)}/ ${item.goal}</Text>
+            <Text style={styles.subtitle2}> {Math.round(stageprogress(index)/item.goal*100)}%</Text>
+          </View>
+          <View style={{margin:5,marginBottom:10, borderBottomWidth:StyleSheet.hairlineWidth}}>
+              <ProgressBar style={{margin:5, alignSelf:'center'}} color={'lightblue'} progress={stageprogress(index)/item.goal} width={windowWidth}/>
+              <View style={{flexDirection:'row'}}>
+                  <Text style={styles.subtitle1}> End Date:</Text>
+                  <Text style={styles.subtitle2}>{item.date}</Text>
+              </View>
+          </View>
+      </View>
+  );
+}
+
+  const [contribute,setContribute]=useState([]);
+  const [deposithist,setDeposithist]=useState([]);
+  const [target, setTarget]=useState(20000);
+  const [memberno, setMemberno]=useState(1);
+  const [goalinfo,setGoalinfo]=useState({});
+  const [goalprogress, setGoalprogress]=useState(0);
+
+  useEffect(()=>{
+    if(route.params){
+      gid=route.params.gid;
+      updateprogress
+    }
+    db.transaction(tx=>{
+      tx.executeSql(
+        'SELECT Goal.Goal_ID AS gid, Goal_name, SUM(Deposit_amount)AS GoalProgress, end_time, Goal_amount FROM Goal INNER JOIN Deposit ON Goal.Goal_ID=Deposit.Goal_ID WHERE Goal.Goal_ID=?',
+        [gid],
+        (tx, result)=>{
+          setGoalinfo(result.rows.item(0))
+          console.log(goalinfo);
+        },
+        (tx, error)=>{
+          console.log(error)
+        });
+      tx.executeSql(
+        'SELECT Deposit.Account_ID AS aid, SUM(Deposit_amount)AS membercontrib, name FROM Account INNER JOIN Deposit ON Account.Account_ID=Deposit.Account_ID WHERE Deposit.Goal_ID=? GROUP BY Deposit.Account_ID',
+        [gid],
+        (tx, result)=>{
+          var temp=[];
+          for(i=0;i<result.rows.length;i++)
+            temp.push(result.rows.item(i));
+          if (contribute.length<=1)
+            setContribute(temp);
+          setMemberno(result.rows.length);
+          console.log(contribute, memberno)
+        },
+        (tx, error)=>{
+          console.log(error)
+        });
+      tx.executeSql(
+        'SELECT Deposit_ID AS did, Deposit.Account_ID AS aid, Deposit_amount, name, Deposit_time FROM Account INNER JOIN Deposit ON Account.Account_ID=Deposit.Account_ID WHERE Deposit.Goal_ID=? ORDER BY Deposit_time DESC',
+        [gid],
+        (tx, result)=>{
+          var temp= []
+          for(i=0;i<result.rows.length;i++)
+            temp.push(result.rows.item(i));
+          if (deposithist.length<=1)
+            setDeposithist(temp);
+          console.log(deposithist);
+        },
+        (tx, error)=>{
+          console.log(error)
+        });
+    })
+  },[])
+
+  function updateprogress(){
+    setGoalprogress(goalinfo.GoalProgress)
+    setTarget(goalinfo.Goal_amount)
+  }
+
+  const ItemA = ({id, Amount, name ,index}) => {
+    return(
+    <View style={{margin:5, flexDirection:'column',height:70, width:70}}>
+        <Image source={require('../../res/icon.jpeg')} style={styles.image}/>
+        <Text numberOfLines={1} style={styles.name}>{name}</Text>
+        <Text numberOfLines={1} style={{color:'green', alignSelf:'center', fontSize:12, margin:1}}>{Math.round(Amount/target*100)}%</Text>
+    </View>
+    );
+  };
+  const renderItemA = ({ item, index }) => <ItemA 
+    id={item.aid}
+    Amount={item.membercontrib}
+    name={item.name}
+    index={index}
+    />;
+
+  const ItemB = ({id, name, payment, date, time }) => {
+    return(
+    <View style={{margin:5, flexDirection:'row', borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'lightgrey', justifyContent:'space-around'}}>
+        <Image source={require('../../res/icon.jpeg')} style={styles.image}/>
+        <View style={{margin:5, flexDirection:'row', justifyContent:'space-around'}}>
+          <Text numberOfLines={1} style={styles.name2}>{name}</Text>
+          <Text numberOfLines={1} style={{color:'green', alignSelf:'center', fontSize:16, margin:10}}>+{payment}</Text>
+        </View>
+        <View style={{flexDirection:'column', justifyContent:'center'}}>
+          <Text style={{fontSize:12,color:'grey'}}>{date}</Text>
+          <Text style={{fontSize:12,color:'grey',alignSelf:'flex-end'}}>{time}</Text>
+        </View>
+    </View>
+    ); 
+  };
+
+  const renderItemB = ({ item }) => <ItemB 
+    id={item.did} 
+    name={item.name}
+    payment={item.Deposit_amount}
+    date={JSON.stringify(item.Deposit_time).slice(1,11)}
+    time={JSON.stringify(item.Deposit_time).slice(12,20)}
+    />;
+
     return (
       <View style={{flexDirection:'column', height:windowHeight}}>
         <View>
           <NavBar style={styles.header} titleStyle={styles.title} back 
           right={
-          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); navigation.navigate('Notice')}}/>
+          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); navigation.navigate('Notice',{gid:gid})}}/>
           } 
-          title={route.params.groupname} 
+          title={goalinfo.Goal_name} 
           onLeftPress={()=>navigation.navigate('Home')} 
           leftStyle={{width:30,height:30}} leftIconSize={30}
           />
         </View>
-        <Text style={styles.subtitleb}> Goal Progress:</Text>
         <View style={{flexDirection:'row'}}>
-          <Text style={styles.subtitle1}> ${sumamount}/ ${Target}</Text>
-          <Text style={styles.subtitle2}> {Math.round(sumamount/Target*100)}%</Text>
+          <Text style={styles.subtitlea}> Goal Progress:</Text>
+          {/*Button to prevent render error */}
+          <Button round style={{fontSize:12, height:20, justifyContent:'center', width:150}} color='success' onPress={updateprogress}>Update progress</Button>
         </View>
-        <ProgressBar style={{margin:5, alignSelf:'center'}} progress={sumamount/Target} width={windowWidth}/>
+        <View style={{flexDirection:'row'}}>
+          <Text style={styles.subtitle1}> ${goalinfo.GoalProgress}/ ${goalinfo.Goal_amount}</Text>
+          <Text style={styles.subtitle2}> {Math.round(goalinfo.GoalProgress/goalinfo.Goal_amount*100)}%</Text>
+        </View>
+        <ProgressBar style={{margin:5, alignSelf:'center'}} progress={goalprogress/target} width={windowWidth}/>
         <View style={{flexDirection:'row', borderBottomWidth:StyleSheet.hairlineWidth}}>
             <Text style={styles.subtitle1}> End Date:</Text>
-            <Text style={styles.subtitle2}>{endDate}</Text>
+            <Text style={styles.subtitle2}>{goalinfo.end_time}</Text>
         </View>
         <View>
         {goaltype=='long'?<SwiperFlatList
@@ -199,29 +226,29 @@ const GroupPage=({route})=> {//main program-------------------------------------
           <FlatList
           style={{marginHorizontal:10, marginVertical:5, borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'dimgrey'}}
           horizontal
-          data={DATA}
+          data={contribute}
           renderItem={renderItemA}
-          keyExtractor={item => item.id}/>
+          keyExtractor={item => item.aid}/>
         </View>
         <View style={{flexDirection:'column', margin:5, height:histheight}}>
           <Text style={styles.subtitleb}>History:</Text>
           <FlatList
             style={{marginHorizontal:10,marginVertical:5, borderBottomWidth:StyleSheet.hairlineWidth}}
-            data={DATA}
+            data={deposithist}
             renderItem={renderItemB}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.did}
           />
         </View>
         <View style={{flexDirection:'row',justifyContent:'space-around', position:'absolute', bottom:5, alignSelf:'center', width:'90%'}}>
-            {sumamount>=Target?<Button size={'small'} color={'success'} round style={{alignSelf:'center', margin:10}}>DONE!!</Button>:null}
-            {sumamount<Target?<Button 
+            {goalprogress>=target?<Button size={'small'} color={'success'} round style={{alignSelf:'center', margin:10}}>DONE!!</Button>:null}
+            {goalprogress<target?<Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>navigation.navigate('Deposit',{groupname:route.params.groupname})}>
+            onPress={()=>navigation.navigate('Deposit',{groupname:route.params.groupname, gid:gid})}>
             Deposit
             </Button>:null}
-            {sumamount<Target?<Button 
+            {goalprogress<target?<Button 
             size={'small'} color={'dimgrey'} round style={{alignSelf:'center', margin:10}}
-            onPress={()=>navigation.navigate('Vote',{goaltype:route.params.goaltype, progress:sumamount, target:Target,endDate:endDate, memberCount:DATA.length})}>
+            onPress={()=>navigation.navigate('Vote',{gid:gid})}>
             Vote
             </Button>:null}
         </View>

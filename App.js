@@ -2,6 +2,19 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import Nav from './src/nav'
 import * as SQLite from 'expo-sqlite';
+import {
+  insertAccountData,
+  insertAccountDatawithID,
+  insertGoalData,
+  insertDepositData,
+  deleteAccountData,
+  deleteGoalData,
+  deleteDepositData,
+  selectAccountData,
+  insertGroupData,
+  deleteGroupData,
+  insertVoteData,
+} from './database'
 
 const db = SQLite.openDatabase('maindb4.db');
 
@@ -43,6 +56,7 @@ class Index extends Component {
   // Create Account Table if not exists
     db.transaction(tx => {
       tx.executeSql(
+        //'DROP TABLE Account;\
         'CREATE TABLE IF NOT EXISTS Account \
         (Account_ID INTEGER PRIMARY KEY AUTOINCREMENT, \
           password TEXT, \
@@ -58,7 +72,7 @@ class Index extends Component {
             'SELECT * FROM Account;',
             [],
             (tx, resultSet) => {
-              console.log('Table content:', resultSet.rows);
+              console.log('Account content:', resultSet.rows);
             },
             (tx, error) => {
               console.error('Error selecting data', error);
@@ -75,6 +89,7 @@ class Index extends Component {
    // Create Goal Table if not exists
    // %YY%MM%DD%HH%MM%SS
       tx.executeSql(
+        //'DROP TABLE Goal;\
         'CREATE TABLE IF NOT EXISTS Goal \
         (Goal_ID INTEGER PRIMARY KEY AUTOINCREMENT, \
           Goal_name TEXT, \
@@ -106,6 +121,7 @@ class Index extends Component {
 
    // Create Deposit Table if not exists
       tx.executeSql(
+        //'DROP TABLE Deposit;\
         'CREATE TABLE IF NOT EXISTS Deposit \
         (Account_ID INTEGER, \
           Goal_ID INTEGER, \
@@ -136,8 +152,10 @@ class Index extends Component {
       
       // create Vote table
       tx.executeSql(
+        //'DROP TABLE Vote;\
         'CREATE TABLE IF NOT EXISTS Vote \
-        ( Account_ID INTEGER, \
+        ( Vote_ID INTEGER,\
+          Account_ID INTEGER, \
           Goal_ID INTEGER, \
           vote_type TEXT, \
           vote_detail TEXT, \
@@ -167,6 +185,7 @@ class Index extends Component {
       // create group table
       tx.executeSql(
 
+        //'DROP TABLE Goal_Group;\
         'CREATE TABLE IF NOT EXISTS Goal_Group \
         ( Account_ID INTEGER, \
           Goal_ID INTEGER, \
@@ -179,7 +198,7 @@ class Index extends Component {
               'SELECT * FROM Goal_Group;',
               [],
               (tx, resultSet) => {
-                console.log('Table content:', resultSet.rows);
+                console.log('Group content:', resultSet.rows);
               },
               (tx, error) => {
                 console.error('Error selecting data', error);
@@ -191,9 +210,91 @@ class Index extends Component {
             console.error('Error creating table', error);
           }
       );
+    
+      //for(i=1;i<5;i++){
+      //  insertVoteData(0,i,4,'New group','').
+      //  then(res => {
+      //    console.log("insertion valid",res);
+      //  }).catch(err => {
+      //   console.log("insertion invalid",err);
+      // });
+      //}
+      
+      //update table
+      //tx.executeSql(
+      //    'UPDATE Goal SET is_pending="1"',
+      //    [],
+      //    (tx, result) => {
+      //      tx.executeSql(
+      //        'SELECT * FROM Goal;',
+      //        [],
+      //        (tx, resultSet) => {
+      //          console.log('Goal:', resultSet.rows);
+      //        },
+      //        (tx, error) => {
+      //          console.error('Error selecting data', error);
+      //        }
+      //      );},            
+      //    (tx, error) => {
+      //      console.error('Update table', error);
+      //    }
+      //);
+      // insertion example
+    //  for(i=1;i<5;i++){
+    //    for(j=1;j<4;j++){
+    //      insertDepositData(i,j,'100').
+    //  then(res => {
+    //    console.log("insert valid",res);
+    //  }).catch(err => {
+    //   console.log("insert invalid",err);
+    // });
+    //    }
+    //  }
 
-
-
+    //   for(j=1;j<4;j++){
+    //     insertGroupData(i,j).
+    // then(res => {
+    //   console.log("insert valid",res);
+    // }).catch(err => {
+    //  console.log("insert invalid",err);
+    //});
+    //   }
+     
+      
+    //  insertDepositData('1','2','250').
+    //  then(res => {
+    //    console.log("insertion valid",res);
+    //  }).catch(err => {
+    //   console.log("insertion invalid",err);
+    // });
+      
+   //  insertGoalData('Party','short','4000','2023-05-30').
+   //  then(res => {
+   //    console.log("insertion valid",res);
+   //  }).catch(err => {
+   //   console.log("insertion invalid",err);
+   // });
+   //  insertAccountData('User 3','orange','90000003','test','100000000003','2000').
+   //   then(res => {
+   //     console.log("insertion valid",res);
+   //   }).catch(err => {
+   //    console.log("insertion invalid",err);
+   //  });
+      
+    //  selectAccountData('5').
+    //  then(res => {
+    //    console.log("select valid",res);
+    //  }).catch(err => {
+    //   console.log("select invalid",err);
+    // });
+    
+   // deleteGroupData('4')
+   // .then(res => {
+   //  console.log("delete valid",res);
+   //}).catch(err => {
+   // console.log("delete invalid",err);
+   //});
+   /**/
 
     });
   }

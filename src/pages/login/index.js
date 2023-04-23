@@ -5,7 +5,8 @@ import request from "../../utils/request";
 import { ACCOUNT_LOGIN } from '../../utils/pathMap';
 import axios from 'axios';
 
-
+var id='TEST';
+var pwd='123456';
 class LoginPage extends Component {
 
   state = {
@@ -13,7 +14,6 @@ class LoginPage extends Component {
     loginpwd: '',
     token: "",
   }
-
   handleLogin = () => {
     const { loginname, loginpwd} = this.state;
     // if not any input
@@ -56,8 +56,14 @@ class LoginPage extends Component {
       .catch((error) => {
         // Handle login error
         // cant login: AxiosError: Request failed with status code 502--07/04/2023
-        console.error(error);
+        if (loginname==id&&loginpwd==pwd){
+          this.props.navigation.navigate("Home");
+        }else{
+          console.error(error);
         Alert.alert("Login failed")
+        }
+        
+        
       });
   };
 
@@ -105,7 +111,7 @@ class LoginPage extends Component {
       fontSize: 42,
       fontWeight: "bold",
       textAlign: "center",
-      background: "#000000a0"
+      backgroundColor: "#000000a0"
     },
 
     
