@@ -7,8 +7,6 @@ import * as SQLite from 'expo-sqlite';
 import { useState } from 'react';
 
 const db = SQLite.openDatabase('maindb.db');
-var DATA =[
-]
 var gid='1';
 
 function updateVote(voteflag,voteid,gid){
@@ -24,12 +22,15 @@ function updateVote(voteflag,voteid,gid){
 
 const Notice=({route})=> {//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   const navigation=useNavigation();
-  if (route.params){
-  gid=route.params.gid
-  }
+   
   const [votelist,setVotelist]=useState([]);
   const [votecount,setVotecount]=useState([]);
+
 useEffect(()=>{
+  console.log('sql')
+  if (route.params){
+    gid=route.params.gid
+    }
   db.transaction(tx=>{
     tx.executeSql(
       'SELECT Vote_ID, Vote_type, Vote_detail, is_vote FROM Vote WHERE Goal_ID=? AND Account_ID=?',
@@ -39,17 +40,23 @@ useEffect(()=>{
         for(i=0;i<result.rows.length;i++)
           temp.push(result.rows.item(i));
         setVotelist(temp);
-        console.log(votelist);
-    })  
+        console.log('votelist: ',votelist);
+    },
+    (tx, error)=>{
+      console.log(error)
+    });  
     tx.executeSql(
       'SELECT Vote_ID, SUM(is_vote) AS v_count FROM Vote WHERE Goal_ID=? AND is_vote!=0 GROUP BY Vote_ID',
-      [gid, '1'],
+      [gid],
       (tx,result)=>{
         var temp=[]
         for(i=0;i<result.rows.length;i++)
           temp.push(result.rows.item(i));
         setVotecount(temp);
-        console.log(votecount);
+        console.log('votecount: ',votecount);
+    },
+    (tx, error)=>{
+      console.log(error)
     })
   })
 },[])
@@ -70,11 +77,11 @@ const Item = ({id, votetype, info, voteflag, index}) => {
 };
 
 const renderItem = ({ item, index }) => <Item 
-id={item.id}
-votetype={item.votetype}
-info={item.info}
-voteflag={item.voteflag}
-index={index}
+  id={item.Vote_ID}
+  votetype={item.Vote_type}
+  info={item.Vote_detail}
+  voteflag={item.is_vote}
+  index={index}
 />;
 
     return (
@@ -87,7 +94,7 @@ index={index}
               data={votelist}
               extraData={votecount}
               renderItem={renderItem}
-              keyExtractor={item => item.id}/>
+              keyExtractor={item => item.Vote_ID}/>
         </View>
       </View>
     )
