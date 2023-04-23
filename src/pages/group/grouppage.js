@@ -190,7 +190,7 @@ const renderStage=({item, index})=> {
         <View>
           <NavBar style={styles.header} titleStyle={styles.title} back 
           right={
-          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); navigation.navigate('Notice')}}/>
+          <Button onlyIcon icon="exclamationcircleo" iconFamily="antdesign" iconSize={40} color="warning" iconColor="#fff" style={{ width: 45, height: 45 }} onPress={()=>{console.log('Notice'); navigation.navigate('Notice',{gid:gid})}}/>
           } 
           title={goalinfo.Goal_name} 
           onLeftPress={()=>navigation.navigate('Home')} 
